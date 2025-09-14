@@ -1,0 +1,150 @@
+{
+    "BP_CookableMeat_C": {
+      "friendly": "Cookable Meat",
+      "friendly_key": ""
+    },
+    "BP_MonsterChest_C": {
+      "friendly": "Monster Chest",
+      "friendly_key": ""
+    },
+    "BarrelRed_C": {
+      "friendly": "Red Barrel",
+      "friendly_key": ""
+    },
+    "BarrelClosed_Blueprint_C": {
+      "friendly": "Gold Barrel",
+      "friendly_key": ""
+    },
+    "Bones_C": {
+      "friendly": "Bones",
+      "friendly_key": ""
+    },
+    "CrashEnemySpawner_C": {
+      "friendly": "Monster",
+      "friendly_key": ""
+    },
+    "BuyForceCubeStompJump_C": {
+      "friendly": "Force Cube Stomp Jump",
+      "friendly_key": "928CA8AE48287F0F9CBAFEAFE8268EC4",
+      "description": "",
+      "description_key": ""
+    },
+    "Chest_C": {
+      "friendly": "Chest",
+      "friendly_key": "",
+      "description": "",
+      "description_key": ""
+    },
+    "Coin:Chest_C": {
+      "friendly": "Coin Chest",
+      "friendly_key": "",
+      "description": "",
+      "description_key": ""
+    },
+    "CoinBig_C": {
+      "friendly": "Big Coin",
+      "friendly_key": ""
+    },
+    "CoinRed_C": {
+      "friendly": "Red Coin",
+      "friendly_key": ""
+    },
+    "_CoinStack_C": {
+      "friendly": "Coin Stack",
+      "friendly_key": ""
+    },
+    "DestroyablePots_C": {
+      "friendly": "Destroyable Pots",
+      "friendly_key": ""
+    },
+    "Coin:DestroyablePots_C": {
+      "friendly": "Destroyable Pots",
+      "friendly_key": ""
+    },
+    "GoldBlock_C": {
+      "friendly": "Gold Block",
+      "friendly_key": "",
+      "description": "",
+      "description_key": ""
+    },
+    "Jumppad_C": {
+      "friendly": "Jumppad",
+      "friendly_key": ""
+    },
+    "FT:Jumppad_C": {
+      "friendly": "Jumppad",
+      "friendly_key": ""
+    },
+    "MinecraftBrick_C": {
+      "friendly": "Minecraft Brick",
+      "friendly_key": "",
+      "description": "",
+      "description_key": ""
+    },
+    "Coin:MinecraftBrick_C": {
+      "friendly": "Minecraft Brick",
+      "friendly_key": "",
+      "description": "",
+      "description_key": ""
+    },
+    "MoonTake_C": {
+      "friendly": "Green Moon",
+      "friendly_key": "",
+      "description": "",
+      "description_key": ""
+    },
+    "Scrap_C": {
+      "friendly": "Scrap",
+      "friendly_key": ""
+    },
+    "EnemySpawn1_C": {
+      "friendly": "Wooden Cross",
+      "friendly_key": "",
+      "description": "",
+      "description_key": ""
+    },
+    "EnemySpawn2_C": {
+      "friendly": "Stone Grave",
+      "friendly_key": "",
+      "description": "",
+      "description_key": ""
+    },
+    "EnemySpawn3_C": {
+      "friendly": "Volcano",
+      "friendly_key": ""
+    },
+    "Shell_C": {
+      "friendly": "Shell",
+      "friendly_key": "",
+      "description": "",
+      "description_key": ""
+    },
+    "DeadHero_C": {
+      "friendly": "Dead Hero",
+      "friendly_key": "",
+      "description": "",
+      "description_key": ""
+    },
+    "Waldo:RedGuy_C": {
+      "friendly": "Waldo",
+      "friendly_key": "",
+      "description": "",
+      "description_key": ""
+    },
+    "Pipesystem_C": {
+      "friendly": "Pipe",
+      "friendly_key": ""
+    },
+    "FT:Pipesystem_C": {
+      "friendly": "Pipe",
+      "friendly_key": ""
+    },
+    "BP_Area2_Uncloged_Quest_C": {
+      "friendly": "Valve Quest",
+      "friendly_key": ""
+},
+    "BP_ParanoidQuest_C": {
+      "friendly": "Candle Quest",
+      "friendly_key": ""
+    }
+  }

@@ -1,0 +1,1301 @@
+[  
+  {
+    "name": "Chest50_2182",
+    "area": "Map",
+    "coins": 18
+  },
+  {
+    "name": "BuyStats",
+    "area": "Map",
+    "comment": "This is not available until after the credits."
+  },
+  {
+    "name": "BarrelClosed17",
+    "type": "Hide:BarrelRed_C",
+    "area": "Map"
+  },
+  {
+    "name": "BarrelClosed2_2",
+    "type": "Hide:BarrelRed_C",
+    "area": "Map"
+  },
+  {
+    "name": "BarrelColor_2",
+    "type": "Hide:BarrelRed_C",
+    "area": "Map"
+  },
+  {
+    "name": "BarrelClosed2_2",
+    "area": "Map",
+    "comment": " ",
+    "linetype": "target",
+    "target": {
+      "x": 287.12112426757812,
+      "y": -33767.76171875
+    }
+  },
+  {
+    "name": "BarrelClosed_Blueprint2_3",
+    "area": "Map",
+    "comment": "Unlocks Force Cube",
+    "linetype": "target",
+    "target": {
+      "x": 332.32745361328125,
+      "y": -33490.3203125
+    }
+  },
+  {
+    "name": "BarrelClosed_Blueprint3_5",
+    "area": "Map",
+    "comment": "Unlocks Double Jump",
+    "linetype": "target",
+    "target": {
+      "x": 503.5240173339844,
+      "y": -33482.83984375
+    }
+  },
+  {
+    "name": "BarrelClosed_Blueprint4",
+    "area": "Map",
+    "comment": "Unlocks Triple Jump",
+    "linetype": "target",
+    "target": {
+      "x": 130.502090454101562,
+      "y": -33980.2890625
+    }
+  },
+  {
+    "name": "BarrelClosed_Blueprint5_2",
+    "area": "Map",
+    "comment": "Unlocks Happiness",
+    "linetype": "target",
+    "target": {
+      "x": 48.0,
+      "y": -34084.0
+    }
+  },
+  {
+    "name": "BarrelClosed_Blueprint6",
+    "area": "Map",
+    "comment": "Unlocks Health Regeneration",
+    "linetype": "target",
+    "target": {
+      "x": -57.00196838378906,
+      "y": -34003.71875
+    }
+  },
+  {
+    "name": "BarrelClosed_Blueprint_2",
+    "area": "Map",
+    "comment": "Health Max +15",
+    "linetype": "target",
+    "target": {
+      "x": 393.44390869140625,
+      "y": -33396.23046875
+    }
+  },
+  {
+    "name": "BarrelRed2",
+    "area": "Map",
+    "comment": "Unlocks Gun Projectile Speed x2",
+    "linetype": "target",
+    "target": {
+      "x": -23095.03515625,
+      "y": -12244.0947265625
+    }
+  },
+  {
+    "name": "BarrelRed3",
+    "area": "Map",
+    "comment": "Unlocks Gun damage +15",
+    "linetype": "target",
+    "target": {
+      "x": -23101.931640625,
+      "y": -11550.875
+    }
+  },
+  {
+    "name": "BarrelRed4",
+    "area": "Map",
+    "comment": "Unlocks Max Health +15",
+    "linetype": "target",
+    "target": {
+      "x": -23106.603515625,
+      "y": -12066.693359375
+    }
+  },
+  {
+    "name": "BarrelRed5",
+    "area": "Map",
+    "comment": "Unlocks Ammo Refill Speed +66%",
+    "linetype": "target",
+    "target": {
+      "x": -23116.8515625,
+      "y": -11908.509765625
+    }
+  },
+  {
+    "name": "BarrelRed6",
+    "area": "Map",
+    "comment": "Unlocks Sword Damage +3",
+    "linetype": "target",
+    "target": {
+      "x": -23095.521484375,
+      "y": -12392.7412109375
+    }
+  },
+  {
+    "name": "BarrelRed_2",
+    "area": "Map",
+    "comment": "Unlocks Gun cooldown halfed",
+    "linetype": "target",
+    "target": {
+      "x": -23100.384765625,
+      "y": -11320.3593751
+    }
+  },
+  {
+    "name": "Shell13_3781",
+    "area": "Map",
+    "linetype": "target",
+    "target": {
+      "x": 27421.515625,
+      "y": -23146.896484375
+    }
+  },
+  {
+    "name": "Shell16_5895",
+    "area": "Map",
+    "linetype": "target",
+    "target": {
+      "x": 27421.515625,
+      "y": -23146.896484375
+    }
+  },
+  {
+    "name": "Shell2_1957",
+    "area": "Map",
+    "linetype": "target",
+    "target": {
+      "x": 27421.515625,
+      "y": -23146.896484375
+    }
+  },
+  {
+    "name": "Shell5_1015",
+    "area": "Map",
+    "linetype": "target",
+    "target": {
+      "x": 27421.515625,
+      "y": -23146.896484375
+    }
+  },
+  {
+    "name": "Shell9_2044",
+    "area": "Map",
+    "linetype": "target",
+    "target": {
+      "x": 27421.515625,
+      "y": -23146.896484375
+    }
+  },
+  {
+    "name": "Shell_1483",
+    "area": "Map",
+    "linetype": "target",
+    "target": {
+      "x": 27421.515625,
+      "y": -23146.896484375
+    }
+  },
+  {
+    "name": "Chest146_2",
+    "area": "Map",
+    "linetype": "target",
+    "target": {
+      "x": 17819.99609375,
+      "y": 9486.4990234375
+    }
+  },
+  {
+    "name": "Chest147_2",
+    "area": "Map",
+    "linetype": "target",
+    "target": {
+      "x": 17819.99609375,
+      "y": 9486.4990234375
+    }
+  },
+  {
+    "name": "Chest47",
+    "area": "Map",
+    "linetype": "target",
+    "target": {
+      "x": 17819.99609375,
+      "y": 9486.4990234375
+    }
+  },
+  {
+    "name": "Chest60_2151",
+    "area": "Map",
+    "linetype": "target",
+    "target": {
+      "x": 17819.99609375,
+      "y": 9486.4990234375
+    }
+  },
+  {
+    "name": "Chest64_1416",
+    "area": "Map",
+    "linetype": "target",
+    "target": {
+      "x": 17819.99609375,
+      "y": 9486.4990234375
+    }
+  },
+  {
+    "name": "Chest80_1332",
+    "area": "Map",
+    "linetype": "target",
+    "target": {
+      "x": 17819.99609375,
+      "y": 9486.4990234375
+    }
+  },
+  {
+    "name": "BuyUpgradeChestNum",
+    "area": "Map",
+    "lat": -33767.76171875,
+    "lng": 287.12112426757812,
+    "comment": "Only available after the credits"
+  },
+  {
+    "name": "BuyHealthRegen2_695",
+    "area": "Map",
+    "lat": -34003.71875,
+    "lng": -57.00196838378906,
+    "comment": "Requires collecting a Gold Barrel"
+  },
+  {
+    "name": "BuySwordDamage+11",
+    "area": "Map",
+    "lat": -33800.21875,
+    "lng": 100.940216064453125
+  },
+  {
+    "name": "BuyDoubleJump_786",
+    "area": "Map",
+    "lat": -33482.83984375,
+    "lng": 503.5240173339844,
+    "comment": "Requires collecting a Gold Barrel"
+  },
+  {
+    "name": "BuyTripleJump_877",
+    "area": "Map",
+    "lat": -33980.2890625,
+    "lng": 130.502090454101562,
+    "comment": "Requires collecting a Gold Barrel"
+  },
+  {
+    "name": "BuySpeedx15_2",
+    "area": "Map",
+    "lat": -33870.11328125,
+    "lng": 210.43764877319336,
+    "comment": "Only available after the credits"
+  },
+  {
+    "name": "BuySpeedx2_206",
+    "area": "Map",
+    "lat": -33690.83203125,
+    "lng": 179.78148651123047
+  },
+  {
+    "name": "UpgradeHappiness2_2",
+    "area": "Map",
+    "lat": -34084.0,
+    "lng": 48.0,
+    "comment": "Requires collecting a Gold Barrel"
+  },
+  {
+    "name": "BuyChestDetectorRadius",
+    "area": "Map",
+    "lat": -33671.2265625,
+    "lng": 360.25746154785156,
+    "comment": "Only available after the credits"
+  },
+  {
+    "name": "BuyForceBlock_695",
+    "area": "Map",
+    "lat": -33490.3203125,
+    "lng": 332.32745361328125,
+    "comment": "Requires collecting a Gold Barrel"
+  },
+  {
+    "name": "BuyWallet+50_737",
+    "area": "Map",
+    "lat": -33590.125,
+    "lng": 255.09010314941406
+  },
+  {
+    "name": "BuyWallet+51",
+    "area": "Map",
+    "lat": -33575.9296875,
+    "lng": 430.7998504638672,
+    "comment": "Only available after the credits"
+  },
+  {
+    "name": "BuySwordDamage+10_2",
+    "area": "Map",
+    "lat": -33901.05859375,
+    "lng": 27.856106758117676
+  },
+  {
+    "name": "BuyHealth+15_765",
+    "area": "Map",
+    "lat": -33396.23046875,
+    "lng": 393.44390869140625,
+    "comment": "Requires collecting a Gold Barrel"
+  },
+  {
+    "name": "UpgradeSwordDamageX2_716",
+    "area": "Map",
+    "lat": -12392.7412109375,
+    "lng": -23095.521484375,
+    "comment": "Requires collecting a Red Barrel"
+  },
+  {
+    "name": "BuySilentFeet2",
+    "area": "Map",
+    "lat": -11908.509765625,
+    "lng": -23116.8515625,
+    "comment": "Requires collecting a Red Barrel"
+  },
+  {
+    "name": "BuyGunRefireRate50_506",
+    "area": "Map",
+    "lat": -11320.359375,
+    "lng": -23100.384765625,
+    "comment": "Requires collecting a Red Barrel"
+  },
+  {
+    "name": "BuyGunSpeedx2_436",
+    "area": "Map",
+    "lat": -12244.0947265625,
+    "lng": -23095.03515625,
+    "comment": "Requires collecting a Red Barrel"
+  },
+  {
+    "name": "BuyGunDamage+15_1234",
+    "area": "Map",
+    "lat": -11550.875,
+    "lng": -23101.931640625,
+    "comment": "Requires collecting a Red Barrel"
+  },
+  {
+    "name": "BuyHealth+16_457",
+    "area": "Map",
+    "lat": -12066.693359375,
+    "lng": -23106.603515625,
+    "comment": "Requires collecting a Red Barrel"
+  },
+  {
+    "name": "BuySilentFeet_902",
+    "area": "Map",
+    "lat": -11697.0458984375,
+    "lng": -23131.419921875
+  },
+  {
+    "name": "Chest9_2231",
+    "area": "Map",
+    "lng": -1750.5399169921875
+  },
+  {
+    "name": "Chest76",
+    "area": "Map",
+    "lng": -1550.93603515625
+  },
+  {
+    "name": "Juicer2",
+    "area": "Map",
+    "spawns": "BP_DoubleHealthLoot_C",
+    "variant": "red"
+  },
+  {
+    "name": "Juicer3",
+    "area": "Map",
+    "spawns": "_BuyHealth+10_C",
+    "variant": "green"
+  },
+  {
+    "name": "Juicer_286",
+    "area": "Map",
+    "spawns": "BP_A3_StrengthQuest_C",
+    "variant": "yellow"
+  },
+  {
+    "name": "DeadHero2Austin",
+    "area": "Map",
+    "variant": "spy-glasses",
+    "yt_video": "FNZt6RPxqLo",
+    "yt_start": "460",
+    "friendly": "Dead Hero: Spy glasses"
+  },
+  {
+    "name": "DeadHero2Link",
+    "area": "Map",
+    "variant": "adventure-kid",
+    "yt_video": "FNZt6RPxqLo",
+    "yt_start": "256",
+    "friendly": "Dead Hero: Adventure Kid Hat"
+  },
+  {
+    "name": "DeadHero3Heman",
+    "area": "Map",
+    "variant": "him-guy",
+    "yt_video": "FNZt6RPxqLo",
+    "yt_start": "5",
+    "friendly": "Dead Hero: Hair of Him-Guy"
+  },
+  {
+    "name": "DeadHero3Pokemon",
+    "area": "Map",
+    "variant": "catch-hat",
+    "yt_video": "FNZt6RPxqLo",
+    "yt_start": "45",
+    "friendly": "Dead Hero: Catch-Hat"
+  },
+  {
+    "name": "DeadHero4Picard",
+    "area": "Map",
+    "variant": "commander",
+    "yt_video": "FNZt6RPxqLo",
+    "yt_start": "552",
+    "friendly": "Dead Hero: Space commander toy"
+  },
+  {
+    "name": "DeadHero4Santa",
+    "area": "Map",
+    "variant": "santa",
+    "yt_video": "FNZt6RPxqLo",
+    "yt_start": "195",
+    "friendly": "Dead Hero: Hat and fake beard"
+  },
+  {
+    "name": "DeadHero4Santa2",
+    "area": "Map",
+    "variant": "vault-toy",
+    "yt_video": "FNZt6RPxqLo",
+    "yt_start": "229",
+    "friendly": "Dead Hero: Vault Toy"
+  },
+  {
+    "name": "DeadHero4Santa3",
+    "area": "Map",
+    "variant": "hans-yolo",
+    "yt_video": "FNZt6RPxqLo",
+    "yt_start": "614",
+    "friendly": "Dead Hero: Hans Yolo"
+  },
+  {
+    "name": "DeadHero_3",
+    "area": "Map",
+    "variant": "magic-boy",
+    "yt_video": "FNZt6RPxqLo",
+    "yt_start": "335",
+    "friendly": "Dead Hero: Magic Boy"
+  },
+  {
+    "name": "DeadHeroGoku",
+    "area": "Map",
+    "variant": "power-hair",
+    "yt_video": "FNZt6RPxqLo",
+    "yt_start": "392",
+    "friendly": "Dead Hero: Power Hair"
+  },
+  {
+    "name": "DeadHeroGuybrush",
+    "area": "Map",
+    "variant": "murray",
+    "yt_video": "FNZt6RPxqLo",
+    "yt_start": "102",
+    "friendly": "Dead Hero: Murray"
+  },
+  {
+    "name": "DeadHeroIndy",
+    "area": "Map",
+    "variant": "adventure-hat",
+    "yt_video": "FNZt6RPxqLo",
+    "yt_start": "372",
+    "friendly": "Dead Hero: Adventure Hat"
+  },
+  {
+    "name": "BuyDoubleJump_786",
+    "area": "Map",
+    "cost": 36
+  },
+  {
+    "name": "BuySword2_2",
+    "area": "Map",
+    "cost": 6,
+    "price_type":7 
+  },  
+  {
+    "name": "BuyHealth+5",
+    "area": "Map",
+    "lat": 2035
+  },
+  {
+    "name": "Jumppad7",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad8",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad23_3162",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad24",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad26",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad35",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad43_2",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad44",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad45",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad59_1564",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad61",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad72",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad73",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad83",
+    "type": "FT:Jumppad_C",
+    "area": "Map",
+    "target": {
+      "x": 43209.37890625,
+      "y": 26780.978515625,
+      "z": 1306.9228515625
+    },
+    "other_pad": "Map:Jumppad85",
+    "twoway": 1
+  },
+  {
+    "name": "Jumppad85",
+    "type": "FT:Jumppad_C",
+    "area": "Map",
+    "target": {
+      "x": 15024.869140625,
+      "y": 5824.7353515625,
+      "z": 33.81306076049805
+    },
+    "other_pad": "Map:Jumppad83",
+    "twoway": 2
+  },
+  {
+    "name": "Jumppad71_9499",
+    "area": "Map",
+    "target": {
+      "x": -38274.1738734555,
+      "y": 61237.2265625,
+      "z": 4017.8192135128766
+    }
+  },
+  {
+    "name": "Jumppad89",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad90",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad91",
+    "type": "FT:Jumppad_C",
+    "area": "Map",
+    "target": {
+      "y": 15903.16547346115
+    }
+  },
+  {
+    "name": "Jumppad96",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad97",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad2_49",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad_266",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad13_972",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad14_7215",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew21_1352",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew22",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew23",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew24",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew27",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew28",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew32",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew33",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew34",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew35",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew36",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew37",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew40",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew41",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew48",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew49",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew52",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew53",
+    "type": "FT:Pipesystem_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew25_14338",
+    "area": "Map",
+    "target": {
+      "y": -44168.26953125
+    }
+  },
+  {
+    "name": "PipesystemNew26",
+    "area": "Map",
+    "lat": -44168.26953125
+  },
+  {
+    "name": "Jumppad37_8255",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew3_20340",
+    "area": "Map",
+    "lat": -40052.6796875,
+    "lng": -31176.26171875,
+    "target": {
+      "x": -30844.025390625,
+      "y": -42095.1171875
+    }
+  },
+  {
+    "name": "PipesystemNew4",
+    "area": "Map",
+    "lat": -42095.1171875,
+    "lng": -30844.025390625,
+    "target": {
+      "x": -31176.26171875,
+      "y": -40052.6796875
+    }
+  },
+  {
+    "name": "Jumppad30_17845",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad75",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad46_2543",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad47",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad39_2367",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad52",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad81",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "Jumppad70",
+    "type": "FT:Jumppad_C",
+    "area": "Map"
+  },
+  {
+    "name": "PipesystemNew50",
+    "type": "FT:PipesystemNew_C",
+    "area": "Map",
+    "lat": 40464.94140625,
+    "lng": 20499.578125
+  },
+  {
+    "name": "PipesystemNew51",
+    "type": "FT:PipesystemNew_C",
+    "area": "Map",
+    "target": {
+      "x": 20499.578125,
+      "y": 40464.94140625
+    }
+  },
+  {
+    "name": "MetalBall11_938",
+    "type": "Hide:MetalBall_C",
+    "area": "Map"
+  },
+  {
+    "name": "MetalBall7_209",
+    "type": "Hide:MetalBall_C",
+    "area": "Map"
+  },
+  {
+    "name": "Brick1682",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Brick2137",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick10",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick11",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick12",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick13",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick14_13312",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick15",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick16_2",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick17",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick19",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick2",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick20",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick21",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick22",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick23",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick24",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick25",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick26",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick27",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick28_6",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick29",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick3",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick30",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick31",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick32",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick33_13",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick34",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick35",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick36_2",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick37",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick38",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick39",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick40",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick41",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick42",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick43",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick44",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick45",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick46",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick47",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick49",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick4_6204",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick5",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick50",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick51",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick52",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick6_6497",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick7_6500",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick8",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick9",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "MinecraftBrick_59",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_10028",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_10097",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_10100",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_10167",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_10170",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_10179",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_11375",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_11558",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_11563",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_14112",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_1427",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_1576",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_1697",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_178",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_1802",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_2502",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_3711",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_3712",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_3713",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_3719",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_3720",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_3721",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_3723",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_3724",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_3725",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_3726",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_3728",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_3730",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_3733",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_3779",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  },
+  {
+    "name": "Red_brick_6",
+    "type": "SL:MinecraftBrick_C",
+    "area": "Map"
+  }
+]

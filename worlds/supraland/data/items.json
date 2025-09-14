@@ -1,0 +1,492 @@
+{
+      "BP_UnlockMap_C": {
+            "id": 2000,
+            "loc": "Map",
+            "count": 1
+      },
+      "BuyBelt_C": {
+            "id": 2001,
+            "loc": "Float Buckle",
+            "count": 2
+      },
+      "BuyChestDetector_C": {
+            "id": 2002,
+            "loc": "Chest Detector",
+            "count": 1
+      },
+      "BuyChestDetectorRadius_C": {
+            "id": 2003,
+            "loc": "Chest Detector Radius x2",
+            "count": 1
+      },
+      "BuyDoubleJump_C": {
+            "id": 2004,
+            "loc": "Double Jump",
+            "count": 2
+      },
+      "BuyForceBeamGold_C": {
+            "id": 2005,
+            "loc": "Force Beam Gold Module",
+            "count": 1
+      },
+      "BuyForceBlock_C": {
+            "id": 2006,
+            "loc": "Force Cube",
+            "count": 2
+      },
+      "BuyGun1_C": {
+            "id": 2007,
+            "loc": "Mighty MacGuffin",
+            "count": 2
+      },
+      "BuyGunAlt_C": {
+            "id": 2008,
+            "loc": "2nd Fire",
+            "count": 1
+      },
+      "BuyGunCriticalDamage_C": {
+            "id": 2009,
+            "loc": "Gun Critical damage",
+            "count": 1
+      },
+      "BuyGunCriticalDamageChance_C": {
+            "id": 2010,
+            "loc": "Gun Fire Critical Damage Chance +5%",
+            "count": 6
+      },
+      "BuyGunDamage+15_C": {
+            "id": 2011,
+            "loc": "Gun damage +15",
+            "count": 1
+      },
+      "BuyGunDamage+5_C": {
+            "id": 2012,
+            "loc": "Gun damage +5",
+            "count": 9
+      },
+      "BuyGunRefillSpeed+66_C": {
+            "id": 2013,
+            "loc": "Ammo Refill Speed +66%",
+            "count": 4
+      },
+      "BuyGunRefireRate50_C": {
+            "id": 2014,
+            "loc": "Gun cooldown halfed",
+            "count": 2
+      },
+      "BuyGunSpeedx2_C": {
+            "id": 2015,
+            "loc": "Gun Projectile Speed x2",
+            "count": 1
+      },
+      "BuyHealth+15_C": {
+            "id": 2016,
+            "loc": "Max Health +15",
+            "count": 5
+      },
+      "BuyHealth+5_C": {
+            "id": 2017,
+            "loc": "Max Health +5",
+            "count": 17
+      },
+      "BuyHealthRegen_C": {
+            "id": 2018,
+            "loc": "Health Regeneration",
+            "count": 1
+      },
+      "BuyHealthRegenMax10_C": {
+            "id": 2019,
+            "loc": "Health Regeneration +10",
+            "count": 1
+      },
+      "BuyHealthRegenMax5_C": {
+            "id": 2020,
+            "loc": "Health Regeneration +5",
+            "count": 16
+      },
+      "BuyShieldBreaker_C": {
+            "id": 2021,
+            "loc": "Shield Breaker",
+            "count": 1
+      },
+      "BuyShowProgress_C": {
+            "id": 2022,
+            "loc": "Awesome-Meter",
+            "count": 1
+      },
+      "BuySmashdownDamage+33_C": {
+            "id": 2023,
+            "loc": "Stomp Damage +33%",
+            "count": 5
+      },
+      "BuySpeedx15_C": {
+            "id": 2024,
+            "loc": "Speed x1.5",
+            "count": 1
+      },
+      "BuySpeedx2_C": {
+            "id": 2025,
+            "loc": "Speed x2",
+            "count": 1
+      },
+      "BuyStats_C": {
+            "id": 2026,
+            "loc": "Stats",
+            "count": 1
+      },
+      "BuySword2_C": {
+            "id": 2027,
+            "loc": "Supra Sword",
+            "count": 1
+      },
+      "BuySword_C": {
+            "id": 2028,
+            "loc": "Sword",
+            "count": 1
+      },
+      "BuySwordCriticalDamageChance_C": {
+            "id": 2029,
+            "loc": "Critical Damage Chance +5%",
+            "count": 10
+      },
+      "BuySwordDamage+1_C": {
+            "id": 2030,
+            "loc": "Sword Damage +1",
+            "count": 9
+      },
+      "BuySwordDamage+3_C": {
+            "id": 2031,
+            "loc": "Sword Damage +3",
+            "count": 7
+      },
+      "BuyTranslocator_C": {
+            "id": 2032,
+            "loc": "Translocator",
+            "count": 1
+      },
+      "BuyTripleJump_C": {
+            "id": 2033,
+            "loc": "Triple Jump",
+            "count": 2
+      },
+      "BuyUpgradeChestNum_C": {
+            "id": 2034,
+            "loc": "See Chest Count",
+            "count": 1
+      },
+      "BuyWalletx15_C": {
+            "id": 2035,
+            "loc": "Max Coins x1.5",
+            "count": 5
+      },
+      "BuyWalletx2_C": {
+            "id": 2036,
+            "loc": "Max Coins x2",
+            "count": 5
+      },
+      "BuySmashdownRadius+_C": {
+            "id": 2037,
+            "loc": "Stomp Radius +50cm",
+            "count": 8
+      },
+      "BuyGunComboDamage+25_C": {
+            "id": 2038,
+            "loc": "Combo Damage +25",
+            "count": 8
+      },
+      "BuyGunDamage+1_C": {
+            "id": 2039,
+            "loc": "Gun damage +1",
+            "count": 4
+      },
+      "Coin:Chest_C": {
+            "id": 2040,
+            "loc": "Coin Chest",
+            "count": 25
+      },
+      "BuyHealth+2_C": {
+            "id": 2041,
+            "loc": "Max Health +2",
+            "count": 2
+      },
+      "BuyForceCubeBeam_C": {
+            "id": 2042,
+            "loc": "Force Beam/Cube Compatibility",
+            "count": 1
+      },
+      "BuyNumberRising_C": {
+            "id": 2043,
+            "loc": "Enemy Health",
+            "count": 1
+      },
+      "BuyTranslocatorDamagex3_C": {
+            "id": 2044,
+            "loc": "Damage x2",
+            "count": 2
+      },
+      "BuyTranslocatorShotForce_C": {
+            "id": 2045,
+            "loc": "Shot Force x2",
+            "count": 1
+      },
+      "BuyTranslocatorCoolDownHalf_C": {
+            "id": 2046,
+            "loc": "Half Cooldown",
+            "count": 1
+      },
+      "BuyGunAltDamagex2_C": {
+            "id": 2047,
+            "loc": "Gun Altfire Damage x2",
+            "count": 5
+      },
+      "MoonTake_C": {
+            "id": 2048,
+            "loc": "Green Moon",
+            "count": 2
+      },
+      "BuySwordDamage+02_C": {
+            "id": 2049,
+            "loc": "Sword Damage +2",
+            "count": 6
+      },
+      "BuyGunSplashDamage_C": {
+            "id": 2050,
+            "loc": "Gun Splash Damage",
+            "count": 1
+      },
+      "BuyCrystal_C": {
+            "id": 2051,
+            "loc": "Red Moon",
+            "count": 6
+      },
+      "BuyGunHoly2_C": {
+            "id": 2052,
+            "loc": "Holy Gun",
+            "count": 1
+      },
+      "BuySilentFeet_C": {
+            "id": 2053,
+            "loc": "Silent feet",
+            "count": 1
+      },
+      "BuyGraveDetector_C": {
+            "id": 2054,
+            "loc": "Grave Detector",
+            "count": 1
+      },
+      "BuyUpgradeGraveNum_C": {
+            "id": 2055,
+            "loc": "See Grave Count",
+            "count": 1
+      },
+      "BuyForceCubeStompGrave3_C": {
+            "id": 2056,
+            "loc": "Volcano Sealer",
+            "count": 1
+      },
+      "BuyMoreLoot_C": {
+            "id": 2057,
+            "loc": "More Loot",
+            "count": 1
+      },
+      "BuyForceBlockTelefrag_C": {
+            "id": 2058,
+            "loc": "Force Cube Telefrag",
+            "count": 1
+      },
+      "BuyHealthRegenSpeed_C": {
+            "id": 2059,
+            "loc": "Regeneration Speed x2",
+            "count": 3
+      },
+      "BuySwordHoly1_C": {
+            "id": 2060,
+            "loc": "Holy Sword",
+            "count": 1
+      },
+      "BP_PurchaseHealth+1_C": {
+            "id": 2061,
+            "loc": "Max Health +{healthIncrease}",
+            "count": 1
+      },
+      "BuySwordRange25_C": {
+            "id": 2062,
+            "loc": "Sword Range +25%",
+            "count": 1
+      },
+      "BuySwordCriticalDamage_C": {
+            "id": 2063,
+            "loc": "Sword Critical Damage",
+            "count": 1
+      },
+      "BuyEnemiesLoot_C": {
+            "id": 2064,
+            "loc": "Loot",
+            "count": 1
+      },
+      "BuySmashdown_C": {
+            "id": 2065,
+            "loc": "Stomp Shoes",
+            "count": 1
+      },
+      "BuyShowHealthbar_C": {
+            "id": 2066,
+            "loc": "Health Bar",
+            "count": 1
+      },
+      "BuyGunCoin_C": {
+            "id": 2067,
+            "loc": "Gun Picks Up Coins",
+            "count": 1
+      },
+      "BuyArmor1_C": {
+            "id": 2068,
+            "loc": "Armor",
+            "count": 1
+      },
+      "BuySwordRefireRate-33_C": {
+            "id": 2069,
+            "loc": "Sword 33% faster",
+            "count": 1
+      },
+      "BuyForceBeam_C": {
+            "id": 2070,
+            "loc": "Force Beam",
+            "count": 1
+      },
+      "BuyHeartLuck_C": {
+            "id": 2071,
+            "loc": "Loot Luck",
+            "count": 1
+      },
+      "BuyForceCubeStomp_C": {
+            "id": 2072,
+            "loc": "Force Cube Stomp",
+            "count": 1
+      },
+      "BuyCoinMagnet_C": {
+            "id": 2073,
+            "loc": "Coin Magnet",
+            "count": 1
+      },
+      "BuySwordHoly2_C": {
+            "id": 2074,
+            "loc": "Holy Sword",
+            "count": 1
+      },
+      "BuyGunHoly1_C": {
+            "id": 2075,
+            "loc": "Holy Gun",
+            "count": 1
+      },
+      "Coin_C": {
+            "id": 2076,
+            "loc": "Coin",
+            "count": 651
+      },
+      "CoinBig_C": {
+            "id": 2077,
+            "loc": "Big Coin",
+            "count": 83
+      },
+      "DeadHero2Austin": {
+            "id": 2078,
+            "loc": "Austin",
+            "count": 1
+      },
+      "DeadHero2Link": {
+            "id": 2079,
+            "loc": "Link",
+            "count": 1
+      },
+      "DeadHero3Heman": {
+            "id": 2080,
+            "loc": "Heman",
+            "count": 1
+      },
+      "DeadHero3Pokemon": {
+            "id": 2081,
+            "loc": "Ash",
+            "count": 1
+      },
+      "DeadHero4Picard": {
+            "id": 2082,
+            "loc": "Picard",
+            "count": 1
+      },
+      "DeadHero4Santa": {
+            "id": 2083,
+            "loc": "Santa",
+            "count": 1
+      },
+      "DeadHero4Santa2": {
+            "id": 2084,
+            "loc": "Santa",
+            "count": 1
+      },
+      "DeadHero4Santa3": {
+            "id": 2085,
+            "loc": "Santa",
+            "count": 1
+      },
+      "DeadHero_3": {
+            "id": 2086,
+            "loc": "Hero_3",
+            "count": 1
+      },
+      "DeadHeroGoku": {
+            "id": 2087,
+            "loc": "Goku",
+            "count": 1
+      },
+      "DeadHeroGuybrush": {
+            "id": 2088,
+            "loc": "GuyBrush",
+            "count": 1
+      },
+      "DeadHeroIndy": {
+            "id": 2089,
+            "loc": "Indy",
+            "count": 1
+      },
+      "EnemySpawn1_C": {
+            "id": 2090,
+            "loc": "Wooden Cross",
+            "count": 76
+      },
+      "EnemySpawn2_C": {
+            "id": 2091,
+            "loc": "Stone Grave",
+            "count": 55
+      },
+      "EnemySpawn3_C": {
+            "id": 2092,
+            "loc": "Volcano",
+            "count": 67
+      },
+      "BP_DoubleHealthLoot_C": {
+            "id": 2093,
+            "loc": "Double Health",
+            "count": 1
+      },
+      "_BuyHealth+10_C": {
+            "id": 2094,
+            "loc": "Health +10",
+            "count": 1
+      },
+      "BP_A3_StrengthQuest_C": {
+            "id": 2095,
+            "loc": "Strong",
+            "count": 1
+      },
+      "Shell_C": {
+            "id": 2096,
+            "loc": "Shell",
+            "count": 6
+      },
+      "UpgradeHappiness_C": {
+            "id": 2097,
+            "loc": "Happiness",
+            "count": 1
+      }
+}

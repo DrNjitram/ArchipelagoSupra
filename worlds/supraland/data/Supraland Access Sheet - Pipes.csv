@@ -1,0 +1,10 @@
+Pipe Start,Pipe End,notes,Type 1,Type 2,Accesibility start,Accesibility end
+Red_Crystal,Desert2,"opens from Red, twoway after",PipesystemNew27,PipesystemNew28,6 Shells,blocked
+Desert2,After_Chapel3,,PipesystemNew21_1352,PipesystemNew22,Stomp,BuyBelt_C
+Before_Chapel,Farm,,PipesystemNew35,PipesystemNew34,BuyBelt_C,none
+After_Rattlehag,Farm,"opens from Rattlehag, twoway after",PipesystemNew37,PipesystemNew36,HeightIncrease5 or ForceBeam,blocked
+Before_Purple,After_Rattlehag,twoway after opening,PipesystemNew32,PipesystemNew33,ForceBeam,blocked
+Carrot_Farm,Carrot_Farm,twoway after opening,PipesystemNew41,PipesystemNew40,ForceBeam & Belt,blocked
+Rattlehag,Behind_Blueville,always open,PipesystemNew51,PipesystemNew50,Translocator & HeightIncrease8,none
+After_Rattlehag,Under_Cactus,"twoway after opening, has special interaction for puzzle",PipesystemNew53,PipesystemNew52,Stars166,blocked
+Boss_Arena,Before_Boss1,twoway after opening,PipesystemNew48,PipesystemNew49,,
