@@ -530,3 +530,4 @@ else:
             warnings.warn("_speedups not available. Falling back to pure python LocationStore. "
                           "Install a matching C++ compiler for your platform to compile _speedups.")
             LocationStore = _LocationStore
+

@@ -1,52 +1,108 @@
+import dataclasses
+from enum import Enum
+from typing import TYPE_CHECKING
+from typing_extensions import override
 from BaseClasses import CollectionState
+from NetUtils import JSONMessagePart
+from constants import GAME_NAME
+from rule_builder import Has, HasAll, HasAny, Rule, CustomRuleRegister, TWorld
+from items import FillerItem, ProgressionItem, TrapItem, UsefulItem
+from worlds.supraland.rule_builder import CanReachLocation
+
+if TYPE_CHECKING:
+    from world import SupralandWorld
 
 HeightTable = {
-    "Prog:Translocator": [3, 5], #base, shot force
-    "Prog:SpeedJump": [1, 2, 3], #speed inc, double jump, triple jump
-    "Prog:Cube": [2, 2, 2],
-    "Happiness": [100]
+    ProgressionItem.ProgTrans: [3, 5], #base, shot force
+    ProgressionItem.ProgSpeedJump: [1, 2, 3], #speed inc, double jump, triple jump
+    ProgressionItem.ProgCube: [2, 2, 2],
+    ProgressionItem.Happiness: [100]
 }
 wallet_sizes = [30, 45, 67, 101, 151, 227, 455, 911, 1822, 3645, 7290]
 
-def has_sword(state: CollectionState, player: int, level=1) -> bool:
-    return state.count("Prog:Sword", player) >= level
 
-def has_gun(state: CollectionState, player: int, level=1) -> bool:
-    return state.count("Prog:Sword", player) >= level
-
-def can_destroy_graves1(state: CollectionState, player: int) -> bool:
-    return ((has_sword(state, player) and state.has("Prog:GraveSword", player))
-            or (has_gun(state, player) and state.has("Prog:GraveGun", player)))
-
-def can_destroy_graves2(state: CollectionState, player: int) -> bool:
-    return ((has_sword(state, player) and state.count("Prog:GraveSword", player) >= 2)
-            or (has_gun(state, player) and state.count("Prog:GraveGun", player)) >= 2)
-
-def can_destroy_graves3(state: CollectionState, player: int) -> bool:
-    return state.count("Prog:Cube", player) >= 3 and state.has("StompShoes", player)
-
-def can_reach_height(state: CollectionState, player: int, height: int) -> bool:
-    # Has some awkward handling of more items than we expect
-    return sum([HeightTable[item][min(state.count(item, player), len(HeightTable[item]))] for item in HeightTable.keys()]) >= height
-
-def can_afford(state: CollectionState, player: int, cost: int) -> bool:
-    return wallet_sizes[state.count("PRog:WalletIncrease", player)] > cost
-
-def can_destroy_metal(state: CollectionState, player: int) -> bool:
-    return state.count("BuyGunAltDamagex2_C", player) >= 5
-
-def can_break_planks(state: CollectionState, player: int) -> bool:
-    return (state.has("Prog:Sword", player)
-            or state.has("Prog:Translocator", player)
-            or state.has("Prog:Gun", player))
+def as_str(value: Enum | str) -> str:
+    return str(value.value) if isinstance(value, Enum) else value
 
 
-def can_defeat_meatbag(state: CollectionState, player: int) -> bool:
-    return (state.has("FloatBuckle", player)
-            and can_break_planks(state, player)
-            and state.count("Prog:ForceBeam", player) >= 3)
+@dataclasses.dataclass()
+class CanReachHeight(Rule["SupralandWorld"], game=GAME_NAME):
 
-def combat_level(state: CollectionState, player: int, level: int) -> bool:
+    TargetHeight: int = 1
+
+
+    class Resolved(Rule.Resolved):
+        target_height: int
+
+        def _evaluate(self, state: CollectionState) -> bool:
+            return sum([HeightTable[item][min(state.count(item, self.player), len(HeightTable[item]))] for item in
+                        HeightTable.keys()]) >= self.target_height
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            if state is None:
+                verb = "Can afford"
+            elif self(state):
+                verb = "Afforded"
+            else:
+                verb = "Cannot afford"
+            return [
+                {"type": "text", "text": f"{verb} height"},
+                {"type": "color", "color": "yellow", "text": str(self.target_height)},
+            ]
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is None:
+                return str(self)
+            prefix = "Reached" if self(state) else "Cannot reach"
+            return f"{prefix} height {self.target_height}"
+
+        @override
+        def __str__(self) -> str:
+            return f"Can reach height {self.target_height}"
+
+
+@dataclasses.dataclass()
+class CanAfford(Rule["SupralandWorld"], game=GAME_NAME):
+
+    cost: int = 1
+
+
+    class Resolved(Rule.Resolved):
+        cost: int
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            return wallet_sizes[state.count(ProgressionItem.Wallet2+ProgressionItem.Wallet15, self.player)] > self.cost
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            if state is None:
+                verb = "Can afford"
+            elif self(state):
+                verb = "Afforded"
+            else:
+                verb = "Cannot afford"
+            return [
+                {"type": "text", "text": f"{verb}"},
+                {"type": "color", "color": "yellow", "text": str(self.cost)},
+                {"type": "text", "text": f"coins"}
+            ]
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is None:
+                return str(self)
+            prefix = "Afforded" if self(state) else "Cannot afford"
+            return f"{prefix} {self.cost} coins"
+
+        @override
+        def __str__(self) -> str:
+            return f"Can afford {self.cost} coins"
+
+@dataclasses.dataclass()
+class CanDefeatCombat(Rule["SupralandWorld"], game=GAME_NAME):
     # currently just counts all health once, and all combat twice
     # 21x Health (2x 2, 16x 5, 3x 15)
     # 21x Regen (1x base, 3x speed, 16x 5, 1x 10)
@@ -55,15 +111,116 @@ def combat_level(state: CollectionState, player: int, level: int) -> bool:
     # 8x ComboDamage (8x 25)
     # 10x SwordCritical
     # max is 150
-    return (state.count("Prog:Health", player) + state.count("Prog:Regen", player) +
-            state.count("GunDamage", player) * 2 + state.count("SwordDamage", player) * 2 +
-            state.count("ComboDamage", player) * 2 + state.count("SwordCritical", player) +
-            (state.count("Prog:Sword")-1)*10) >= level
+    combat : int = 1
 
-def can_defeat_rattlehag(state: CollectionState, player: int) -> bool:
-    # 20 is arbitrary for now, but allows for difficulty levels
-    return combat_level(state, player, 20)
 
-def can_defeat_gauntlet(state: CollectionState, player: int) -> bool:
-    # 20 is arbitrary for now, but allows for difficulty levels
-    return combat_level(state, player, 100)
+
+    class Resolved(Rule.Resolved):
+        combat: int
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            return ((state.count(UsefulItem.Health15, self.player)+state.count(UsefulItem.Health5, self.player)+state.count(UsefulItem.Health2, self.player)+state.count(UsefulItem.Health1, self.player))+
+                    state.count(UsefulItem.ProgHealthRegen, self.player) +
+                    (state.count(UsefulItem.GunDamage15, self.player)+state.count(UsefulItem.GunDamage5, self.player)+state.count(UsefulItem.GunDamage1, self.player)) * 2 +
+                    (state.count(UsefulItem.SwordDamage1, self.player)+state.count(UsefulItem.SwordDamage2, self.player)+state.count(UsefulItem.SwordDamage3, self.player)) * 2 +
+                    state.count(UsefulItem.GunComboDamage, self.player) * 2 +
+                    state.count(UsefulItem.SwordCritical, self.player) +
+                    (state.count(ProgressionItem.ProgSword, self.player)-1)*10) >= self.combat
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            if state is None:
+                verb = "Can Defeat"
+            elif self(state):
+                verb = "Defeated"
+            else:
+                verb = "Cannot defeat"
+            return [
+                {"type": "text", "text": f"{verb} level"},
+                {"type": "color", "color": "yellow", "text": str(self.combat)},
+            ]
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is None:
+                return str(self)
+            prefix = "Defeated" if self(state) else "Cannot defeat"
+            return f"{prefix} level {self.combat}"
+
+        @override
+        def __str__(self) -> str:
+            return f"Can defeat level {self.combat}"
+
+@dataclasses.dataclass()
+class HasLocationGroup(Rule["SupralandWorld"], game=GAME_NAME):
+
+    location_name_group: str
+    """The name of the item group containing the items"""
+
+    count: int = 1
+    """The number of items the player needs to have"""
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        location_names = tuple(sorted(world.location_name_groups[self.location_name_group]))
+        return self.Resolved(
+            self.location_name_group,
+            location_names,
+            self.count,
+            player=world.player,
+            caching_enabled=world.rule_caching_enabled,
+        )
+
+    class Resolved(Rule.Resolved):
+        location_name_group: str
+        location_names: tuple[str, ...]
+        count: int = 1
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # implementation based on state.has_group
+            found = 0
+            player_locations = state.locations_checked[self.player]
+            for location_name in self.location_names:
+                found += player_locations[location_name]
+                if found >= self.count:
+                    return True
+            return False
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            if state is None:
+                verb = "Can reach"
+            elif self(state):
+                verb = "Reached"
+            else:
+                verb = "Cannot reach"
+            return [
+                {"type": "text", "text": f"{verb}"},
+                {"type": "color", "color": "yellow", "text": str(self.count)},
+                {"type": "color", "color": "cyan", "text": self.location_name_group},
+                {"type": "text", "text": f" locations"}
+            ]
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is None:
+                return str(self)
+            prefix = "Reached" if self(state) else "Cannot reach"
+            return f"{prefix} {self.count} {self.location_name_group} locations"
+
+        @override
+        def __str__(self) -> str:
+            return f"Can reach {self.count} {self.location_name_group} locations"
+
+can_destroy_red_planks = HasAny(ProgressionItem.ProgSword, ProgressionItem.ProgGun, ProgressionItem.ProgTrans)
+
+can_defeat_meatbag = Has(ProgressionItem.Buckle) & can_destroy_red_planks & Has(ProgressionItem.ProgForceBeam, 3)
+can_melt_metal = Has(ProgressionItem.GunAltDamage, 5)
+can_destroy_wood_grave = HasAny(UsefulItem.ProgGraveGun, UsefulItem.ProgGraveSword)
+can_destroy_stone_grave = Has(UsefulItem.ProgGraveSword, 2) | Has(UsefulItem.ProgGraveGun, 2)
+
+can_defeat_rattlehag = CanDefeatCombat(20)
+can_defeat_gauntlet = CanDefeatCombat(100)
+
