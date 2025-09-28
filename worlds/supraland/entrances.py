@@ -1,13 +1,10 @@
-from regions import RegionName as R
-from rule_builder import And, OptionFilter, Or, Rule, True_, Has, HasAll, Has, HasAny
+from .regions import RegionName as R
+from rule_builder import Rule, True_, HasAll, Has, HasAny,CanReachRegion
 from typing import TYPE_CHECKING
-from StateHelpers import can_destroy_red_planks, CanReachHeight, can_destroy_wood_grave, can_destroy_stone_grave, \
-    can_defeat_rattlehag, can_defeat_meatbag, CanReachStars, HasLocationGroup
-from items import ProgressionItem as ProgItem
-from items import Events
-from rule_builder import CanReachRegion
-from worlds.supraland.items import UsefulItem
-from worlds.supraland.rule_builder import HasGroup
+from .StateHelpers import can_destroy_red_planks, CanReachHeight, can_destroy_wood_grave, can_destroy_stone_grave, \
+    can_defeat_rattlehag, can_defeat_meatbag, HasLocationGroup
+from .items import ProgressionItem as ProgItem, Events, UsefulItem
+
 
 if TYPE_CHECKING:
     from world import SupralandWorld
@@ -73,7 +70,7 @@ ENTRANCE_RULES: dict[tuple[R, R], Rule["SupralandWorld"]] = {
     (R.BC_IN, R.BC_BG): can_destroy_red_planks & (HasAny(ProgItem.ProgTrans, ProgItem.Strong) | HasAll(ProgItem.ProgCube, ProgItem.ProgGun)),
     (R.RH, R.D3): True_(),
     (R.RH, R.AF_RH): can_defeat_rattlehag,
-    (R.RH, R.BV): ProgItem.ProgTrans & CanReachHeight(5),
+    (R.RH, R.BV): Has(ProgItem.ProgTrans) & CanReachHeight(5),
     (R.AF_RH, R.RH): True_(),
     (R.AF_RH, R.BF_PC): HasAll(ProgItem.Buckle, ProgItem.ProgCube) & can_destroy_red_planks,
     (R.BF_PC, R.PC): HasAll(ProgItem.ProgForceBeam, ProgItem.ProgTrans) ,

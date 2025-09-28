@@ -90,19 +90,29 @@ RegionKeys = {
     "Red Crystal": "RC",
     "Desert2": "D2",
     "Blue_Crystal_After_Gate": "BC_AG",
-    "Carrot_Field": "Carrot Town",
+    "Carrot_Field": "CT",
 }
 
 print(raw_data[0].split(","))
 for line in raw_data[2:]:
     location = [l.strip() for l in line.strip().split(",")]
-    if location[1] in ["EnemySpawner", "CoinItem"]:
-        continue
 
     print(f"{location[0].replace("+", "_")} = \"{loc_replace[location[9]]} - {location[8]}\"")
 
 for line in raw_data[2:]:
     location = [l.strip() for l in line.strip().split(",")]
-    if location[1] in ["EnemySpawner", "CoinItem"]:
-        continue
-    print(f"LocationData(LocationName.{location[0].replace("+", "_")}, RegionName.{RegionKeys[location[9]]}),")
+
+    coins = 0
+    if "coins" in location[10].lower() and "gives" not in location[10].lower():
+        coins = int(location[10].split()[0])
+    if coins:
+        print(f"LocationData(LocationName.{location[0].replace("+", "_")}, RegionName.{RegionKeys[location[9]]}, {coins}),")
+    else:
+        print(
+            f"LocationData(LocationName.{location[0].replace("+", "_")}, RegionName.{RegionKeys[location[9]]}),")
+
+for line in raw_data[2:]:
+    location = [l.strip() for l in line.strip().split(",")]
+
+    print(f"L.{location[0].replace("+", "_")}: True_(),")
+

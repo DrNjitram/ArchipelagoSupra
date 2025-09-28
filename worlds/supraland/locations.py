@@ -1,26 +1,20 @@
-import json
-import pkgutil
 from dataclasses import dataclass
 from enum import Enum
+from itertools import groupby
 
+from BaseClasses import Location
 from .constants import BASE_ID, GAME_NAME
 from .regions import RegionName
 
 
+class SupralandLocation(Location):
+    game: str = GAME_NAME
 
-
-# This will get pipe openings added later
-event_list: list[str] = [
-    "Introduction",
-    "Blueville Theft",
-    "Rattlehag",
-    "Final Boss"
-]
 
 class LocationGroup(str, Enum):
     C = "Coin"
     BC = "Big Coin"
-    Star = "Star" # Gives a star, i think
+    Star = "Star" # Gives a star, I think
 
 class LocationName(str, Enum):
     BP_UnlockMap_2 = "Blue Crystal - After Gate - on top of tower"
@@ -33,9 +27,9 @@ class LocationName(str, Enum):
     BuyForceBlock3 = "Blueville - Shop"
     BuyForceBlock_695 = "Desert 1 - Shop - Barrel at launcher"
     BuyGun2_2 = "Blueville - Shop"
-    BuyGunAlt_478 = "Suprafield - in lockerrooms"
+    BuyGunAlt_478 = "Suprafield - in locker rooms"
     BuyGunCriticalDamage_1496 = "Farm - Shop - Standard"
-    BuyGunCriticalDamageChance2_1856 = "Surprafield - Shop - Standard"
+    BuyGunCriticalDamageChance2_1856 = "Suprafield - Shop - Standard"
     BuyGunCriticalDamageChance3_3189 = "Rattlehag - Shop - Standard"
     BuyGunCriticalDamageChance4_198 = "Carrot Town - Shop"
     BuyGunCriticalDamageChance_1426 = "Before Chapel - Shop"
@@ -89,10 +83,13 @@ class LocationName(str, Enum):
     Chest107_9218 = "After Chapel 2 - on stone peak"
     Chest108_10670 = "Desert 2 - next to twigs at door"
     Chest109 = "Redville - beneath heavy block"
+    Chest10_1082 = "Farm - in star cave"
     Chest110 = "Purple Crystal - behind yellow ball jump"
     Chest111_3 = "Blue Crystal - After Gate - High ledge next to crystal"
     Chest112 = "Redville - behind breakable block"
     Chest113 = "Desert 1 - Behind Carrot"
+    Chest114 = "Blueville - beneath Castle"
+    Chest115_4 = "Carrot Field - behind blue pickaxe door"
     Chest116 = "Suprafield - on top of tree stump"
     Chest117_2 = "Blueville - behind cracked block"
     Chest118_2 = "Green Crystal - behind waterfall"
@@ -105,18 +102,25 @@ class LocationName(str, Enum):
     Chest124_8 = "Green Crystal - in paper hut"
     Chest125_2 = "After_Green - in blue house"
     Chest126 = "After Rattlehag - inside small hut"
+    Chest127_2 = "Carrot Town - on top of roof"
+    Chest128 = "Carrot Town - on stone shelf"
+    Chest129_6 = "Carrot Town - near exit"
     Chest12_686 = "Desert 1 - Chest behind Cube Door"
     Chest130 = "Blueville - attic of laser house"
+    Chest131 = "Rattlehag - on arch"
+    Chest132 = "Rattlehag - in structure"
     Chest133 = "After_Green - on top of blockhouse behind paper"
     Chest134_13 = "Red Crystal - Cactus Jumps on hill"
-    Chest135 = "Behind Suprafield - 2nd floor lockerrroom"
+    Chest135 = "Behind Suprafield - 2nd floor footlocker"
     Chest136_3 = "Red Crystal - bricked house"
     Chest137 = "Red Crystal - behind glass"
     Chest138_5 = "Desert 2 - through small pipe"
     Chest139 = "Rattlehag - on sword"
     Chest13_410 = "Desert 1 - Chest halfway on structure"
+    Chest140 = "Rattlehag - on sword"
+    Chest141_3 = "Suprafield - in pan"
     Chest142 = "Suprafield - in pan"
-    Chest143 = "After Chapel 1 - after harddrive"
+    Chest143 = "After Chapel 1 - after hard drive"
     Chest144 = "Blue Crystal - Inside - Behind door in attic"
     Chest145_2 = "Blue Crystal - Inside - Float Buckle"
     Chest146_2 = "Lavafield - on top of hut"
@@ -127,12 +131,14 @@ class LocationName(str, Enum):
     Chest150 = "Blueville - house behind gate"
     Chest151_3 = "Red Crystal - high ledge in corner"
     Chest152_6 = "Boss Arena - high on shelf"
+    Chest153_9 = "Boss Arena - in pan"
     Chest154 = "Farm - on stone shelf"
     Chest155_2 = "Redville - Chest on ledge near firepipe"
     Chest156_2 = "Blue Crystal - Before Gate - on top of pipe"
     Chest157 = "Redville - behind combat challenge"
     Chest158 = "Behind Blueville - behind water"
     Chest159_6 = "Under Cactus - Volcano Stomp"
+    Chest15_2768 = "Red Crystal - hidden alcove"
     Chest160 = "Before Boss 1 - back of arena"
     Chest161_2 = "Before Boss 1 - in blue house"
     Chest162 = "Redville - Chest in cardboard"
@@ -157,26 +163,35 @@ class LocationName(str, Enum):
     Chest23_14291 = "Red Crystal - across level"
     Chest24_16178 = "Red Crystal - Cooking Guy Kitchen"
     Chest25_692 = "Red Crystal - at lever puzzle"
-    Chest27_4172 = "Redville - Cave Behind House next to Juicer"
+    Chest26_1739 = "Redville - Cave above Paint machine"
+    Chest27_4172 = "Redville - Cave Behind Juicer"
     Chest28_4997 = "Desert 3 - above door to Desert2"
     Chest29_7214 = "Red Crystal - In Wood House"
+    Chest30_2321 = "Farm - behind green pipe"
     Chest31_9005 = "Red Crystal - next to house on wall"
     Chest32_1454 = "Redville - Purple Button House"
     Chest33_1094 = "Redville - ceiling of start house"
+    Chest34_2175 = "Redville - Boarded House"
     Chest35_2137 = "Desert 2 - Next to door"
     Chest36_4639 = "Red Crystal - under gun chest"
-    Chest37_1815 = "Desert 1 - Near candle in the back"
+    Chest37_1815 = "Desert 1 - Over the planks near a candle"
     Chest38_3995 = "Red Crystal - Next to metal in distance"
     Chest39_5860 = "Redville - Behind cave with paint machine"
+    Chest3_1811 = "After Chapel 4 - on stone shelf next to Stomp"
     Chest40_8 = "Rattlehag - on sword"
     Chest41_2 = "Before Boss 2 - behind red planks"
+    Chest42_1521 = "Farm - between Chapel and Farm"
     Chest43 = "Red Crystal - Behind gate in yellow cave"
     Chest44_2721 = "After Chapel 4 - Stomp Shoes"
     Chest45_4075 = "After Chapel 4 - behind stomp blocks"
     Chest46 = "Redville - House with red target"
     Chest47 = "After Chapel 4 - behind metal door"
+    Chest48_4722 = "After Chapel 2 - on top ledge"
+    Chest49_1234 = "After Chapel 4 - in glass house"
     Chest4_1544 = "Desert 1 - Above Force Cube barrel"
+    Chest50_2182 = "Suprafield - behind flower lady"
     Chest51_1360 = "After Chapel 1 - in elevated nook"
+    Chest52_10699 = "After Chapel 3 - in cave ceiling"
     Chest53_1192 = "Blue Crystal - Inside - above yellow ring"
     Chest54_8402 = "After Rattlehag - in stomp house"
     Chest55_3907 = "After Chapel 3 - on floor of cave"
@@ -194,6 +209,7 @@ class LocationName(str, Enum):
     Chest66_7106 = "Suprafield - behind lockers"
     Chest67 = "Desert 2 - stomp down chest"
     Chest68 = "After Chapel 3 - in cave ceiling"
+    Chest69 = "Desert 1 - Dark Room"
     Chest6_710 = "Red Crystal - Armor House"
     Chest70 = "Blue Crystal - Inside - through green pipe"
     Chest71 = "Desert 1 - top chest on structure"
@@ -211,6 +227,7 @@ class LocationName(str, Enum):
     Chest82_4377 = "After Rattlehag - behind yellow ball launch"
     Chest83_1920 = "Carrot Town - behind keylock"
     Chest84_3197 = "After Rattlehag - behind electric lock"
+    Chest85_1892 = "Rattlehag - on top of structure"
     Chest86_2441 = "Blueville - behind grate"
     Chest87 = "Suprafield - attic opposite lockerroom"
     Chest88_1696 = "Carrot Town - behind ball parkour"
@@ -226,10 +243,944 @@ class LocationName(str, Enum):
     Chest97_9186 = "Carrot Town - beneath stomp glass"
     Chest98_10407 = "Carrot Town - ceiling under glass"
     Chest99_2116 = "Carrot Town - hidden next to carrots"
-    UpgradeHappiness2_2 = "Redville - Shop - Barrel behind combat"
+    Chest9_2231 = "Introduction - Chest upstairs"
+    Chest_622 = "Desert 2 - Purple Block Jump"
+    #UpgradeHappiness2_2 = "Redville - Shop - Barrel behind combat"
     Juicer2 = "Farm - in basement"
     Juicer3 = "Redville - Juicer"
     Juicer_286 = "Carrot Town - Strong"
+    Coin10 = "Desert 1 - Coin on Plank"
+    Coin100 = "Red Crystal - at dropdown from Desert2"
+    Coin101 = "Red Crystal - behind yellow cave"
+    Coin102_3866 = "Suprafield - tree next to pan"
+    Coin103 = "Suprafield - tree next to pan"
+    Coin104_20359 = "Red Crystal - at green moon"
+    Coin105_21138 = "Red Crystal - at green moon"
+    Coin106_21629 = "Red Crystal - at green moon"
+    Coin107_22176 = "Red Crystal - next to sign"
+    Coin108_22547 = "Red Crystal - next to sign"
+    Coin109_24177 = "Red Crystal - next to sign"
+    Coin11 = "Blueville - behind pipe in throneroom"
+    Coin110 = "Suprafield - tree next to pan"
+    Coin111 = "Suprafield - tree next to pan"
+    Coin112 = "Suprafield - tree next to pan"
+    Coin113_5137 = "Suprafield - tree next to pan"
+    Coin114_27840 = "Red Crystal - at Armor House"
+    Coin115_28539 = "Red Crystal - at Armor House"
+    Coin116_29390 = "Red Crystal - at Armor House"
+    Coin117_30049 = "Red Crystal - at Armor House"
+    Coin118_31044 = "Red Crystal - door to Desert2"
+    Coin119_31695 = "Red Crystal - door to Desert2"
+    Coin12 = "Desert 1 - Coin on Plank"
+    Coin120_32210 = "Red Crystal - door to Desert2"
+    Coin121_33061 = "Desert 2 - coin on blocks"
+    Coin122 = "Blueville - behind pipe in throneroom"
+    Coin123_37139 = "Desert 2 - coin on blocks"
+    Coin124 = "Desert 2 - coin on blocks"
+    Coin125_1618 = "Desert 3 - on big rock"
+    Coin126_2205 = "Desert 3 - on big rock"
+    Coin127_2600 = "Desert 3 - on big rock"
+    Coin128_3827 = "Desert 3 - on big rock"
+    Coin129_4414 = "Desert 3 - on big rock"
+    Coin13 = "Desert 1 - Large Coin Circle"
+    Coin130_5289 = "Farm - next to locked door"
+    Coin131_6556 = "Farm - next to locked door"
+    Coin132_8279 = "Farm - next to locked door"
+    Coin133_9482 = "Farm - north line"
+    Coin134_10661 = "Farm - north line"
+    Coin135_11760 = "Farm - north line"
+    Coin136_12203 = "Desert 3 - next to gold wall"
+    Coin137_12974 = "Desert 3 - next to gold wall"
+    Coin138_13961 = "Desert 3 - next to gold wall"
+    Coin139_15068 = "Desert 3 - next to gold wall"
+    Coin14 = "Desert 1 - Large Coin Circle"
+    Coin140_15983 = "Desert 3 - next to gold wall"
+    Coin141_16994 = "Red Crystal - ledge near yellow pipe"
+    Coin142 = "Red Crystal - ledge near yellow pipe"
+    Coin143 = "Red Crystal - ledge near yellow pipe"
+    Coin144_18711 = "Red Crystal - behind big wooden shed"
+    Coin145 = "Red Crystal - behind big wooden shed"
+    Coin146 = "Red Crystal - behind big wooden shed"
+    Coin147 = "Red Crystal - behind big wooden shed"
+    Coin148_19933 = "Desert 3 - on wall between farm and desert"
+    Coin149 = "Desert 3 - on wall between farm and desert"
+    Coin15 = "Desert 1 - Large Coin Circle"
+    Coin150 = "Desert 3 - on wall between farm and desert"
+    Coin151 = "Desert 3 - on wall between farm and desert"
+    Coin152 = "Desert 3 - on wall between farm and desert"
+    Coin153_22620 = "Redville - Coin behind Barrel House"
+    Coin154_23471 = "Redville - Coin behind Barrel House"
+    Coin155_2 = "After_Green - in blockhouse"
+    Coin156_25341 = "Redville - Coin Besides Manor"
+    Coin157_26688 = "Redville - Coin Besides Manor"
+    Coin158_27539 = "Introduction - Coin next to Sword"
+    Coin159_28142 = "Introduction - Coin next to Sword"
+    Coin16 = "Desert 1 - Large Coin Circle"
+    Coin160 = "Desert 1 - Coin at barrel launcher"
+    Coin161 = "Desert 1 - Coin at barrel launcher"
+    Coin162 = "Desert 1 - Coin at barrel launcher"
+    Coin163_33109 = "Desert 1 - Coin on plank"
+    Coin164_5976 = "Redville - Coin at boarded House"
+    Coin165_34403 = "Redville - Coin at boarded House"
+    Coin166_3394 = "Desert 2 - Coin near gate"
+    Coin167_3893 = "Desert 2 - Coin near gate"
+    Coin168_4968 = "Desert 2 - circle in corner"
+    Coin169_5707 = "Desert 2 - coin at blocks"
+    Coin17 = "Desert 1 - Large Coin Circle"
+    Coin170 = "Blueville - behind pipe in throneroom"
+    Coin171_7545 = "Desert 2 - Next to central rock"
+    Coin172 = "Desert 2 - next to chest"
+    Coin173_9223 = "Desert 2 - next to Desert 3"
+    Coin174_10202 = "Desert 2 - next to Desert 3"
+    Coin175 = "Desert 2 - next to chest"
+    Coin176 = "Desert 2 - next to chest"
+    Coin177 = "After Chapel 3 - on cave floor"
+    Coin178_12798 = "Desert 2 - Next to big rock"
+    Coin179_13337 = "Desert 2 - Next to big rock"
+    Coin18 = "Desert 1 - Large Coin Circle"
+    Coin180_14068 = "Desert 2 - In front of door"
+    Coin181_14527 = "Desert 2 - In front of door"
+    Coin182_16578 = "Desert 1 - Coin at lava barrel"
+    Coin183 = "Farm - on raised ledge"
+    Coin184_6651 = "Redville - Coin at Star House"
+    Coin185_7565 = "Red Crystal - in big wooden shed"
+    Coin186_23129 = "Desert 1 - Coin under overhang"
+    Coin187 = "Desert 1 - Coin under overhang"
+    Coin188 = "Desert 1 - Coin under platform"
+    Coin189 = "Desert 1 - Coin under platform"
+    Coin190 = "Desert 1 - Coin under platform"
+    Coin191_29128 = "Introduction - Coin behind fire pipe"
+    Coin192 = "Introduction - Coin behind fire pipe"
+    Coin193_30268 = "Red Crystal - behind yellow cave"
+    Coin194_31793 = "Red Crystal - behind yellow cave"
+    Coin195 = "Suprafield - tree next to pan"
+    Coin196_34887 = "Red Crystal - next to yellow pipe"
+    Coin197 = "Red Crystal - next to yellow pipe"
+    Coin198 = "Red Crystal - next to yellow pipe"
+    Coin199 = "Red Crystal - next to yellow pipe"
+    Coin19_2270 = "Desert 1 - Coin circle at chest"
+    Coin2 = "Desert 1 - Coin at double jump"
+    Coin20 = "Desert 1 - Coin circle at chest"
+    Coin200_36373 = "Red Crystal - near metal in the back"
+    Coin201_37296 = "Red Crystal - near metal in the back"
+    Coin202 = "After Chapel 3 - on cave floor"
+    Coin203 = "After Chapel 3 - on cave floor"
+    Coin204_2274 = "Desert 1 - Coin cluster at purple jump"
+    Coin205 = "Desert 1 - Coin cluster at purple jump"
+    Coin206 = "Desert 1 - Coin cluster at purple jump"
+    Coin207_5983 = "Desert 1 - Coin at barrel"
+    Coin208 = "Desert 1 - Coin at barrel"
+    Coin209 = "Desert 1 - Coin at barrel"
+    Coin21 = "Desert 1 - Coin circle at chest"
+    Coin210_2626 = "Redville - Coin next to Juicer"
+    Coin211 = "Redville - Coin next to Juicer"
+    Coin212_4592 = "Desert 2 - in sky between pipes"
+    Coin213 = "Desert 2 - in sky between pipes"
+    Coin214 = "Desert 2 - in sky between pipes"
+    Coin215_4482 = "Redville - Coin at boarded House"
+    Coin216_5045 = "Redville - Coin in boarded box"
+    Coin217 = "Red Crystal - in big wooden shed"
+    Coin218 = "Carrot Town - big balls house"
+    Coin219 = "Carrot Town - big balls house"
+    Coin22 = "Desert 1 - Coin circle at chest"
+    Coin220 = "Carrot Town - big balls house"
+    Coin221 = "Suprafield - tree next to pan"
+    Coin222 = "Suprafield - tree next to pan"
+    Coin223 = "Suprafield - tree next to pan"
+    Coin224 = "Suprafield - tree next to pan"
+    Coin225 = "Red Crystal - after purple spike block"
+    Coin226_13 = "Suprafield - above attic"
+    Coin227 = "Behind Suprafield - on dirt ledge"
+    Coin228 = "Behind Suprafield - on dirt ledge"
+    Coin229 = "Behind Suprafield - on dirt ledge"
+    Coin23 = "Desert 1 - Coin circle at chest"
+    Coin230_10344 = "After Chapel 1 - elevated coin"
+    Coin231_10571 = "After Chapel 1 - elevated coin"
+    Coin232_10942 = "After Chapel 1 - elevated coin"
+    Coin233_11201 = "After Chapel 1 - elevated coin"
+    Coin234_12212 = "After Chapel 1 - elevated coin"
+    Coin235_13071 = "After Chapel 1 - elevated coin"
+    Coin236_14194 = "After Chapel 1 - elevated coin"
+    Coin237_4498 = "After Chapel 1 - in button hut"
+    Coin238 = "After Chapel 1 - in button hut"
+    Coin239 = "After Chapel 1 - in button hut"
+    Coin240 = "After Chapel 1 - in button hut"
+    Coin241_6528 = "After Chapel 1 - next to red barrel stump"
+    Coin242 = "After Chapel 1 - next to red barrel stump"
+    Coin243 = "After Chapel 1 - next to red barrel stump"
+    Coin244 = "After Chapel 1 - next to red barrel stump"
+    Coin245_7990 = "After Chapel 1 - next to stairs"
+    Coin246_9105 = "After Chapel 1 - next to stairs"
+    Coin247_9772 = "After Chapel 1 - next to stairs"
+    Coin248_10439 = "After Chapel 1 - behind bush"
+    Coin249_11762 = "After Chapel 1 - behind bush"
+    Coin24_4357 = "Desert 1 - Lower coin cluster"
+    Coin250 = "After Chapel 1 - behind bush"
+    Coin251 = "After Chapel 1 - behind bush"
+    Coin252_12623 = "After Chapel 1 - in locked house"
+    Coin253 = "After Chapel 1 - in locked house"
+    Coin254 = "After Chapel 1 - in locked house"
+    Coin255 = "Rattlehag - in pipe"
+    Coin256_14325 = "After Chapel 1 - next to house"
+    Coin257 = "After Chapel 1 - next to house"
+    Coin258 = "After Chapel 1 - next to house"
+    Coin259 = "After Chapel 1 - next to house"
+    Coin25_5208 = "Desert 1 - Lower coin cluster"
+    Coin260_15955 = "After Chapel 1 - on rock ledge"
+    Coin261 = "After Chapel 1 - on rock ledge"
+    Coin262 = "After Chapel 1 - on rock ledge"
+    Coin263_17296 = "Before Chapel - in card house"
+    Coin264_17459 = "Before Chapel - in card house"
+    Coin265 = "Before Chapel - in card house"
+    Coin266_18751 = "Before Chapel - next to green pipe"
+    Coin267 = "Before Chapel - next to green pipe"
+    Coin268 = "Before Chapel - next to green pipe"
+    Coin269 = "Before Chapel - next to green pipe"
+    Coin26_5835 = "Desert 1 - Lower coin cluster"
+    Coin270_20365 = "Before Chapel - next to rock"
+    Coin271 = "Before Chapel - next to rock"
+    Coin272 = "Before Chapel - next to rock"
+    Coin273_22226 = "After Chapel 1 - on tree stump"
+    Coin274 = "After Chapel 1 - on tree stump"
+    Coin275 = "After Chapel 1 - on tree stump"
+    Coin276_22927 = "After Chapel 1 - on stone ridge"
+    Coin277_23834 = "After Chapel 1 - on stone ridge"
+    Coin278_24429 = "After Chapel 1 - on stone ridge"
+    Coin279 = "After Chapel 1 - on stone ledge"
+    Coin27_6630 = "Desert 1 - Lower coin cluster"
+    Coin280 = "After Chapel 1 - on stone ledge"
+    Coin281 = "After Chapel 1 - after red planks"
+    Coin282 = "After Chapel 1 - after red planks"
+    Coin283_25028 = "After Chapel 1 - on top of rocks"
+    Coin284 = "After Chapel 1 - floating next to trees"
+    Coin285 = "After Chapel 1 - on top of rocks"
+    Coin286 = "Blueville - behind pipe in throneroom"
+    Coin287 = "Blueville - behind pipe in throneroom"
+    Coin288 = "Carrot Town - near exit"
+    Coin289 = "Carrot Town - near exit"
+    Coin28_8193 = "Desert 1 - Coin on ledge near Candle"
+    Coin290 = "After Chapel 4 - stomp parkour"
+    Coin291 = "After Chapel 4 - stomp parkour"
+    Coin292 = "After Chapel 4 - stomp parkour"
+    Coin293 = "After Chapel 4 - stomp parkour"
+    Coin294 = "After Chapel 4 - stomp parkour"
+    Coin295 = "After Chapel 4 - stomp parkour"
+    Coin296 = "After Chapel 4 - stomp parkour"
+    Coin297 = "Carrot Town - big balls house"
+    Coin298 = "Carrot Town - big balls house"
+    Coin299 = "Carrot Town - on top of plank"
+    Coin29_8996 = "Desert 1 - Coin on ledge near Candle"
+    Coin3 = "Desert 1 - Coin at double jump"
+    Coin300 = "Carrot Town - on top of plank"
+    Coin301 = "Suprafield - behind crate in lockerroom"
+    Coin302 = "Suprafield - behind crate in lockerroom"
+    Coin303 = "Suprafield - in lockerroom"
+    Coin304 = "Suprafield - in lockerroom"
+    Coin305 = "Suprafield - above attic"
+    Coin306_6866 = "Red Crystal - stairs next to shell"
+    Coin307 = "Red Crystal - next to piston puzzle"
+    Coin308 = "Desert 1 - Coin cluster at purple puzzle"
+    Coin309_5818 = "After Chapel 4 - in the back"
+    Coin30_10071 = "Desert 1 - Coin on ledge near Candle"
+    Coin310_7357 = "After Chapel 4 - in the back"
+    Coin311_8632 = "After Chapel 4 - in the back"
+    Coin312_9707 = "After Chapel 4 - in the back"
+    Coin313_9966 = "After Chapel 4 - in the back"
+    Coin314_10161 = "After Chapel 4 - in the back"
+    Coin315_5610 = "Suprafield - behind arena"
+    Coin316 = "Suprafield - behind arena"
+    Coin317 = "Suprafield - behind arena"
+    Coin318 = "Suprafield - behind arena"
+    Coin319 = "Suprafield - behind arena"
+    Coin31_11402 = "Desert 1 - Coin in air at switch"
+    Coin32 = "Desert 1 - Coin in air at switch"
+    Coin320_15843 = "After Chapel 3 - on stump"
+    Coin321_16358 = "After Chapel 3 - on stump"
+    Coin322 = "After Chapel 4 - coin tower"
+    Coin323_18052 = "After Chapel 3 - on stump"
+    Coin324 = "Rattlehag - in pipe"
+    Coin325 = "Rattlehag - in pipe"
+    Coin326 = "Rattlehag - in pipe"
+    Coin327 = "Rattlehag - in pipe"
+    Coin328 = "Desert 1 - Coin under overhang"
+    Coin329 = "Desert 1 - Coin on Plank"
+    Coin330 = "Carrot Town - next to shop"
+    Coin331 = "After Chapel 4 - coin tower"
+    Coin332 = "After Chapel 4 - coin tower"
+    Coin333 = "After Chapel 4 - coin tower"
+    Coin334 = "After Chapel 4 - coin tower"
+    Coin335 = "After Chapel 4 - coin tower"
+    Coin336 = "After Chapel 4 - coin tower"
+    Coin337 = "Farm - on raised ledge"
+    Coin338 = "Farm - next to saw"
+    Coin339 = "Farm - next to saw"
+    Coin33_321 = "Desert 1 - Coin in air at switch"
+    Coin340 = "Behind Suprafield - coin stack in sky"
+    Coin341_14938 = "Behind Suprafield - coin stack in sky"
+    Coin342_14957 = "Behind Suprafield - coin stack in sky"
+    Coin343_14976 = "Behind Suprafield - coin stack in sky"
+    Coin344_14434 = "Desert 2 - in yellow U pipe"
+    Coin345 = "Desert 2 - in yellow U pipe"
+    Coin346 = "Desert 2 - in yellow U pipe"
+    Coin347 = "Desert 2 - in yellow U pipe"
+    Coin348 = "Desert 2 - in yellow U pipe"
+    Coin349 = "Desert 2 - in yellow U pipe"
+    Coin34_611 = "Desert 1 - Coin in air at switch"
+    Coin350 = "Suprafield - above attic"
+    Coin351 = "Suprafield - above attic"
+    Coin352 = "Suprafield - above attic"
+    Coin353 = "Suprafield - above attic"
+    Coin354_14846 = "Behind Suprafield - coin stack in sky"
+    Coin355_14865 = "Behind Suprafield - coin stack in sky"
+    Coin356_21362 = "Before Chapel - at door to Farm"
+    Coin357 = "Before Chapel - at door to Farm"
+    Coin358 = "Before Chapel - at door to Farm"
+    Coin359 = "Before Chapel - at door to Farm"
+    Coin35_861 = "Desert 1 - Coin in air at switch"
+    Coin360 = "Under Cactus - on block"
+    Coin361_3 = "Blueville - coin house"
+    Coin362_5 = "Blueville - coin house"
+    Coin363 = "Blue Crystal - Inside - next to purple rings"
+    Coin364 = "Blue Crystal - Inside - next to purple rings"
+    Coin365 = "Blue Crystal - Inside - next to purple rings"
+    Coin366 = "Blue Crystal - Inside - next to switch"
+    Coin367 = "Blue Crystal - Inside - next to switch"
+    Coin368 = "Blue Crystal - Inside - next to switch"
+    Coin369 = "Blue Crystal - After Gate - behind rock"
+    Coin36_14561 = "Desert 1 - Coin on ledge"
+    Coin370 = "Blue Crystal - After Gate - behind rock"
+    Coin371 = "Blue Crystal - Inside - big circle in attic"
+    Coin372 = "Blue Crystal - Inside - big circle in attic"
+    Coin373 = "Blue Crystal - Inside - big circle in attic"
+    Coin374 = "Blue Crystal - Inside - big circle in attic"
+    Coin375 = "Blue Crystal - Inside - big circle in attic"
+    Coin376 = "Blue Crystal - Inside - big circle in attic"
+    Coin377 = "Blue Crystal - Inside - big circle in attic"
+    Coin378 = "Blue Crystal - Inside - big circle in attic"
+    Coin379 = "Blue Crystal - Inside - big circle in attic"
+    Coin37_2354 = "Desert 2 - On low rock"
+    Coin38 = "Desert 2 - circle in corner"
+    Coin380 = "Blue Crystal - Inside - big circle in attic"
+    Coin381 = "Blue Crystal - Inside - big circle in attic"
+    Coin382 = "Blue Crystal - Inside - big circle in attic"
+    Coin383 = "Blue Crystal - Inside - big circle in attic"
+    Coin384 = "Blue Crystal - Inside - big circle in attic"
+    Coin385 = "Blue Crystal - Inside - big circle in attic"
+    Coin386 = "Blue Crystal - Inside - big circle in attic"
+    Coin387 = "Blue Crystal - Inside - big circle in attic"
+    Coin388 = "Blue Crystal - Inside - big circle in attic"
+    Coin389 = "Blue Crystal - Inside - big circle in attic"
+    Coin39 = "Desert 2 - circle in corner"
+    Coin390 = "Blue Crystal - Inside - big circle in attic"
+    Coin391 = "Blue Crystal - Inside - big circle in attic"
+    Coin392 = "After Chapel 1 - on top of rocks"
+    Coin393 = "After Chapel 1 - on top of rocks"
+    Coin394 = "Desert 1 - Coin cluster at purple puzzle"
+    Coin395 = "Blue Crystal - Inside - coin inside metal pipe"
+    Coin396 = "Blue Crystal - Inside - coin inside metal pipe"
+    Coin397 = "Blue Crystal - Inside - coin inside metal pipe"
+    Coin398 = "Blue Crystal - Inside - coin inside metal pipe"
+    Coin399 = "Blue Crystal - Inside - in chest in attic"
+    Coin4 = "Desert 1 - Coin at double jump"
+    Coin400 = "Blue Crystal - Inside - in chest in attic"
+    Coin401 = "Blue Crystal - Inside - in chest in attic"
+    Coin402 = "Blue Crystal - Inside - in chest in attic"
+    Coin403 = "After Chapel 1 - on stone ledge"
+    Coin404 = "After Chapel 1 - on stone ledge"
+    Coin405 = "After Chapel 3 - on cave floor"
+    Coin406 = "After Chapel 3 - on cave floor"
+    Coin407 = "After Chapel 3 - on cave floor"
+    Coin408 = "Desert 1 - high next to central structure"
+    Coin409 = "Desert 1 - high next to central structure"
+    Coin40_6515 = "Desert 2 - On central rock"
+    Coin410 = "Desert 1 - high next to central structure"
+    Coin411 = "Red Crystal - next to piston puzzle"
+    Coin412 = "Blue Crystal - After Gate - below Map"
+    Coin413 = "Blue Crystal - After Gate - below Map"
+    Coin414 = "Blue Crystal - After Gate - below Map"
+    Coin415 = "Blue Crystal - After Gate - below Map"
+    Coin416 = "Blue Crystal - After Gate - below Map"
+    Coin417 = "Blue Crystal - Inside - in Belt House"
+    Coin418 = "Blue Crystal - Inside - in Belt House"
+    Coin419 = "Blue Crystal - Inside - in Belt House"
+    Coin41_3103 = "Red Crystal - on passage house"
+    Coin420 = "Blue Crystal - Inside - in Belt House"
+    Coin421 = "Blue Crystal - Inside - in Belt House"
+    Coin422 = "After Chapel 4 - stomp parkour"
+    Coin423 = "After Chapel 4 - stomp parkour"
+    Coin424 = "After Chapel 4 - stomp parkour"
+    Coin425 = "After Chapel 4 - stomp parkour"
+    Coin426 = "After Chapel 4 - stomp parkour"
+    Coin427 = "Purple Crystal - in hidden nook"
+    Coin428 = "Purple Crystal - in hidden nook"
+    Coin429 = "Purple Crystal - in hidden nook"
+    Coin42_18483 = "Suprafield - above attic"
+    Coin430 = "Carrot Town - beneath glass"
+    Coin431 = "Carrot Town - beneath glass"
+    Coin432 = "Carrot Town - beneath glass"
+    Coin433 = "Carrot Town - next to tree"
+    Coin434 = "Carrot Town - next to tree"
+    Coin435 = "Carrot Town - next to tree"
+    Coin436 = "Carrot Town - next to tree"
+    Coin437 = "Carrot Town - at bottom of laser puzzle"
+    Coin438 = "Carrot Town - at bottom of laser puzzle"
+    Coin439 = "Carrot Town - at bottom of laser puzzle"
+    Coin43_18893 = "Suprafield - above attic"
+    Coin440 = "Carrot Town - at bottom of laser puzzle"
+    Coin441 = "Carrot Town - at bottom of laser puzzle"
+    Coin442 = "Carrot Town - on top of laser puzzle"
+    Coin443 = "Carrot Town - on top of laser puzzle"
+    Coin444 = "Carrot Town - on top of laser puzzle"
+    Coin445_10988 = "Before Purple - beyond chasm"
+    Coin446_12368 = "Before Purple - beyond chasm"
+    Coin447_13523 = "Before Purple - beyond chasm"
+    Coin448 = "After Rattlehag - next to extendable pole"
+    Coin449 = "After Rattlehag - next to extendable pole"
+    Coin44_18983 = "Suprafield - above attic"
+    Coin450 = "After Rattlehag - next to extendable pole"
+    Coin451 = "After Rattlehag - next to extendable pole"
+    Coin452 = "After Rattlehag - in door frame"
+    Coin453 = "After Rattlehag - in door frame"
+    Coin454 = "After Rattlehag - in door frame"
+    Coin455 = "After Rattlehag - in door frame"
+    Coin456 = "After Rattlehag - in door frame"
+    Coin457 = "After Rattlehag - in door frame"
+    Coin458 = "Rattlehag - outside structure"
+    Coin459 = "Rattlehag - outside structure"
+    Coin45_19145 = "Rattlehag - outside structure"
+    Coin46 = "Desert 2 - On big rock"
+    Coin460 = "Rattlehag - outside structure"
+    Coin461 = "Carrot Town - on top of plank"
+    Coin462 = "Carrot Town - on top of block"
+    Coin463 = "Carrot Town - on top of block"
+    Coin464 = "Carrot Town - on top of block"
+    Coin465 = "Carrot Town - past small shower"
+    Coin466 = "Carrot Town - past small shower"
+    Coin467 = "Carrot Town - past small shower"
+    Coin468 = "Carrot Town - hidden behind block"
+    Coin469 = "Carrot Town - hidden behind block"
+    Coin47 = "Desert 2 - On big rock"
+    Coin470_17480 = "Carrot Town - hidden behind block"
+    Coin471 = "Carrot Town - hidden behind block"
+    Coin472 = "Carrot Town - hidden behind block"
+    Coin473 = "Carrot Town - hidden behind block"
+    Coin474 = "Carrot Town - next to small shower"
+    Coin475 = "Suprafield - behind crate in lockerroom"
+    Coin476 = "Carrot Town - next to small shower"
+    Coin477 = "Carrot Town - hidden behind block"
+    Coin478 = "Carrot Town - hidden behind block"
+    Coin479 = "Carrot Town - hidden behind block"
+    Coin48 = "Desert 2 - On big rock"
+    Coin480 = "Carrot Town - hidden behind block"
+    Coin481 = "Carrot Town - hidden behind block"
+    Coin482 = "Carrot Town - on top of small shower"
+    Coin483 = "Carrot Town - on top of small shower"
+    Coin484 = "Carrot Town - on top of small shower"
+    Coin485 = "After Chapel 1 - floating next to trees"
+    Coin486 = "After Chapel 1 - floating next to trees"
+    Coin487 = "After Chapel 1 - floating next to trees"
+    Coin488 = "After Chapel 1 - floating next to trees"
+    Coin489 = "Carrot Town - next to shop"
+    Coin490 = "Carrot Town - next to shop"
+    Coin491_10418 = "Before Purple - below supraballers house"
+    Coin492 = "Before Purple - below supraballers house"
+    Coin493 = "Before Purple - below supraballers house"
+    Coin494 = "Carrot Town - next to Juicer"
+    Coin495 = "Carrot Town - next to Juicer"
+    Coin496 = "Carrot Town - next to Juicer"
+    Coin497_14240 = "After Chapel 2 - on high stone ledge"
+    Coin498 = "After Chapel 2 - on high stone ledge"
+    Coin499 = "After Chapel 2 - on high stone ledge"
+    Coin49_21 = "Desert 2 - next to Desert3"
+    Coin5 = "Desert 1 - Coin at double jump"
+    Coin500 = "After Chapel 2 - on high stone ledge"
+    Coin501 = "Behind Suprafield - coin stack in sky"
+    Coin502 = "Behind Suprafield - coin stack in sky"
+    Coin503_25941 = "Blue Crystal - Before Gate - coins on gate"
+    Coin504 = "Blue Crystal - Before Gate - coins on gate"
+    Coin505 = "Blue Crystal - Before Gate - coins on gate"
+    Coin506 = "Blue Crystal - Before Gate - coins on gate"
+    Coin507_28233 = "After Chapel 2 - on high stone ledge"
+    Coin508_29145 = "After Chapel 2 - on high stone ledge"
+    Coin509_29904 = "After Chapel 2 - on high stone ledge"
+    Coin50_23 = "Desert 2 - coin on blocks"
+    Coin51 = "Suprafield - in box opposite lockerroom"
+    Coin510_30933 = "After Chapel 2 - on high stone ledge"
+    Coin511 = "Desert 2 - on high stone ledge"
+    Coin512 = "Desert 2 - on high stone ledge"
+    Coin513 = "Desert 2 - on high stone ledge"
+    Coin514 = "Desert 2 - on high stone ledge"
+    Coin515 = "Desert 2 - on high stone ledge"
+    Coin516 = "Desert 2 - on high stone ledge"
+    Coin517 = "Desert 2 - on high stone ledge"
+    Coin518 = "After Chapel 2 - on high stone ledge"
+    Coin519 = "After Chapel 2 - on high stone ledge"
+    Coin52 = "Suprafield - in box opposite lockerroom"
+    Coin520 = "After Chapel 2 - on high stone ledge"
+    Coin521 = "After Chapel 2 - on high stone ledge"
+    Coin522 = "After Chapel 2 - on high stone ledge"
+    Coin523 = "After Chapel 2 - on high stone ledge"
+    Coin524 = "After Chapel 2 - on high stone ledge"
+    Coin525 = "After Chapel 2 - on high stone ledge"
+    Coin526 = "After Chapel 2 - on high stone ledge"
+    Coin527 = "After Chapel 2 - on high stone ledge"
+    Coin528 = "After Chapel 2 - on high stone ledge"
+    Coin529 = "Blue Crystal - After Gate - High ledge next to crystal"
+    Coin53 = "Suprafield - in box opposite lockerroom"
+    Coin530 = "Blue Crystal - After Gate - High ledge next to crystal"
+    Coin531 = "Blue Crystal - After Gate - High ledge next to crystal"
+    Coin532 = "Blue Crystal - After Gate - High ledge next to crystal"
+    Coin533 = "Blue Crystal - After Gate - High ledge next to crystal"
+    Coin534 = "Blue Crystal - After Gate - High ledge next to crystal"
+    Coin535 = "Carrot Town - next to small shower"
+    Coin536 = "Carrot Town - next to small shower"
+    Coin537 = "Carrot Town - next to small shower"
+    Coin538 = "Carrot Town - next to lever"
+    Coin539 = "Carrot Town - next to lever"
+    Coin54 = "Red Crystal - after piston puzzle"
+    Coin540_7 = "Blueville - coin house"
+    Coin541 = "Blueville - behind swinging door"
+    Coin542 = "Blueville - behind swinging door"
+    Coin543 = "Blueville - behind swinging door"
+    Coin544 = "Blueville - behind swinging door"
+    Coin545 = "Blueville - behind swinging door"
+    Coin546 = "Red Crystal - between Desert2 and Red_Crystal"
+    Coin547 = "Red Crystal - between Desert2 and Red_Crystal"
+    Coin548 = "Red Crystal - between Desert2 and Red_Crystal"
+    Coin549_9 = "Blueville - coin house"
+    Coin55 = "Desert 2 - on rock"
+    Coin550_11 = "Blueville - coin house"
+    Coin551 = "Desert 1 - Coin at carrot"
+    Coin552 = "Desert 1 - Coin cluster at purple puzzle"
+    Coin553 = "Redville - Coin in front of shop"
+    Coin554 = "Redville - Coin in front of shop"
+    Coin555 = "Redville - Coin in front of shop"
+    Coin556_2 = "Redville - Manor Coin"
+    Coin557 = "Redville - Manor Coin"
+    Coin558 = "Redville - Manor Coin"
+    Coin559 = "Redville - Manor Coin"
+    Coin56 = "Desert 2 - on rock"
+    Coin560 = "Redville - Manor Coin"
+    Coin561 = "Redville - Manor Coin"
+    Coin562 = "Redville - Manor Coin"
+    Coin563 = "Redville - Manor Coin"
+    Coin564 = "Blueville - coin house"
+    Coin565 = "Blueville - coin house"
+    Coin566 = "Blueville - coin house"
+    Coin567 = "Blueville - coin house"
+    Coin568 = "Blueville - coin house"
+    Coin569 = "After Chapel 1 - on card house"
+    Coin57 = "Desert 2 - on rock"
+    Coin570 = "After Chapel 1 - on rock ledge"
+    Coin571 = "After Chapel 4 - next to window"
+    Coin572 = "After Chapel 4 - next to window"
+    Coin573 = "Carrot Town - near exit"
+    Coin574 = "Carrot Town - on wall near exit"
+    Coin575 = "Carrot Town - on wall near exit"
+    Coin576 = "Carrot Town - on wall near exit"
+    Coin577 = "Lavafield - in cave in field"
+    Coin578 = "Lavafield - in cave in field"
+    Coin579 = "Lavafield - in cave in field"
+    Coin580 = "Lavafield - in cave in field"
+    Coin581_6 = "Desert 3 - on top of nugget wall"
+    Coin582_8 = "Desert 3 - on top of nugget wall"
+    Coin583 = "Desert 3 - on top of nugget wall"
+    Coin584 = "Desert 3 - on top of nugget wall"
+    Coin585 = "Desert 3 - on top of nugget wall"
+    Coin586 = "Desert 3 - on top of nugget wall"
+    Coin587 = "Desert 3 - on top of nugget wall"
+    Coin588 = "Blue Crystal - Inside - in air"
+    Coin589 = "Blue Crystal - Inside - in air"
+    Coin58_3898 = "Red Crystal - on passage house"
+    Coin59 = "Desert 2 - Next to red guy"
+    Coin590 = "Blue Crystal - Inside - in air"
+    Coin591 = "Blue Crystal - Inside - in air"
+    Coin592 = "Blue Crystal - Inside - below ceiling"
+    Coin593 = "Blue Crystal - Inside - below ceiling"
+    Coin594 = "Blue Crystal - Inside - below ceiling"
+    Coin595 = "Blue Crystal - Inside - below ceiling"
+    Coin596 = "Blue Crystal - Inside - below ceiling"
+    Coin597_2 = "After_Green - outside of blockhouse"
+    Coin598 = "After_Green - outside of blockhouse"
+    Coin599 = "After_Green - outside of blockhouse"
+    Coin6 = "Desert 1 - Coin at double jump"
+    Coin60 = "Desert 2 - Next to red guy"
+    Coin600 = "After_Green - outside of blockhouse"
+    Coin601 = "Carrot Town - near chest near exit"
+    Coin602 = "Desert 2 - next to chest"
+    Coin603 = "Redville - Coin next to green button"
+    Coin604 = "Redville - Coin next to green button"
+    Coin605 = "After_Green - in blockhouse"
+    Coin606 = "After_Green - in blockhouse"
+    Coin607 = "After_Green - in blockhouse"
+    Coin608 = "After_Green - in blockhouse"
+    Coin609 = "Under Cactus - on block"
+    Coin610 = "Under Cactus - on block"
+    Coin611 = "Under Cactus - on block"
+    Coin612 = "Under Cactus - on block"
+    Coin613 = "Under Cactus - on block"
+    Coin614 = "After Chapel 4 - on rock"
+    Coin615 = "After Chapel 4 - on rock"
+    Coin616 = "After Chapel 4 - on rock"
+    Coin617 = "After Chapel 4 - on rock"
+    Coin618 = "Blue Crystal - Inside - in girder above purple button"
+    Coin619_2 = "Carrot Town - behind ball parkour"
+    Coin61_10 = "Desert 1 - Coin at barrel launcher"
+    Coin620_2 = "Rattlehag - coin on highest rock"
+    Coin621 = "Rattlehag - coin pair in alcove"
+    Coin622 = "Rattlehag - coin pair in alcove"
+    Coin623_2 = "Blue Crystal - After Gate - next to red target tube"
+    Coin624 = "Blue Crystal - After Gate - next to red target tube"
+    Coin625 = "Blue Crystal - Inside - in girder above purple button"
+    Coin626 = "Blue Crystal - Inside - in girder above purple button"
+    Coin627 = "Behind Suprafield - coin stack in sky"
+    Coin628 = "Suprafield - above attic"
+    Coin629 = "Suprafield - above attic"
+    Coin62_12 = "Desert 1 - Coin at barrel launcher"
+    Coin630 = "Suprafield - above attic"
+    Coin631 = "Suprafield - above attic"
+    Coin632 = "Suprafield - above attic"
+    Coin633 = "Suprafield - above attic"
+    Coin634_2 = "Redville - Coin in Box"
+    Coin635_2 = "After Chapel 4 - next to Suprafield"
+    Coin636 = "After Chapel 4 - next to Suprafield"
+    Coin637 = "After Chapel 4 - next to Suprafield"
+    Coin638_7 = "Carrot Town - down yellow pipe"
+    Coin639 = "Carrot Town - down yellow pipe"
+    Coin63_14 = "Desert 1 - Coin at barrel launcher"
+    Coin64 = "Desert 2 - circle in corner"
+    Coin640 = "Carrot Town - down yellow pipe"
+    Coin643 = "After Chapel 3 - in air"
+    Coin644 = "After Chapel 3 - in air"
+    Coin645 = "After Chapel 3 - in air"
+    Coin646 = "After Chapel 3 - in air"
+    Coin647 = "After Chapel 3 - in air"
+    Coin648 = "After Chapel 3 - in air"
+    Coin649 = "After Chapel 3 - in air"
+    Coin65 = "Desert 2 - circle in corner"
+    Coin650 = "After Chapel 3 - in air"
+    Coin651 = "After Chapel 3 - in air"
+    Coin652 = "After Chapel 3 - in air"
+    Coin653 = "Blue Crystal - After Gate - next to red target tube"
+    Coin66 = "Desert 2 - On Big rock"
+    Coin67 = "Desert 2 - On Big rock"
+    Coin68_2442 = "Red Crystal - near big wooden building"
+    Coin69_6960 = "Red Crystal - on passage house"
+    Coin70 = "Red Crystal - on passage house"
+    Coin71 = "Red Crystal - on passage house"
+    Coin72 = "Red Crystal - near big wooden building"
+    Coin73 = "Red Crystal - near big wooden building"
+    Coin74 = "Red Crystal - near big wooden building"
+    Coin75 = "Red Crystal - near big wooden building"
+    Coin76_2610 = "Red Crystal - stairs next to shell"
+    Coin77 = "Before Boss 2 - next to high pipe"
+    Coin78 = "Red Crystal - after piston puzzle"
+    Coin79 = "Before Boss 2 - next to high pipe"
+    Coin7_3528 = "Red Crystal - after piston puzzle"
+    Coin8 = "Desert 1 - Coin on plank"
+    Coin80_3411 = "Red Crystal - behind yellow cave"
+    Coin81_3429 = "Red Crystal - behind yellow cave"
+    Coin82_3725 = "Red Crystal - stairs next to shell"
+    Coin83_4624 = "Red Crystal - stairs next to shell"
+    Coin84_5387 = "Red Crystal - coin on plank"
+    Coin85_6374 = "Red Crystal - coin on plank"
+    Coin86_7585 = "Red Crystal - next to Indy"
+    Coin87_8604 = "Red Crystal - next to Indy"
+    Coin88_9591 = "Red Crystal - on walkway in air"
+    Coin89 = "Red Crystal - on walkway in air"
+    Coin90 = "Red Crystal - on walkway in air"
+    Coin91_11132 = "Red Crystal - on walkway in air"
+    Coin92_11999 = "Red Crystal - on twig"
+    Coin93_12762 = "Red Crystal - on twig"
+    Coin94_13517 = "Red Crystal - on twig"
+    Coin95_13704 = "Red Crystal - between Desert2 and Red_Crystal"
+    Coin96_14659 = "Red Crystal - between Desert2 and Red_Crystal"
+    Coin97_15342 = "Red Crystal - between Desert2 and Red_Crystal"
+    Coin98_15897 = "Red Crystal - at dropdown from Desert2"
+    Coin99 = "Red Crystal - at dropdown from Desert2"
+    Coin9_2 = "Blueville - behind pipe in throneroom"
+    Coin_290 = "Desert 1 - Coin at double jump"
+    Coin641_2 = "After Chapel 3 - in air"
+    Coin642 = "After Chapel 3 - in air"
+    CoinBig10 = "Carrot Town - behind behind ball parkour"
+    CoinBig11 = "Carrot Town - behind behind ball parkour"
+    CoinBig12_1489 = "Carrot Town - in key-card house"
+    CoinBig13 = "Carrot Town - in key-card house"
+    CoinBig14 = "Carrot Town - ceiling under glass"
+    CoinBig15 = "Carrot Town - next to carrots"
+    CoinBig16 = "After Chapel 1 - behind green key"
+    CoinBig17 = "After Chapel 1 - behind green key"
+    CoinBig18 = "Carrot Town - next to carrots"
+    CoinBig19 = "Blueville - attic of blue house"
+    CoinBig20_1253 = "Carrot Town - behind ball parkour"
+    CoinBig21_1568 = "After Chapel 3 - in nook on dirt shelf"
+    CoinBig22_2507 = "After Chapel 4 - on top of tree"
+    CoinBig23_6 = "Blueville - attic of blue house after jump"
+    CoinBig24 = "Blueville - attic of blue house"
+    CoinBig25_8 = "Blueville - next to sewer grate"
+    CoinBig26 = "Blueville - attic of blue house"
+    CoinBig27 = "Blueville - corner of roof"
+    CoinBig28 = "Blueville - laser house"
+    CoinBig29 = "Blueville - laser house"
+    CoinBig2_246 = "Carrot Town - at start"
+    CoinBig30 = "Blueville - laser house"
+    CoinBig31 = "Blueville - laser house"
+    CoinBig32 = "Blueville - laser house"
+    CoinBig33 = "Blueville - laser house"
+    CoinBig34_2 = "Blueville - beneath Castle"
+    CoinBig35 = "Blueville - beneath Castle"
+    CoinBig36 = "Blueville - beneath Castle"
+    CoinBig37 = "Blueville - beneath Castle"
+    CoinBig38 = "Blueville - beneath Castle"
+    CoinBig39 = "Blueville - beneath Castle"
+    CoinBig3_2 = "Farm - in air"
+    CoinBig4 = "Red Crystal - on hill next to moon"
+    CoinBig40 = "Blueville - beneath Castle"
+    CoinBig41 = "Blueville - beneath Castle"
+    CoinBig42 = "Blueville - beneath Castle"
+    CoinBig43 = "Blueville - beneath Castle"
+    CoinBig44 = "Blueville - beneath Castle"
+    CoinBig45 = "Blueville - beneath Castle"
+    CoinBig46 = "Lavafield - on top of hut"
+    CoinBig47 = "After_Green - on top of blockhouse"
+    CoinBig48 = "After_Green - on top of blockhouse"
+    CoinBig49 = "Before Boss 1 - on gate"
+    CoinBig5 = "Before Purple - beneath big tree"
+    CoinBig50 = "Before Boss 1 - on gate"
+    CoinBig51 = "After_Green - in paper hut"
+    CoinBig52 = "Lavafield - on ledge"
+    CoinBig53 = "Lavafield - on ledge"
+    CoinBig54 = "Lavafield - on ledge"
+    CoinBig55 = "Carrot Town - near chest near exit"
+    CoinBig56 = "Carrot Town - on roof"
+    CoinBig57 = "Carrot Town - on roof"
+    CoinBig58 = "Carrot Town - on roof"
+    CoinBig59 = "Carrot Town - on roof"
+    CoinBig6 = "Before Purple - beneath big tree"
+    CoinBig60 = "After Chapel 1 - after Hard drive"
+    CoinBig61 = "After Chapel 1 - after Hard drive"
+    CoinBig62 = "Lavafield - On top of wood on high clif"
+    CoinBig63 = "Suprafield - next to lockerroom"
+    CoinBig64_2 = "Behind Blueville - far corner"
+    CoinBig65 = "Boss Arena - edge of the map"
+    CoinBig66 = "Boss Arena - on top of blocks"
+    CoinBig67 = "Boss Arena - on top of blocks"
+    CoinBig68 = "Boss Arena - on top of blocks"
+    CoinBig69 = "Boss Arena - edge of the map"
+    CoinBig7 = "Carrot Town - between orange trees"
+    CoinBig70 = "Behind Green - in paper hut"
+    CoinBig71 = "After Chapel 2 - in air above Chapel"
+    CoinBig72 = "After Chapel 2 - in air above Chapel"
+    CoinBig73 = "After Chapel 2 - in air above Chapel"
+    CoinBig74 = "Farm - in air"
+    CoinBig75_2 = "Blueville - before throneroom"
+    CoinBig76 = "Behind Blueville - under throne"
+    CoinBig77 = "Behind Blueville - under throne"
+    CoinBig78_2 = "Blueville - top of castle"
+    CoinBig79_2 = "Purple Crystal - above swinging plank"
+    CoinBig8 = "Carrot Town - top of keycard house"
+    CoinBig80 = "Farm - in air"
+    CoinBig81_2 = "Blue Crystal - After Gate - on yellow pipe"
+    CoinBig9 = "Carrot Town - next to carrots"
+    CoinBig_371 = "Purple Crystal - in hidden nook"
+    EnemySpawn10 = "Red Crystal - bottom of tower"
+    EnemySpawn100_6137 = "After Chapel 1 - blocking passage"
+    EnemySpawn101_6910 = "After Chapel 1 - blocking passage"
+    EnemySpawn102_8395 = "After Chapel 1 - next to red barrel stump"
+    EnemySpawn108_1932 = "Suprafield - on hill"
+    EnemySpawn113_2595 = "Suprafield - behind house on hill"
+    EnemySpawn114_3558 = "Suprafield - on hill"
+    EnemySpawn115_4661 = "Suprafield - on hill"
+    EnemySpawn12_9217 = "Red Crystal - at green moon"
+    EnemySpawn134 = "Rattlehag - near chest"
+    EnemySpawn13_10642 = "Red Crystal - behind Cookhouse"
+    EnemySpawn159 = "After Rattlehag - behind structure"
+    EnemySpawn15_13798 = "Red Crystal - at door to Desert1"
+    EnemySpawn160 = "After Rattlehag - at eastern wall"
+    EnemySpawn161 = "After Rattlehag - valley floor"
+    EnemySpawn162 = "After Rattlehag - valley floor"
+    EnemySpawn163 = "After Rattlehag - across valley"
+    EnemySpawn164 = "After Rattlehag - across valley"
+    EnemySpawn16_785 = "Desert 2 - in corner"
+    EnemySpawn177 = "Carrot Town - in town"
+    EnemySpawn178 = "Carrot Town - in town"
+    EnemySpawn179 = "Carrot Town - in town"
+    EnemySpawn17_1940 = "Desert 2 - Next to big rock"
+    EnemySpawn180 = "Carrot Town - next to cheese"
+    EnemySpawn181 = "Carrot Town - next to purple tree"
+    EnemySpawn182 = "Carrot Town - next to purple tree"
+    EnemySpawn183 = "Carrot Town - between orange trees"
+    EnemySpawn184 = "Redville - Behind coloring pipe"
+    EnemySpawn186 = "Redville - Behind coloring pipe"
+    EnemySpawn19_3926 = "Desert 2 - Next to blocks"
+    EnemySpawn1_398 = "Desert 1 - Next to cactus"
+    EnemySpawn2 = "Desert 1 - Next to jump pad"
+    EnemySpawn20_4982 = "Desert 2 - next to yellow pipes"
+    EnemySpawn21_6371 = "Desert 2 - next to yellow pipes"
+    EnemySpawn22_7661 = "Desert 2 - Next to purple block"
+    EnemySpawn25_11261 = "Desert 2 - Next to stacked blocks"
+    EnemySpawn26_12614 = "Desert 2 - next to Desert3"
+    EnemySpawn27_13769 = "Desert 2 - Next to stacked blocks"
+    EnemySpawn29_15287 = "Desert 2 - Next to big rock"
+    EnemySpawn32_18509 = "Desert 1 - Next to gate"
+    EnemySpawn34_22106 = "Desert 1 - Next to pencil"
+    EnemySpawn36_24263 = "Desert 1 - Next to lever"
+    EnemySpawn37_25193 = "Desert 1 - Next to Screwdriver"
+    EnemySpawn38_26456 = "Desert 1 - Next to Candles"
+    EnemySpawn39_2054 = "Farm - next to entrance"
+    EnemySpawn4 = "Desert 1 - Next to window"
+    EnemySpawn40_3452 = "Farm - behind cave entrance"
+    EnemySpawn41_4778 = "Farm - above red moon"
+    EnemySpawn42_5717 = "Farm - next to locked entrance"
+    EnemySpawn43_8117 = "Farm - next to pumpkin patch"
+    EnemySpawn44 = "Farm - next to Construction blocks"
+    EnemySpawn45_8669 = "Farm - raised ledge"
+    EnemySpawn46_9770 = "Farm - northwest 1"
+    EnemySpawn47_10961 = "Farm - behind gear"
+    EnemySpawn48_1802 = "Desert 3 - at central stone"
+    EnemySpawn49_2921 = "Desert 3 - opposite nugget wall"
+    EnemySpawn5 = "Desert 1 - Under Overhang"
+    EnemySpawn50_4355 = "Desert 3 - next to sign"
+    EnemySpawn51_5105 = "Desert 3 - next to magnet tower"
+    EnemySpawn52_2702 = "Rattlehag - near chest"
+    EnemySpawn53_866 = "Desert 2 - next to yellow U pipe"
+    EnemySpawn54_5552 = "After Chapel 1 - next to shield generator"
+    EnemySpawn57_7199 = "After Chapel 4 - next to stomp house"
+    EnemySpawn58 = "After Chapel 1 - next to shield generator"
+    EnemySpawn59_3789 = "After Chapel 4 - next to bush"
+    EnemySpawn6 = "Desert 1 - Under structure"
+    EnemySpawn61 = "Rattlehag - near chest"
+    EnemySpawn66 = "After Chapel 4 - in the back"
+    EnemySpawn67 = "After Chapel 4 - next to coin tower"
+    EnemySpawn69_6438 = "After Chapel 1 - behind trees"
+    EnemySpawn7 = "Desert 1 - Next to plank"
+    EnemySpawn73_7722 = "After Chapel 1 - beneath stone ledge"
+    EnemySpawn8_1118 = "Red Crystal - next to shell"
+    EnemySpawn9 = "Red Crystal - at Armor House"
+    EnemySpawn98_4461 = "After Chapel 2 - in pit"
+    EnemySpawn99_5404 = "After Chapel 2 - in pit"
+    EnemySpawn105_2072 = "Suprafield - next to field"
+    EnemySpawn106_3035 = "Suprafield - on hill"
+    EnemySpawn107_4358 = "Suprafield - on hill"
+    EnemySpawn109_5546 = "Suprafield - next to lockers"
+    EnemySpawn110_6494 = "Suprafield - next to field"
+    EnemySpawn111_8327 = "Suprafield - next to yellow pipe on hill"
+    EnemySpawn112_10475 = "Suprafield - next to yellow pipe on hill"
+    EnemySpawn11_7918 = "Red Crystal - behind house"
+    EnemySpawn14_12256 = "Red Crystal - next to purple button"
+    EnemySpawn165 = "After Rattlehag - across valley"
+    EnemySpawn166 = "After Rattlehag - across valley"
+    EnemySpawn167 = "After Rattlehag - across valley"
+    EnemySpawn168 = "After Rattlehag - across valley"
+    EnemySpawn169 = "After Rattlehag - valley floor"
+    EnemySpawn170 = "After Rattlehag - at eastern wall"
+    EnemySpawn171 = "After Rattlehag - next to entrance"
+    EnemySpawn185_1441 = "Carrot Town - next to Juicer"
+    EnemySpawn187 = "Carrot Town - corner of town"
+    EnemySpawn188 = "Carrot Town - behind ball house"
+    EnemySpawn189 = "Carrot Town - at shop"
+    EnemySpawn190 = "Carrot Town - next to cheese"
+    EnemySpawn191 = "Carrot Town - next to gold pickaxe door"
+    EnemySpawn192 = "Carrot Town - next to purple tree"
+    EnemySpawn193 = "Carrot Town - next to purple tree"
+    EnemySpawn207 = "After Chapel 2 - in pit"
+    EnemySpawn23_2507 = "Suprafield - in arena"
+    EnemySpawn24_10376 = "Desert 2 - Next to lever"
+    EnemySpawn35 = "Suprafield - in arena"
+    EnemySpawn55_7458 = "After Chapel 1 - next to red barrel stump"
+    EnemySpawn56 = "Suprafield - in arena"
+    EnemySpawn60_19750 = "After Chapel 4 - in the back"
+    EnemySpawn63_21554 = "After Chapel 4 - next to coin tower"
+    EnemySpawn64_24367 = "After Chapel 4 - next to wall"
+    EnemySpawn65_24804 = "After Chapel 4 - next to coin tower"
+    EnemySpawn68_23043 = "After Chapel 4 - beneath wooden fence"
+    EnemySpawn70_8827 = "After Chapel 1 - behind trees"
+    EnemySpawn74_1097 = "Farm - northwest 1"
+    EnemySpawn75_2165 = "Desert 1 - Under Overhang"
+    EnemySpawn76_4073 = "Desert 1 - Next to Pencil"
+    EnemySpawn77_5696 = "Desert 2 - Next to big cactus"
+    EnemySpawn78_6809 = "Desert 2 - next to stacked blocks"
+    EnemySpawn79_8132 = "Desert 2 - Next to Desert1"
+    EnemySpawn80_9140 = "Desert 3 - next to gold nuggets"
+    EnemySpawn81_10763 = "Desert 3 - next to door to Blue Crystal"
+    EnemySpawn82_12056 = "Desert 3 - next to sign"
+    EnemySpawn83_14579 = "Farm - next to cave entrance"
+    EnemySpawn84_15902 = "Farm - next to cave entrance"
+    EnemySpawn85 = "After Chapel 1 - next to shield generator"
+    EnemySpawn86_28261 = "After Chapel 1 - beneath stone ledge"
+    EnemySpawn87_1217 = "Red Crystal - next to white picket fence"
+    EnemySpawn88_3035 = "Red Crystal - next to Cookhouse"
+    EnemySpawn89_5153 = "Red Crystal - at door to Desert1"
+    EnemySpawn90_7365 = "Farm - next to locked door"
+    EnemySpawn92_3515 = "After Chapel 2 - in pit"
+    EnemySpawn94_5966 = "After Chapel 2 - in pit"
+    EnemySpawn103 = "Farm - at farm"
+    EnemySpawn104 = "Farm - at farm"
+    EnemySpawn116 = "Farm - at farm"
+    EnemySpawn117 = "Farm - at farm"
+    EnemySpawn119 = "Desert 2 - next to yellow pipes"
+    EnemySpawn120 = "Desert 2 - next to yellow pipes"
+    EnemySpawn124 = "Red Crystal - on ground"
+    EnemySpawn125 = "Red Crystal - on ground"
+    EnemySpawn126 = "Desert 1 - on ground"
+    EnemySpawn128 = "After Rattlehag - across valley"
+    EnemySpawn129 = "After Rattlehag - across valley"
+    EnemySpawn130 = "After Rattlehag - across valley"
+    EnemySpawn131 = "After Rattlehag - valley floor"
+    EnemySpawn132 = "After Rattlehag - north"
+    EnemySpawn133 = "Carrot Town - next to purple tree"
+    EnemySpawn135 = "Carrot Town - next to purple tree"
+    EnemySpawn136 = "After Chapel 1 - near shield"
+    EnemySpawn137 = "After Chapel 4 - in back"
+    EnemySpawn138 = "After Chapel 4 - in back"
+    EnemySpawn139 = "After Chapel 1 - near shield"
+    EnemySpawn140 = "After Chapel 2 - near shield"
+    EnemySpawn141 = "After Chapel 2 - near shield"
+    EnemySpawn142 = "After Chapel 4 - near hole"
+    EnemySpawn145 = "After Chapel 4 - near hole"
+    EnemySpawn146 = "After Chapel 4 - near hole"
+    EnemySpawn147 = "Suprafield - next to field"
+    EnemySpawn148 = "Suprafield - next to field"
+    EnemySpawn149 = "Suprafield - next to field"
+    EnemySpawn150 = "Suprafield - next to field"
+    EnemySpawn151 = "Suprafield - next to field"
+    EnemySpawn152 = "Suprafield - next to field"
+    EnemySpawn154 = "Red Crystal - next to Desert3"
+    EnemySpawn155_44524 = "Carrot Town - exit of town"
+    EnemySpawn156 = "Carrot Town - exit of town"
+    EnemySpawn157 = "Carrot Town - exit of town"
+    EnemySpawn158 = "After Rattlehag - next to electric gate"
+    EnemySpawn172_1950 = "Before Purple - next to Bronze 3"
+    EnemySpawn173_4033 = "Before Purple - next to Bronze 3"
+    EnemySpawn174_5379 = "Before Purple - next to Bronze 3"
+    EnemySpawn175 = "Blue Crystal - Before Gate - on floor"
+    EnemySpawn176 = "Blue Crystal - Before Gate - on floor"
+    EnemySpawn18 = "Lavafield - High Cliff"
+    EnemySpawn195 = "Carrot Town - behind cracked block wall"
+    EnemySpawn196 = "Carrot Town - behind cracked block wall"
+    EnemySpawn198 = "Carrot Town - in town"
+    EnemySpawn199 = "Carrot Town - in town"
+    EnemySpawn200 = "Carrot Town - next to cheese"
+    EnemySpawn201 = "Carrot Town - in town"
+    EnemySpawn202 = "Carrot Town - back of town"
+    EnemySpawn203 = "Carrot Town - back of town"
+    EnemySpawn204 = "Carrot Town - next to toxic pit"
+    EnemySpawn208_2 = "Before Boss 3 - on field"
+    EnemySpawn209 = "Behind Green - next to candle"
+    EnemySpawn210 = "Behind Green - next to candle"
+    EnemySpawn211 = "Before Boss 3 - on field"
+    EnemySpawn212 = "Before Boss 3 - on field"
+    EnemySpawn213 = "Before Boss 3 - on field"
+    EnemySpawn28 = "Lavafield - High Cliff"
+    EnemySpawn30 = "Lavafield - High Cliff"
+    EnemySpawn31 = "Lavafield - High Cliff"
+    EnemySpawn33_2 = "Green Crystal - at entry"
+    EnemySpawn3_2 = "Lavafield - High Cliff"
+    EnemySpawn62 = "Carrot Town - next to purple tree"
+    EnemySpawn91_22817 = "Desert 3 - next to arrows"
+    EnemySpawn93 = "Green Crystal - at entry"
+    EnemySpawn95_22931 = "Desert 3 - next to arrows"
+    EnemySpawn96 = "Behind Green - next to candle"
     Shell13_3781 = "Red Crystal - Cooking Guy Kitchen"
     Shell16_5895 = "Red Crystal - Open nook"
     Shell2_1957 = "Red Crystal - under structure"
@@ -237,7 +1188,7 @@ class LocationName(str, Enum):
     Shell9_2044 = "Red Crystal - next to tree"
     Shell_1483 = "Red Crystal - hidden cave"
     DeadHero2Austin = "After Chapel 2 - behind carrot"
-    DeadHero2Link = "Desert 2 - Chest8_878"
+    DeadHero2Link = "Desert 2 - in dark cave"
     DeadHero3Heman = "Desert 3 - on top of rock"
     DeadHero3Pokemon = "Blue Crystal - Inside - inside tube"
     DeadHero4Picard = "After Chapel 2 - on high stone ledge"
@@ -253,65 +1204,66 @@ class LocationName(str, Enum):
 class LocationData:
     name: LocationName
     region: RegionName
+    cost: int = 0
     description: str = ""
     group: LocationGroup = LocationGroup.Star
 
 ALL_LOCATIONS: tuple[LocationData, ...] = (
-    LocationData(LocationName.BP_UnlockMap_2, RegionName.BC_AG),
-    LocationData(LocationName.BuyBelt2_2, RegionName.BV),
-    LocationData(LocationName.BuyChestDetector_30, RegionName.BFB1),
-    LocationData(LocationName.BuyChestDetectorRadius, RegionName.RV),
-    LocationData(LocationName.BuyDoubleJump2, RegionName.BV),
-    LocationData(LocationName.BuyDoubleJump_786, RegionName.RV),
-    LocationData(LocationName.BuyForceBeamGold, RegionName.BV),
-    LocationData(LocationName.BuyForceBlock3, RegionName.BV),
-    LocationData(LocationName.BuyForceBlock_695, RegionName.D1),
-    LocationData(LocationName.BuyGun2_2, RegionName.BV),
+    LocationData(LocationName.BP_UnlockMap_2, RegionName.BC_AG, 20),
+    LocationData(LocationName.BuyBelt2_2, RegionName.BV, 120),
+    LocationData(LocationName.BuyChestDetector_30, RegionName.BFB1, 400),
+    LocationData(LocationName.BuyChestDetectorRadius, RegionName.RV, 474),
+    LocationData(LocationName.BuyDoubleJump2, RegionName.BV, 15),
+    LocationData(LocationName.BuyDoubleJump_786, RegionName.RV, 36),
+    LocationData(LocationName.BuyForceBeamGold, RegionName.BV, 5),
+    LocationData(LocationName.BuyForceBlock3, RegionName.BV, 40),
+    LocationData(LocationName.BuyForceBlock_695, RegionName.D1, 20),
+    LocationData(LocationName.BuyGun2_2, RegionName.BV, 60),
     LocationData(LocationName.BuyGunAlt_478, RegionName.SF),
-    LocationData(LocationName.BuyGunCriticalDamage_1496, RegionName.FR),
-    LocationData(LocationName.BuyGunCriticalDamageChance2_1856, RegionName.SF),
-    LocationData(LocationName.BuyGunCriticalDamageChance3_3189, RegionName.RH),
-    LocationData(LocationName.BuyGunCriticalDamageChance4_198, RegionName.CT),
-    LocationData(LocationName.BuyGunCriticalDamageChance_1426, RegionName.BC),
-    LocationData(LocationName.BuyGunDamage_15_1234, RegionName.AF1),
-    LocationData(LocationName.BuyGunDamage_5_235, RegionName.RH),
-    LocationData(LocationName.BuyGunRefillSpeed_66_478, RegionName.SF),
-    LocationData(LocationName.BuyGunRefillSpeed_67_198, RegionName.CT),
-    LocationData(LocationName.BuyGunRefillSpeedx2_374, RegionName.RH),
-    LocationData(LocationName.BuySilentFeet2, RegionName.AF1),
-    LocationData(LocationName.BuyGunRefireRate50_506, RegionName.AF1),
-    LocationData(LocationName.BuySilentFeet_902, RegionName.AF1),
-    LocationData(LocationName.BuyGunSpeedx2_436, RegionName.AF1),
-    LocationData(LocationName.BuyHealth_15_765, RegionName.RV),
+    LocationData(LocationName.BuyGunCriticalDamage_1496, RegionName.FR, 25),
+    LocationData(LocationName.BuyGunCriticalDamageChance2_1856, RegionName.SF, 10),
+    LocationData(LocationName.BuyGunCriticalDamageChance3_3189, RegionName.RH, 20),
+    LocationData(LocationName.BuyGunCriticalDamageChance4_198, RegionName.CT, 20),
+    LocationData(LocationName.BuyGunCriticalDamageChance_1426, RegionName.BC, 10),
+    LocationData(LocationName.BuyGunDamage_15_1234, RegionName.AF1, 120),
+    LocationData(LocationName.BuyGunDamage_5_235, RegionName.RH, 120),
+    LocationData(LocationName.BuyGunRefillSpeed_66_478, RegionName.SF, 30),
+    LocationData(LocationName.BuyGunRefillSpeed_67_198, RegionName.CT, 250),
+    LocationData(LocationName.BuyGunRefillSpeedx2_374, RegionName.RH, 190),
+    LocationData(LocationName.BuySilentFeet2, RegionName.AF1, 40),
+    LocationData(LocationName.BuyGunRefireRate50_506, RegionName.AF1, 140),
+    LocationData(LocationName.BuySilentFeet_902, RegionName.AF1, 40),
+    LocationData(LocationName.BuyGunSpeedx2_436, RegionName.AF1, 5),
+    LocationData(LocationName.BuyHealth_15_765, RegionName.RV, 10),
     LocationData(LocationName.BuyHealth_16_457, RegionName.AF1),
-    LocationData(LocationName.BuyHealth_17, RegionName.RH),
-    LocationData(LocationName.BuyHealth_5, RegionName.FR),
-    LocationData(LocationName.BuyHealthRegen2_695, RegionName.RV),
-    LocationData(LocationName.BuyHealthRegenMax10_330, RegionName.RH),
-    LocationData(LocationName.BuyHealthRegenMax5_1162, RegionName.CT),
-    LocationData(LocationName.BuyShieldBreaker_1026, RegionName.SF),
+    LocationData(LocationName.BuyHealth_17, RegionName.RH, 150),
+    LocationData(LocationName.BuyHealth_5, RegionName.FR, 35),
+    LocationData(LocationName.BuyHealthRegen2_695, RegionName.RV, 5),
+    LocationData(LocationName.BuyHealthRegenMax10_330, RegionName.RH, 180),
+    LocationData(LocationName.BuyHealthRegenMax5_1162, RegionName.CT, 40),
+    LocationData(LocationName.BuyShieldBreaker_1026, RegionName.SF, 35),
     LocationData(LocationName.BuyShowProgress2_2, RegionName.FR),
-    LocationData(LocationName.BuySmashdownDamage_33, RegionName.CT),
-    LocationData(LocationName.BuySpeedx15_2, RegionName.RV),
-    LocationData(LocationName.BuySpeedx2_206, RegionName.RV),
+    LocationData(LocationName.BuySmashdownDamage_33, RegionName.CT, 50),
+    LocationData(LocationName.BuySpeedx15_2, RegionName.RV, 223),
+    LocationData(LocationName.BuySpeedx2_206, RegionName.RV, 12),
     LocationData(LocationName.BuyStats, RegionName.RV),
     LocationData(LocationName.BuySword2_2, RegionName.D3),
     LocationData(LocationName.BuySword_695, RegionName.Intro),
-    LocationData(LocationName.BuySwordCriticalDamageChance2_2395, RegionName.SF),
-    LocationData(LocationName.BuySwordCriticalDamageChance3_296, RegionName.CT),
-    LocationData(LocationName.BuySwordCriticalDamageChance_1657, RegionName.FR),
-    LocationData(LocationName.BuySwordDamage_11, RegionName.RV),
-    LocationData(LocationName.BuySwordDamage_10_2, RegionName.RV),
-    LocationData(LocationName.UpgradeSwordDamageX2_716, RegionName.AF1),
+    LocationData(LocationName.BuySwordCriticalDamageChance2_2395, RegionName.SF, 10),
+    LocationData(LocationName.BuySwordCriticalDamageChance3_296, RegionName.CT, 10),
+    LocationData(LocationName.BuySwordCriticalDamageChance_1657, RegionName.FR, 10),
+    LocationData(LocationName.BuySwordDamage_11, RegionName.RV, 5),
+    LocationData(LocationName.BuySwordDamage_10_2, RegionName.RV, 65),
+    LocationData(LocationName.UpgradeSwordDamageX2_716, RegionName.AF1, 40),
     LocationData(LocationName.BuyTranslocator_7, RegionName.GC),
-    LocationData(LocationName.BuyTripleJump2, RegionName.BV),
-    LocationData(LocationName.BuyTripleJump_877, RegionName.RV),
-    LocationData(LocationName.BuyUpgradeChestNum, RegionName.RV),
-    LocationData(LocationName.BuyWalletx15, RegionName.AF1),
-    LocationData(LocationName.BuyWalletx16, RegionName.FR),
-    LocationData(LocationName.BuyWalletx17_426, RegionName.CT),
-    LocationData(LocationName.BuyWallet_50_737, RegionName.RV),
-    LocationData(LocationName.BuyWallet_51, RegionName.RV),
+    LocationData(LocationName.BuyTripleJump2, RegionName.BV, 15),
+    LocationData(LocationName.BuyTripleJump_877, RegionName.RV, 30),
+    LocationData(LocationName.BuyUpgradeChestNum, RegionName.RV, 337),
+    LocationData(LocationName.BuyWalletx15, RegionName.AF1, 15),
+    LocationData(LocationName.BuyWalletx16, RegionName.FR, 15),
+    LocationData(LocationName.BuyWalletx17_426, RegionName.CT, 55),
+    LocationData(LocationName.BuyWallet_50_737, RegionName.RV, 24),
+    LocationData(LocationName.BuyWallet_51, RegionName.RV, 10),
     LocationData(LocationName.BuyWalletx2_986, RegionName.D2),
     LocationData(LocationName.Chest100_2221, RegionName.BF_PC),
     LocationData(LocationName.Chest101_2025, RegionName.BF_PC),
@@ -323,10 +1275,13 @@ ALL_LOCATIONS: tuple[LocationData, ...] = (
     LocationData(LocationName.Chest107_9218, RegionName.AF2),
     LocationData(LocationName.Chest108_10670, RegionName.D2),
     LocationData(LocationName.Chest109, RegionName.RV),
+    LocationData(LocationName.Chest10_1082, RegionName.FR),
     LocationData(LocationName.Chest110, RegionName.PC),
     LocationData(LocationName.Chest111_3, RegionName.BC_AG),
     LocationData(LocationName.Chest112, RegionName.RV),
     LocationData(LocationName.Chest113, RegionName.D1),
+    LocationData(LocationName.Chest114, RegionName.BV),
+    LocationData(LocationName.Chest115_4, RegionName.CT),
     LocationData(LocationName.Chest116, RegionName.SF),
     LocationData(LocationName.Chest117_2, RegionName.BV),
     LocationData(LocationName.Chest118_2, RegionName.GC),
@@ -339,8 +1294,13 @@ ALL_LOCATIONS: tuple[LocationData, ...] = (
     LocationData(LocationName.Chest124_8, RegionName.GC),
     LocationData(LocationName.Chest125_2, RegionName.BH_GC),
     LocationData(LocationName.Chest126, RegionName.AF_RH),
+    LocationData(LocationName.Chest127_2, RegionName.CT),
+    LocationData(LocationName.Chest128, RegionName.CT),
+    LocationData(LocationName.Chest129_6, RegionName.CT),
     LocationData(LocationName.Chest12_686, RegionName.D1),
     LocationData(LocationName.Chest130, RegionName.BV),
+    LocationData(LocationName.Chest131, RegionName.RH),
+    LocationData(LocationName.Chest132, RegionName.RH),
     LocationData(LocationName.Chest133, RegionName.BH_GC),
     LocationData(LocationName.Chest134_13, RegionName.RC),
     LocationData(LocationName.Chest135, RegionName.BSF),
@@ -349,6 +1309,8 @@ ALL_LOCATIONS: tuple[LocationData, ...] = (
     LocationData(LocationName.Chest138_5, RegionName.D2),
     LocationData(LocationName.Chest139, RegionName.RH),
     LocationData(LocationName.Chest13_410, RegionName.D1),
+    LocationData(LocationName.Chest140, RegionName.RH),
+    LocationData(LocationName.Chest141_3, RegionName.SF),
     LocationData(LocationName.Chest142, RegionName.SF),
     LocationData(LocationName.Chest143, RegionName.AF1),
     LocationData(LocationName.Chest144, RegionName.BC_IN),
@@ -361,12 +1323,14 @@ ALL_LOCATIONS: tuple[LocationData, ...] = (
     LocationData(LocationName.Chest150, RegionName.BV),
     LocationData(LocationName.Chest151_3, RegionName.RC),
     LocationData(LocationName.Chest152_6, RegionName.BA),
+    LocationData(LocationName.Chest153_9, RegionName.BA),
     LocationData(LocationName.Chest154, RegionName.FR),
     LocationData(LocationName.Chest155_2, RegionName.RV),
     LocationData(LocationName.Chest156_2, RegionName.BC_AG),
     LocationData(LocationName.Chest157, RegionName.RV),
     LocationData(LocationName.Chest158, RegionName.BH_BV),
     LocationData(LocationName.Chest159_6, RegionName.CA),
+    LocationData(LocationName.Chest15_2768, RegionName.RC),
     LocationData(LocationName.Chest160, RegionName.BFB1),
     LocationData(LocationName.Chest161_2, RegionName.BFB1),
     LocationData(LocationName.Chest162, RegionName.RV),
@@ -391,26 +1355,35 @@ ALL_LOCATIONS: tuple[LocationData, ...] = (
     LocationData(LocationName.Chest23_14291, RegionName.RC),
     LocationData(LocationName.Chest24_16178, RegionName.RC),
     LocationData(LocationName.Chest25_692, RegionName.RC),
+    LocationData(LocationName.Chest26_1739, RegionName.RV),
     LocationData(LocationName.Chest27_4172, RegionName.RV),
     LocationData(LocationName.Chest28_4997, RegionName.D3),
     LocationData(LocationName.Chest29_7214, RegionName.RC),
+    LocationData(LocationName.Chest30_2321, RegionName.FR),
     LocationData(LocationName.Chest31_9005, RegionName.RC),
     LocationData(LocationName.Chest32_1454, RegionName.RV),
     LocationData(LocationName.Chest33_1094, RegionName.RV),
+    LocationData(LocationName.Chest34_2175, RegionName.RV),
     LocationData(LocationName.Chest35_2137, RegionName.D2),
     LocationData(LocationName.Chest36_4639, RegionName.RC),
     LocationData(LocationName.Chest37_1815, RegionName.D1),
     LocationData(LocationName.Chest38_3995, RegionName.RC),
     LocationData(LocationName.Chest39_5860, RegionName.RV),
+    LocationData(LocationName.Chest3_1811, RegionName.AF4),
     LocationData(LocationName.Chest40_8, RegionName.RH),
     LocationData(LocationName.Chest41_2, RegionName.BFB2),
+    LocationData(LocationName.Chest42_1521, RegionName.FR),
     LocationData(LocationName.Chest43, RegionName.RC),
     LocationData(LocationName.Chest44_2721, RegionName.AF4),
     LocationData(LocationName.Chest45_4075, RegionName.AF4),
     LocationData(LocationName.Chest46, RegionName.RV),
     LocationData(LocationName.Chest47, RegionName.AF4),
+    LocationData(LocationName.Chest48_4722, RegionName.AF2),
+    LocationData(LocationName.Chest49_1234, RegionName.AF4),
     LocationData(LocationName.Chest4_1544, RegionName.D1),
+    LocationData(LocationName.Chest50_2182, RegionName.SF),
     LocationData(LocationName.Chest51_1360, RegionName.AF1),
+    LocationData(LocationName.Chest52_10699, RegionName.AF3),
     LocationData(LocationName.Chest53_1192, RegionName.BC_IN),
     LocationData(LocationName.Chest54_8402, RegionName.AF_RH),
     LocationData(LocationName.Chest55_3907, RegionName.AF3),
@@ -428,6 +1401,7 @@ ALL_LOCATIONS: tuple[LocationData, ...] = (
     LocationData(LocationName.Chest66_7106, RegionName.SF),
     LocationData(LocationName.Chest67, RegionName.D2),
     LocationData(LocationName.Chest68, RegionName.AF3),
+    LocationData(LocationName.Chest69, RegionName.D1),
     LocationData(LocationName.Chest6_710, RegionName.RC),
     LocationData(LocationName.Chest70, RegionName.BC_IN),
     LocationData(LocationName.Chest71, RegionName.D1),
@@ -445,6 +1419,7 @@ ALL_LOCATIONS: tuple[LocationData, ...] = (
     LocationData(LocationName.Chest82_4377, RegionName.AF_RH),
     LocationData(LocationName.Chest83_1920, RegionName.CT),
     LocationData(LocationName.Chest84_3197, RegionName.AF_RH),
+    LocationData(LocationName.Chest85_1892, RegionName.RH),
     LocationData(LocationName.Chest86_2441, RegionName.BV),
     LocationData(LocationName.Chest87, RegionName.SF),
     LocationData(LocationName.Chest88_1696, RegionName.CT),
@@ -460,7 +1435,9 @@ ALL_LOCATIONS: tuple[LocationData, ...] = (
     LocationData(LocationName.Chest97_9186, RegionName.CT),
     LocationData(LocationName.Chest98_10407, RegionName.CT),
     LocationData(LocationName.Chest99_2116, RegionName.CT),
-    LocationData(LocationName.UpgradeHappiness2_2, RegionName.RV),
+    LocationData(LocationName.Chest9_2231, RegionName.Intro),
+    LocationData(LocationName.Chest_622, RegionName.D2),
+    #LocationData(LocationName.UpgradeHappiness2_2, RegionName.RV, 1337),
     LocationData(LocationName.Juicer2, RegionName.FR),
     LocationData(LocationName.Juicer3, RegionName.RV),
     LocationData(LocationName.Juicer_286, RegionName.CT),
@@ -486,3 +1463,12 @@ ALL_LOCATIONS: tuple[LocationData, ...] = (
 
 location_table = {location.name.value: location for location in ALL_LOCATIONS}
 location_name_to_id: dict[str, int] = {data.name.value: i for i, data in enumerate(ALL_LOCATIONS, start=BASE_ID)}
+
+def get_location_group(location_name: str) -> LocationGroup:
+    return location_table[location_name].group
+
+
+location_name_groups: dict[str, set[str]] = {
+    group.value: set(location_names)
+    for group, location_names in groupby(sorted(location_table, key=get_location_group), get_location_group)
+}

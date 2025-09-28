@@ -1,9 +1,12 @@
 from enum import Enum
 from typing import NamedTuple, TypeAlias
-from constants import BASE_ID
+from .constants import BASE_ID, GAME_NAME
 
-from BaseClasses import ItemClassification
+from BaseClasses import ItemClassification, Item
 
+
+class SupralandItem(Item):
+    game: str = GAME_NAME
 
 class ItemGroup(str, Enum):
     N = "None"
@@ -206,9 +209,10 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(UsefulItem.DoubleHealth, ItemClassification.useful, 1),
     ItemData(UsefulItem.Shell, ItemClassification.useful, 6),
     ItemData(ProgressionItem.Strong, ItemClassification.progression, 1),
-    # ItemData(ProgressionItem.Happiness, ItemClassification.progression, 1),
+    #ItemData(ProgressionItem.Happiness, ItemClassification.progression, 1),
 )
 
 item_table = {item.name.value: item for item in ALL_ITEMS}
 item_name_to_id: dict[str, int] = {data.name.value: i for i, data in enumerate(ALL_ITEMS, start=BASE_ID)}
 
+#print(sum(i.count for i in ALL_ITEMS))

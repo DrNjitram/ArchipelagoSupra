@@ -1,22 +1,22 @@
 import dataclasses
 from enum import Enum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Iterable, Any
 from typing_extensions import override
 from BaseClasses import CollectionState
 from NetUtils import JSONMessagePart
-from constants import GAME_NAME
-from rule_builder import Has, HasAll, HasAny, Rule, CustomRuleRegister, TWorld
-from items import FillerItem, ProgressionItem, TrapItem, UsefulItem
-from worlds.supraland.rule_builder import CanReachLocation
+from .constants import GAME_NAME
+from rule_builder import Has, HasAny, Rule, TWorld, OptionFilter, HasAll, HasAllCounts
+from .items import FillerItem, ProgressionItem, TrapItem, UsefulItem
+
 
 if TYPE_CHECKING:
     from world import SupralandWorld
 
 HeightTable = {
     ProgressionItem.ProgTrans: [3, 5], #base, shot force
-    ProgressionItem.ProgSpeedJump: [1, 2, 3], #speed inc, double jump, triple jump
+    ProgressionItem.ProgSpeedJump: [1, 1, 2, 3], #speed inc 1.5x, 2x, double jump, triple jump
     ProgressionItem.ProgCube: [2, 2, 2],
-    ProgressionItem.Happiness: [100]
+#    ProgressionItem.Happiness: [100]
 }
 wallet_sizes = [30, 45, 67, 101, 151, 227, 455, 911, 1822, 3645, 7290]
 
@@ -30,12 +30,22 @@ class CanReachHeight(Rule["SupralandWorld"], game=GAME_NAME):
 
     TargetHeight: int = 1
 
+    def __init__(self, TargetHeight: int, options: Iterable[OptionFilter[Any]] = ()) -> None:
+        super().__init__(options=options)
+        self.TargetHeight = TargetHeight
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        if self.TargetHeight == 0:
+            return world.true_rule
+        return self.Resolved(self.TargetHeight, player=world.player, caching_enabled=world.rule_caching_enabled)
+
 
     class Resolved(Rule.Resolved):
         target_height: int
 
         def _evaluate(self, state: CollectionState) -> bool:
-            return sum([HeightTable[item][min(state.count(item, self.player), len(HeightTable[item]))] for item in
+            return sum([HeightTable[item][min(state.count(item, self.player)-1, len(HeightTable[item]))] for item in
                         HeightTable.keys()]) >= self.target_height
 
         @override
@@ -67,6 +77,16 @@ class CanReachHeight(Rule["SupralandWorld"], game=GAME_NAME):
 class CanAfford(Rule["SupralandWorld"], game=GAME_NAME):
 
     cost: int = 1
+
+    def __init__(self, cost: int, options: Iterable[OptionFilter[Any]] = ()) -> None:
+        super().__init__(options=options)
+        self.cost = cost
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        if self.cost <= 30:
+            return world.true_rule
+        return self.Resolved(self.cost, player=world.player, caching_enabled=world.rule_caching_enabled)
 
 
     class Resolved(Rule.Resolved):
@@ -113,6 +133,15 @@ class CanDefeatCombat(Rule["SupralandWorld"], game=GAME_NAME):
     # max is 150
     combat : int = 1
 
+    def __init__(self, combat: int, options: Iterable[OptionFilter[Any]] = ()) -> None:
+        super().__init__(options=options)
+        self.combat = combat
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        if self.combat == 0:
+            return world.true_rule
+        return self.Resolved(self.combat, player=world.player, caching_enabled=world.rule_caching_enabled)
 
 
     class Resolved(Rule.Resolved):
@@ -161,6 +190,11 @@ class HasLocationGroup(Rule["SupralandWorld"], game=GAME_NAME):
     count: int = 1
     """The number of items the player needs to have"""
 
+    def __init__(self, location_name_group: str, count: int, options: Iterable[OptionFilter[Any]] = ()) -> None:
+        super().__init__(options=options)
+        self.location_name_group = location_name_group
+        self.count = count
+
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
         location_names = tuple(sorted(world.location_name_groups[self.location_name_group]))
@@ -181,9 +215,9 @@ class HasLocationGroup(Rule["SupralandWorld"], game=GAME_NAME):
         def _evaluate(self, state: CollectionState) -> bool:
             # implementation based on state.has_group
             found = 0
-            player_locations = state.locations_checked[self.player]
+
             for location_name in self.location_names:
-                found += player_locations[location_name]
+                found += state.can_reach_location(location_name, self.player)
                 if found >= self.count:
                     return True
             return False
@@ -216,10 +250,14 @@ class HasLocationGroup(Rule["SupralandWorld"], game=GAME_NAME):
 
 can_destroy_red_planks = HasAny(ProgressionItem.ProgSword, ProgressionItem.ProgGun, ProgressionItem.ProgTrans)
 
-can_defeat_meatbag = Has(ProgressionItem.Buckle) & can_destroy_red_planks & Has(ProgressionItem.ProgForceBeam, 3)
-can_melt_metal = Has(ProgressionItem.GunAltDamage, 5)
+can_defeat_meatbag = HasAllCounts({ProgressionItem.Buckle : 1, ProgressionItem.ProgForceBeam: 3}) & can_destroy_red_planks
+can_melt_metal = HasAllCounts({ProgressionItem.GunAltDamage: 5, ProgressionItem.ProgGun: 2})
 can_destroy_wood_grave = HasAny(UsefulItem.ProgGraveGun, UsefulItem.ProgGraveSword)
-can_destroy_stone_grave = Has(UsefulItem.ProgGraveSword, 2) | Has(UsefulItem.ProgGraveGun, 2)
+can_destroy_stone_grave = (HasAllCounts({UsefulItem.ProgGraveSword: 2,ProgressionItem.ProgSword: 1})) | (HasAllCounts({UsefulItem.ProgGraveGun: 2,ProgressionItem.ProgGun: 1}))
+can_break_stone = HasAll(ProgressionItem.Strong, ProgressionItem.ProgSword)
+reach_upper_red_crystal = CanReachHeight(4) & Has(ProgressionItem.ProgCube)
+reach_post_lockerroom = can_destroy_red_planks & Has(ProgressionItem.ProgGun)
+can_beam_cube = HasAllCounts({ProgressionItem.ProgCube: 1, ProgressionItem.ProgForceBeam: 3})
 
 can_defeat_rattlehag = CanDefeatCombat(20)
 can_defeat_gauntlet = CanDefeatCombat(100)
