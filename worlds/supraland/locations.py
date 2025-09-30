@@ -15,63 +15,65 @@ class LocationGroup(str, Enum):
     C = "Coin"
     BC = "Big Coin"
     Star = "Star" # Gives a star, I think
+    E = "Event"
 
 class LocationName(str, Enum):
+    RH = "Rattlehag"
     BP_UnlockMap_2 = "Blue Crystal - After Gate - on top of tower"
-    BuyBelt2_2 = "Blueville - Shop"
+    BuyBelt2_2 = "Blueville - Shop 1"
     BuyChestDetector_30 = "Before Boss 1 - Chest Detector Shop"
-    BuyChestDetectorRadius = "Redville - Shop - Credits"
-    BuyDoubleJump2 = "Blueville - Shop"
+    BuyChestDetectorRadius = "Redville - Shop - Credits 1"
+    BuyDoubleJump2 = "Blueville - Shop 2"
     BuyDoubleJump_786 = "Redville - Shop - Barrel at lava"
-    BuyForceBeamGold = "Blueville - Shop"
-    BuyForceBlock3 = "Blueville - Shop"
+    BuyForceBeamGold = "Blueville - Shop 3"
+    BuyForceBlock3 = "Blueville - Shop 5"
     BuyForceBlock_695 = "Desert 1 - Shop - Barrel at launcher"
-    BuyGun2_2 = "Blueville - Shop"
+    BuyGun2_2 = "Blueville - Shop 6"
     BuyGunAlt_478 = "Suprafield - in locker rooms"
-    BuyGunCriticalDamage_1496 = "Farm - Shop - Standard"
-    BuyGunCriticalDamageChance2_1856 = "Suprafield - Shop - Standard"
-    BuyGunCriticalDamageChance3_3189 = "Rattlehag - Shop - Standard"
-    BuyGunCriticalDamageChance4_198 = "Carrot Town - Shop"
+    BuyGunCriticalDamage_1496 = "Farm - Shop - Standard 1"
+    BuyGunCriticalDamageChance2_1856 = "Suprafield - Shop - Standard 1"
+    BuyGunCriticalDamageChance3_3189 = "Rattlehag - Shop - Standard 1"
+    BuyGunCriticalDamageChance4_198 = "Carrot Town - Shop 1"
     BuyGunCriticalDamageChance_1426 = "Before Chapel - Shop"
     BuyGunDamage_15_1234 = "After Chapel 1 - Shop - Red barrel on wall"
-    BuyGunDamage_5_235 = "Rattlehag - Shop - Standard"
-    BuyGunRefillSpeed_66_478 = "Suprafield - Shop - Standard"
-    BuyGunRefillSpeed_67_198 = "Carrot Town - Shop"
-    BuyGunRefillSpeedx2_374 = "Rattlehag - Shop - Standard"
+    BuyGunDamage_5_235 = "Rattlehag - Shop - Standard 2"
+    BuyGunRefillSpeed_66_478 = "Suprafield - Shop - Standard 2"
+    BuyGunRefillSpeed_67_198 = "Carrot Town - Shop 2"
+    BuyGunRefillSpeedx2_374 = "Rattlehag - Shop - Standard 3"
     BuySilentFeet2 = "After Chapel 1 - Shop - Red Barrel in House"
     BuyGunRefireRate50_506 = "After Chapel 1 - Shop - Red Barrel in trees"
-    BuySilentFeet_902 = "After Chapel 1 - Shop - Standard"
+    BuySilentFeet_902 = "After Chapel 1 - Shop - Standard 2"
     BuyGunSpeedx2_436 = "After Chapel 1 - Shop - Barrel near stomp"
     BuyHealth_15_765 = "Redville - Shop - Barrel on lever"
     BuyHealth_16_457 = "After Chapel 1 - Shop - White Barrel"
-    BuyHealth_17 = "Rattlehag - Shop - Standard"
-    BuyHealth_5 = "Farm - Shop - Standard"
+    BuyHealth_17 = "Rattlehag - Shop - Standard 4"
+    BuyHealth_5 = "Farm - Shop - Standard 2"
     BuyHealthRegen2_695 = "Redville - Shop - Barrel behind Red Planks"
-    BuyHealthRegenMax10_330 = "Rattlehag - Shop - Standard"
-    BuyHealthRegenMax5_1162 = "Carrot Town - Shop"
-    BuyShieldBreaker_1026 = "Suprafield - Shop - Standard"
-    BuyShowProgress2_2 = "Farm - Shop - Standard"
-    BuySmashdownDamage_33 = "Carrot Town - Shop"
-    BuySpeedx15_2 = "Redville - Shop - Credits"
-    BuySpeedx2_206 = "Redville - Shop - Standard"
+    BuyHealthRegenMax10_330 = "Rattlehag - Shop - Standard 5"
+    BuyHealthRegenMax5_1162 = "Carrot Town - Shop 3"
+    BuyShieldBreaker_1026 = "Suprafield - Shop - Standard 3"
+    BuyShowProgress2_2 = "Farm - Shop - Standard 3"
+    BuySmashdownDamage_33 = "Carrot Town - Shop 4"
+    BuySpeedx15_2 = "Redville - Shop - Credits 2"
+    BuySpeedx2_206 = "Redville - Shop - Standard 1"
     BuyStats = "Redville - Stats"
     BuySword2_2 = "Desert 3 - Moon Sword"
     BuySword_695 = "Introduction - Sword"
-    BuySwordCriticalDamageChance2_2395 = "Suprafield - Shop - Standard"
-    BuySwordCriticalDamageChance3_296 = "Carrot Town - Shop"
-    BuySwordCriticalDamageChance_1657 = "Farm - Shop - Standard"
-    BuySwordDamage_11 = "Redville - Shop - Standard"
-    BuySwordDamage_10_2 = "Redville - Shop - Standard"
+    BuySwordCriticalDamageChance2_2395 = "Suprafield - Shop - Standard 4"
+    BuySwordCriticalDamageChance3_296 = "Carrot Town - Shop 5"
+    BuySwordCriticalDamageChance_1657 = "Farm - Shop - Standard 4"
+    BuySwordDamage_11 = "Redville - Shop - Standard 2"
+    BuySwordDamage_10_2 = "Redville - Shop - Standard 3"
     UpgradeSwordDamageX2_716 = "After Chapel 1 - Shop - Barrel on stump"
     BuyTranslocator_7 = "Green Crystal - Translocator"
     BuyTripleJump2 = "Blueville - Shop"
     BuyTripleJump_877 = "Redville - Shop - Barrel with Double Jump"
-    BuyUpgradeChestNum = "Redville - Shop - Credits"
-    BuyWalletx15 = "After Chapel 1 - Shop - Standard"
-    BuyWalletx16 = "Farm - Shop - Standard"
-    BuyWalletx17_426 = "Carrot Town - Shop - Standard"
-    BuyWallet_50_737 = "Redville - Shop - Standard"
-    BuyWallet_51 = "Redville - Shop - Credits"
+    BuyUpgradeChestNum = "Redville - Shop - Credits 3"
+    BuyWalletx15 = "After Chapel 1 - Shop - Standard 1"
+    BuyWalletx16 = "Farm - Shop - Standard 5"
+    BuyWalletx17_426 = "Carrot Town - Shop 6"
+    BuyWallet_50_737 = "Redville - Shop - Standard 4"
+    BuyWallet_51 = "Redville - Shop - Credits 4"
     BuyWalletx2_986 = "Desert 2 - Way to Red Crystal"
     Chest100_2221 = "Before Purple - below supraballers house"
     Chest101_2025 = "Before Purple - on top of wooden structure"
@@ -115,11 +117,11 @@ class LocationName(str, Enum):
     Chest136_3 = "Red Crystal - bricked house"
     Chest137 = "Red Crystal - behind glass"
     Chest138_5 = "Desert 2 - through small pipe"
-    Chest139 = "Rattlehag - on sword"
+    Chest139 = "Rattlehag - on sword 1"
     Chest13_410 = "Desert 1 - Chest halfway on structure"
-    Chest140 = "Rattlehag - on sword"
-    Chest141_3 = "Suprafield - in pan"
-    Chest142 = "Suprafield - in pan"
+    Chest140 = "Rattlehag - on sword 2"
+    Chest141_3 = "Suprafield - in pan 1"
+    Chest142 = "Suprafield - in pan 2"
     Chest143 = "After Chapel 1 - after hard drive"
     Chest144 = "Blue Crystal - Inside - Behind door in attic"
     Chest145_2 = "Blue Crystal - Inside - Float Buckle"
@@ -131,7 +133,7 @@ class LocationName(str, Enum):
     Chest150 = "Blueville - house behind gate"
     Chest151_3 = "Red Crystal - high ledge in corner"
     Chest152_6 = "Boss Arena - high on shelf"
-    Chest153_9 = "Boss Arena - in pan"
+    Chest153_9 = "Boss Arena - in pan 1"
     Chest154 = "Farm - on stone shelf"
     Chest155_2 = "Redville - Chest on ledge near firepipe"
     Chest156_2 = "Blue Crystal - Before Gate - on top of pipe"
@@ -147,10 +149,10 @@ class LocationName(str, Enum):
     Chest165 = "Before Purple - hidden chest behind ravine"
     Chest166 = "Before Purple - next to girders"
     Chest167 = "After Rattlehag - on shelf in corner"
-    Chest168 = "Boss Arena - in pan"
+    Chest168 = "Boss Arena - in pan 2"
     Chest169 = "Desert 2 - Chest behind Candle"
     Chest16_5090 = "Behind Suprafield - on dirt ledge"
-    Chest170 = "Red Crystal - behind metal door"
+    Chest170 = "Red Crystal - behind metal door 1"
     Chest171_2 = "Behind Blueville - beneath throne"
     Chest172 = "Desert 1 - Chest near switch"
     Chest17_812 = "Red Crystal - at lever puzzle on tower"
@@ -161,7 +163,7 @@ class LocationName(str, Enum):
     Chest21_10208 = "Red Crystal - Chest in wood house roof"
     Chest22_11777 = "Introduction - Through fire pipe"
     Chest23_14291 = "Red Crystal - across level"
-    Chest24_16178 = "Red Crystal - Cooking Guy Kitchen"
+    Chest24_16178 = "Red Crystal - Cooking Guy Kitchen "
     Chest25_692 = "Red Crystal - at lever puzzle"
     Chest26_1739 = "Redville - Cave above Paint machine"
     Chest27_4172 = "Redville - Cave Behind Juicer"
@@ -178,7 +180,7 @@ class LocationName(str, Enum):
     Chest38_3995 = "Red Crystal - Next to metal in distance"
     Chest39_5860 = "Redville - Behind cave with paint machine"
     Chest3_1811 = "After Chapel 4 - on stone shelf next to Stomp"
-    Chest40_8 = "Rattlehag - on sword"
+    Chest40_8 = "Rattlehag - on sword 3"
     Chest41_2 = "Before Boss 2 - behind red planks"
     Chest42_1521 = "Farm - between Chapel and Farm"
     Chest43 = "Red Crystal - Behind gate in yellow cave"
@@ -191,12 +193,12 @@ class LocationName(str, Enum):
     Chest4_1544 = "Desert 1 - Above Force Cube barrel"
     Chest50_2182 = "Suprafield - behind flower lady"
     Chest51_1360 = "After Chapel 1 - in elevated nook"
-    Chest52_10699 = "After Chapel 3 - in cave ceiling"
+    Chest52_10699 = "After Chapel 3 - in cave ceiling 1"
     Chest53_1192 = "Blue Crystal - Inside - above yellow ring"
     Chest54_8402 = "After Rattlehag - in stomp house"
     Chest55_3907 = "After Chapel 3 - on floor of cave"
     Chest56_5023 = "After Chapel 4 - behind purple button"
-    Chest57_1073 = "Suprafield - behind arena"
+    Chest57_1073 = "Suprafield - behind arena 1"
     Chest58 = "Redville - Star House"
     Chest59 = "Redville - House with blue roof"
     Chest5_1955 = "Desert 2 - Chest around Trees and Pipes"
@@ -208,7 +210,7 @@ class LocationName(str, Enum):
     Chest65_5150 = "Blue Crystal - Inside - behind ball parcourse"
     Chest66_7106 = "Suprafield - behind lockers"
     Chest67 = "Desert 2 - stomp down chest"
-    Chest68 = "After Chapel 3 - in cave ceiling"
+    Chest68 = "After Chapel 3 - in cave ceiling 2"
     Chest69 = "Desert 1 - Dark Room"
     Chest6_710 = "Red Crystal - Armor House"
     Chest70 = "Blue Crystal - Inside - through green pipe"
@@ -487,7 +489,7 @@ class LocationName(str, Enum):
     Coin312_9707 = "After Chapel 4 - in the back"
     Coin313_9966 = "After Chapel 4 - in the back"
     Coin314_10161 = "After Chapel 4 - in the back"
-    Coin315_5610 = "Suprafield - behind arena"
+    Coin315_5610 = "Suprafield - behind arena "
     Coin316 = "Suprafield - behind arena"
     Coin317 = "Suprafield - behind arena"
     Coin318 = "Suprafield - behind arena"
@@ -1181,10 +1183,10 @@ class LocationName(str, Enum):
     EnemySpawn93 = "Green Crystal - at entry"
     EnemySpawn95_22931 = "Desert 3 - next to arrows"
     EnemySpawn96 = "Behind Green - next to candle"
-    Shell13_3781 = "Red Crystal - Cooking Guy Kitchen"
+    Shell13_3781 = "Red Crystal - Cooking Guy Kitchen - Shell"
     Shell16_5895 = "Red Crystal - Open nook"
     Shell2_1957 = "Red Crystal - under structure"
-    Shell5_1015 = "Red Crystal - behind metal door"
+    Shell5_1015 = "Red Crystal - behind metal door 2"
     Shell9_2044 = "Red Crystal - next to tree"
     Shell_1483 = "Red Crystal - hidden cave"
     DeadHero2Austin = "After Chapel 2 - behind carrot"
@@ -1209,6 +1211,7 @@ class LocationData:
     group: LocationGroup = LocationGroup.Star
 
 ALL_LOCATIONS: tuple[LocationData, ...] = (
+    LocationData(LocationName.RH, RegionName.RH, group=LocationGroup.E),
     LocationData(LocationName.BP_UnlockMap_2, RegionName.BC_AG, 20),
     LocationData(LocationName.BuyBelt2_2, RegionName.BV, 120),
     LocationData(LocationName.BuyChestDetector_30, RegionName.BFB1, 400),
@@ -1275,10 +1278,10 @@ ALL_LOCATIONS: tuple[LocationData, ...] = (
     LocationData(LocationName.Chest107_9218, RegionName.AF2),
     LocationData(LocationName.Chest108_10670, RegionName.D2),
     LocationData(LocationName.Chest109, RegionName.RV),
-    LocationData(LocationName.Chest10_1082, RegionName.FR),
+    LocationData(LocationName.Chest10_1082, RegionName.FR, group=LocationGroup.C),
     LocationData(LocationName.Chest110, RegionName.PC),
     LocationData(LocationName.Chest111_3, RegionName.BC_AG),
-    LocationData(LocationName.Chest112, RegionName.RV),
+    LocationData(LocationName.Chest112, RegionName.RV, group=LocationGroup.C),
     LocationData(LocationName.Chest113, RegionName.D1),
     LocationData(LocationName.Chest114, RegionName.BV),
     LocationData(LocationName.Chest115_4, RegionName.CT),
@@ -1389,7 +1392,7 @@ ALL_LOCATIONS: tuple[LocationData, ...] = (
     LocationData(LocationName.Chest55_3907, RegionName.AF3),
     LocationData(LocationName.Chest56_5023, RegionName.AF4),
     LocationData(LocationName.Chest57_1073, RegionName.SF),
-    LocationData(LocationName.Chest58, RegionName.RV),
+    LocationData(LocationName.Chest58, RegionName.RV, group=LocationGroup.C),
     LocationData(LocationName.Chest59, RegionName.RV),
     LocationData(LocationName.Chest5_1955, RegionName.D2),
     LocationData(LocationName.Chest60_2151, RegionName.RC),
@@ -1438,7 +1441,7 @@ ALL_LOCATIONS: tuple[LocationData, ...] = (
     LocationData(LocationName.Chest9_2231, RegionName.Intro),
     LocationData(LocationName.Chest_622, RegionName.D2),
     #LocationData(LocationName.UpgradeHappiness2_2, RegionName.RV, 1337),
-    LocationData(LocationName.Juicer2, RegionName.FR),
+    LocationData(LocationName.Juicer2, RegionName.FR, group=LocationGroup.C),
     LocationData(LocationName.Juicer3, RegionName.RV),
     LocationData(LocationName.Juicer_286, RegionName.CT),
     LocationData(LocationName.Shell13_3781, RegionName.RC),
@@ -1472,3 +1475,9 @@ location_name_groups: dict[str, set[str]] = {
     group.value: set(location_names)
     for group, location_names in groupby(sorted(location_table, key=get_location_group), get_location_group)
 }
+
+all_names = [loc.name.value for loc in ALL_LOCATIONS]
+for loc in ALL_LOCATIONS:
+    count = all_names.count(loc.name)
+    if count>1:
+        print(loc, count, loc.name)

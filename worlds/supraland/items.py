@@ -31,47 +31,50 @@ class ProgressionItem(str, Enum):
     Strong = "Strong"
     Happiness = "Happiness"
 
-
-class UsefulItem(str, Enum):
-    ChestDetector = "Chest Detector"
-    ChestDetectorRadius = "Chest Detector Radius x2"
+    Health2 = "Max Health +2"
+    Health5 = "Max Health +5"
+    Health15 = "Max Health +15"
     GunCritDamage = "Gun Critical Damage"
     GunCritChance = "Gun Critical Change +5%"
     GunDamage1 = "Gun Damage +1"
     GunDamage5 = "Gun Damage +5"
     GunDamage15 = "Gun Damage +15"
+    SwordCriticalChance = "Sword Critical Chance +5%"
+    SwordDamage1 = "Sword Damage +1"
+    SwordDamage2 = "Sword Damage +2"
+    SwordDamage3 = "Sword Damage +3"
+    GunComboDamage = "Combo Damage +25"
+    ProgGraveGun = "Progressive Holy Gun"
+    ProgGraveSword = "Progressive Holy Sword"
+    Armor = "Armor"
+    Shell = "Shell"
+
+
+class UsefulItem(str, Enum):
+    ChestDetector = "Chest Detector"
+    ChestDetectorRadius = "Chest Detector Radius x2"
     GunRefill = "Ammo refill speed +66%"
     GunCooldown = "Gun cooldown halved"
     GunProjSpeed = "Gun Projectile Speed x2"
     Health1 = "Max Health +1"
-    Health2 = "Max Health +2"
-    Health5 = "Max Health +5"
-    Health15 = "Max Health +15"
     ProgHealthRegen = "Progressive Health Regen"
     ShieldBreaker = "Shield Breaker"
     ShowProgress = "Awesome-Meter"
     StompDamage = "Stomp Damage +33%"
     SwordCriticalChance = "Sword Critical Chance +5%"
-    SwordDamage1 = "Sword Damage +1"
-    SwordDamage2 = "Sword Damage +2"
-    SwordDamage3 = "Sword Damage +3"
     StompRadius = "Stomp Radius +50cm"
-    GunComboDamage = "Combo Damage +25"
     TransDamage = "Translocator Damage x2"
     TransCooldown = "Translocator Half Cooldown"
     GunSplash = "Gun Splash Damage"
-    ProgGraveGun = "Progressive Holy Gun"
-    ProgGraveSword = "Progressive Holy Sword"
     MoreLoot = "More Loot"
     CubeTelefrag = "Force Cube Telefrag"
     HealthRegenSpeed = "Regeneration Speed x2"
     SwordRange = "Sword Range +25%"
     SwordCritical = "Sword Critical Damage"
     GunCoin = "Gun Picks Up Coins"
-    Armor = "Armor"
     SwordSpeed = "Sword 33% Faster"
     DoubleHealth = "Double Health"
-    Shell = "Shell"
+
 
 
 
@@ -135,18 +138,18 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(ProgressionItem.ProgForceBeam, ItemClassification.progression, 3),
     ItemData(ProgressionItem.ProgCube, ItemClassification.progression, 3),
     ItemData(ProgressionItem.ProgGun, ItemClassification.progression, 7),
-    ItemData(UsefulItem.GunCritDamage, ItemClassification.useful, 1),
-    ItemData(UsefulItem.GunCritChance, ItemClassification.useful, 6),
-    ItemData(UsefulItem.GunDamage15, ItemClassification.useful, 1),
-    ItemData(UsefulItem.GunDamage5, ItemClassification.useful, 9),
-    ItemData(UsefulItem.GunDamage1, ItemClassification.useful, 4),
+    ItemData(ProgressionItem.GunCritDamage, ItemClassification.progression, 1),
+    ItemData(ProgressionItem.GunCritChance, ItemClassification.progression, 6),
+    ItemData(ProgressionItem.GunDamage15, ItemClassification.progression, 1),
+    ItemData(ProgressionItem.GunDamage5, ItemClassification.progression, 9),
+    ItemData(ProgressionItem.GunDamage1, ItemClassification.progression, 4),
     ItemData(UsefulItem.GunRefill, ItemClassification.useful, 4),
     ItemData(UsefulItem.GunCooldown, ItemClassification.useful, 2),
     ItemData(UsefulItem.GunProjSpeed, ItemClassification.useful, 1),
     ItemData(UsefulItem.Health1, ItemClassification.useful, 1),
-    ItemData(UsefulItem.Health2, ItemClassification.useful, 2),
-    ItemData(UsefulItem.Health5, ItemClassification.useful, 17),
-    ItemData(UsefulItem.Health15, ItemClassification.useful, 5),
+    ItemData(ProgressionItem.Health2, ItemClassification.progression, 2),
+    ItemData(ProgressionItem.Health5, ItemClassification.progression, 17),
+    ItemData(ProgressionItem.Health15, ItemClassification.progression, 5),
     ItemData(UsefulItem.ProgHealthRegen, ItemClassification.useful, 18),
     ItemData(UsefulItem.ShieldBreaker, ItemClassification.useful, 1),
     ItemData(UsefulItem.ShowProgress, ItemClassification.useful, 1),
@@ -154,15 +157,15 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(FillerItem.Stats, ItemClassification.filler, 1),
     ItemData(ProgressionItem.ProgSword, ItemClassification.progression, 2),
     ItemData(UsefulItem.SwordCriticalChance, ItemClassification.useful, 10),
-    ItemData(UsefulItem.SwordDamage1, ItemClassification.useful, 9),
-    ItemData(UsefulItem.SwordDamage2, ItemClassification.useful, 6),
-    ItemData(UsefulItem.SwordDamage3, ItemClassification.useful, 7),
+    ItemData(ProgressionItem.SwordDamage1, ItemClassification.progression, 9),
+    ItemData(ProgressionItem.SwordDamage2, ItemClassification.progression, 6),
+    ItemData(ProgressionItem.SwordDamage3, ItemClassification.progression, 7),
     ItemData(ProgressionItem.ProgTrans, ItemClassification.progression, 2),
     ItemData(FillerItem.ChestCount, ItemClassification.filler, 1),
     ItemData(ProgressionItem.Wallet2, ItemClassification.progression, 5),
     ItemData(ProgressionItem.Wallet15, ItemClassification.progression, 5),
     ItemData(UsefulItem.StompRadius, ItemClassification.useful, 8),
-    ItemData(UsefulItem.GunComboDamage, ItemClassification.useful, 8),
+    ItemData(ProgressionItem.GunComboDamage, ItemClassification.progression, 8),
     ItemData(FillerItem.CoinBundle, ItemClassification.filler, 25),
     ItemData(FillerItem.EnemyHealth, ItemClassification.filler, 1),
     ItemData(UsefulItem.TransDamage, ItemClassification.useful, 2),
@@ -171,8 +174,8 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(ProgressionItem.GreenMoon, ItemClassification.progression, 2),
     ItemData(ProgressionItem.RedMoon, ItemClassification.progression, 6),
     ItemData(UsefulItem.GunSplash, ItemClassification.useful, 1),
-    ItemData(UsefulItem.ProgGraveGun, ItemClassification.useful, 2),
-    ItemData(UsefulItem.ProgGraveSword, ItemClassification.useful, 2),
+    ItemData(ProgressionItem.ProgGraveGun, ItemClassification.progression, 2),
+    ItemData(ProgressionItem.ProgGraveSword, ItemClassification.progression, 2),
     ItemData(FillerItem.Silent, ItemClassification.filler, 1),
     ItemData(FillerItem.GraveCount, ItemClassification.filler, 1),
     ItemData(FillerItem.GraveDetector, ItemClassification.filler, 1),
@@ -185,7 +188,7 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(ProgressionItem.Stomp, ItemClassification.progression, 1),
     ItemData(FillerItem.HealthBar, ItemClassification.filler, 1),
     ItemData(UsefulItem.GunCoin, ItemClassification.useful, 1),
-    ItemData(UsefulItem.Armor, ItemClassification.useful, 1),
+    ItemData(ProgressionItem.Armor, ItemClassification.progression, 1),
     ItemData(UsefulItem.SwordSpeed, ItemClassification.useful, 1),
     ItemData(FillerItem.LootLuck, ItemClassification.filler, 1),
     ItemData(FillerItem.CoinMagnet, ItemClassification.filler, 1),
@@ -207,9 +210,10 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     # ItemData(FillerItem.EnemySpawn2, ItemClassification.filler, 55),
     # ItemData(FillerItem.EnemySpawn3, ItemClassification.filler, 67),
     ItemData(UsefulItem.DoubleHealth, ItemClassification.useful, 1),
-    ItemData(UsefulItem.Shell, ItemClassification.useful, 6),
+    ItemData(ProgressionItem.Shell, ItemClassification.progression, 6),
     ItemData(ProgressionItem.Strong, ItemClassification.progression, 1),
     #ItemData(ProgressionItem.Happiness, ItemClassification.progression, 1),
+    ItemData(FillerItem.Coin, ItemClassification.filler, 1)
 )
 
 item_table = {item.name.value: item for item in ALL_ITEMS}

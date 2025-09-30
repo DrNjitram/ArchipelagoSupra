@@ -13,13 +13,16 @@ if TYPE_CHECKING:
     from world import SupralandWorld
 
 HeightTable = {
-    ProgressionItem.ProgTrans: [3, 5], #base, shot force
-    ProgressionItem.ProgSpeedJump: [1, 1, 2, 3], #speed inc 1.5x, 2x, double jump, triple jump
+    ProgressionItem.ProgTrans: [3, 6], #base, shot force
+    ProgressionItem.ProgSpeedJump: [1, 2, 4, 5], #speed inc 1.5x, 2x, double jump, triple jump
     ProgressionItem.ProgCube: [2, 2, 2],
 #    ProgressionItem.Happiness: [100]
 }
 wallet_sizes = [30, 45, 67, 101, 151, 227, 455, 911, 1822, 3645, 7290]
 
+to_count = [ProgressionItem.Health15, ProgressionItem.Health5, ProgressionItem.Health2]
+to_double = [ProgressionItem.GunDamage15, ProgressionItem.GunDamage5, ProgressionItem.GunDamage1, ProgressionItem.SwordDamage1,
+             ProgressionItem.SwordDamage2, ProgressionItem.SwordDamage3, ProgressionItem.GunComboDamage]
 
 def as_str(value: Enum | str) -> str:
     return str(value.value) if isinstance(value, Enum) else value
@@ -51,11 +54,11 @@ class CanReachHeight(Rule["SupralandWorld"], game=GAME_NAME):
         @override
         def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
             if state is None:
-                verb = "Can afford"
+                verb = "Can reach"
             elif self(state):
-                verb = "Afforded"
+                verb = "Reached"
             else:
-                verb = "Cannot afford"
+                verb = "Cannot reach"
             return [
                 {"type": "text", "text": f"{verb} height"},
                 {"type": "color", "color": "yellow", "text": str(self.target_height)},
@@ -63,14 +66,21 @@ class CanReachHeight(Rule["SupralandWorld"], game=GAME_NAME):
 
         @override
         def explain_str(self, state: CollectionState | None = None) -> str:
+            item_dict = {item: state.count(item, self.player) for item in HeightTable.keys()}
             if state is None:
                 return str(self)
             prefix = "Reached" if self(state) else "Cannot reach"
-            return f"{prefix} height {self.target_height}"
+            return f"{prefix} height {self.target_height} with {sum([HeightTable[item][min(state.count(item, self.player)-1, len(HeightTable[item]))] for item in
+                        HeightTable.keys()])}({item_dict})"
 
         @override
         def __str__(self) -> str:
             return f"Can reach height {self.target_height}"
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            """Returns a mapping of item name to set of object ids, used for cache invalidation"""
+            return {item.value: {id(self)} for item in HeightTable.keys()}
 
 
 @dataclasses.dataclass()
@@ -84,6 +94,8 @@ class CanAfford(Rule["SupralandWorld"], game=GAME_NAME):
 
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        # ## TODO FIX
+        # return world.true_rule
         if self.cost <= 30:
             return world.true_rule
         return self.Resolved(self.cost, player=world.player, caching_enabled=world.rule_caching_enabled)
@@ -94,7 +106,7 @@ class CanAfford(Rule["SupralandWorld"], game=GAME_NAME):
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
-            return wallet_sizes[state.count(ProgressionItem.Wallet2+ProgressionItem.Wallet15, self.player)] > self.cost
+            return wallet_sizes[state.count(ProgressionItem.Wallet2, self.player)+state.count(ProgressionItem.Wallet15, self.player)] > self.cost
 
         @override
         def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
@@ -115,11 +127,19 @@ class CanAfford(Rule["SupralandWorld"], game=GAME_NAME):
             if state is None:
                 return str(self)
             prefix = "Afforded" if self(state) else "Cannot afford"
-            return f"{prefix} {self.cost} coins"
+            return f"{prefix} {self.cost} coins (1.5x: {state.count(ProgressionItem.Wallet15, self.player)}, 2x: {state.count(ProgressionItem.Wallet2, self.player)})"
 
         @override
         def __str__(self) -> str:
             return f"Can afford {self.cost} coins"
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            """Returns a mapping of item name to set of object ids, used for cache invalidation"""
+            return {
+                ProgressionItem.Wallet2: {id(self)},
+                ProgressionItem.Wallet15: {id(self)}
+                }
 
 @dataclasses.dataclass()
 class CanDefeatCombat(Rule["SupralandWorld"], game=GAME_NAME):
@@ -147,15 +167,15 @@ class CanDefeatCombat(Rule["SupralandWorld"], game=GAME_NAME):
     class Resolved(Rule.Resolved):
         combat: int
 
+        def get_combat_level(self, state: CollectionState) -> int:
+            return (sum(state.count(item, self.player) for item in to_count) +
+                     sum(state.count(item, self.player) for item in to_double)*2 +
+                    state.count(ProgressionItem.GunComboDamage, self.player)*5+
+                    (state.count(ProgressionItem.ProgSword, self.player)-1)*10)
+
         @override
         def _evaluate(self, state: CollectionState) -> bool:
-            return ((state.count(UsefulItem.Health15, self.player)+state.count(UsefulItem.Health5, self.player)+state.count(UsefulItem.Health2, self.player)+state.count(UsefulItem.Health1, self.player))+
-                    state.count(UsefulItem.ProgHealthRegen, self.player) +
-                    (state.count(UsefulItem.GunDamage15, self.player)+state.count(UsefulItem.GunDamage5, self.player)+state.count(UsefulItem.GunDamage1, self.player)) * 2 +
-                    (state.count(UsefulItem.SwordDamage1, self.player)+state.count(UsefulItem.SwordDamage2, self.player)+state.count(UsefulItem.SwordDamage3, self.player)) * 2 +
-                    state.count(UsefulItem.GunComboDamage, self.player) * 2 +
-                    state.count(UsefulItem.SwordCritical, self.player) +
-                    (state.count(ProgressionItem.ProgSword, self.player)-1)*10) >= self.combat
+            return self.get_combat_level(state) >= self.combat
 
         @override
         def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
@@ -172,14 +192,22 @@ class CanDefeatCombat(Rule["SupralandWorld"], game=GAME_NAME):
 
         @override
         def explain_str(self, state: CollectionState | None = None) -> str:
+            item_dict = {item: state.count(item, self.player) for item in to_count+to_double + [ProgressionItem.ProgSword]}
             if state is None:
                 return str(self)
             prefix = "Defeated" if self(state) else "Cannot defeat"
-            return f"{prefix} level {self.combat}"
+            return f"{prefix} level {self.combat} with level {self.get_combat_level(state)} -> items: {item_dict}"
 
         @override
         def __str__(self) -> str:
             return f"Can defeat level {self.combat}"
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            """Returns a mapping of item name to set of object ids, used for cache invalidation"""
+            return {item.value: {id(self)} for item in to_count+to_double + [ProgressionItem.ProgSword]}
+
+
 
 @dataclasses.dataclass()
 class HasLocationGroup(Rule["SupralandWorld"], game=GAME_NAME):
@@ -197,6 +225,9 @@ class HasLocationGroup(Rule["SupralandWorld"], game=GAME_NAME):
 
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        ## TODO Fix this mess
+        # if True:
+        #     return world.true_rule
         location_names = tuple(sorted(world.location_name_groups[self.location_name_group]))
         return self.Resolved(
             self.location_name_group,
@@ -248,17 +279,23 @@ class HasLocationGroup(Rule["SupralandWorld"], game=GAME_NAME):
         def __str__(self) -> str:
             return f"Can reach {self.count} {self.location_name_group} locations"
 
+        @override
+        def location_dependencies(self) -> dict[str, set[int]]:
+            """Returns a mapping of location name to set of object ids, used for cache invalidation"""
+            return {name: {id(self)} for name in self.location_names}
+
 can_destroy_red_planks = HasAny(ProgressionItem.ProgSword, ProgressionItem.ProgGun, ProgressionItem.ProgTrans)
 
 can_defeat_meatbag = HasAllCounts({ProgressionItem.Buckle : 1, ProgressionItem.ProgForceBeam: 3}) & can_destroy_red_planks
 can_melt_metal = HasAllCounts({ProgressionItem.GunAltDamage: 5, ProgressionItem.ProgGun: 2})
-can_destroy_wood_grave = HasAny(UsefulItem.ProgGraveGun, UsefulItem.ProgGraveSword)
-can_destroy_stone_grave = (HasAllCounts({UsefulItem.ProgGraveSword: 2,ProgressionItem.ProgSword: 1})) | (HasAllCounts({UsefulItem.ProgGraveGun: 2,ProgressionItem.ProgGun: 1}))
+can_destroy_wood_grave = HasAny(ProgressionItem.ProgGraveGun, ProgressionItem.ProgGraveSword)
+can_destroy_stone_grave = (HasAllCounts({ProgressionItem.ProgGraveSword: 2,ProgressionItem.ProgSword: 1})) | (HasAllCounts({ProgressionItem.ProgGraveGun: 2,ProgressionItem.ProgGun: 1}))
 can_break_stone = HasAll(ProgressionItem.Strong, ProgressionItem.ProgSword)
 reach_upper_red_crystal = CanReachHeight(4) & Has(ProgressionItem.ProgCube)
 reach_post_lockerroom = can_destroy_red_planks & Has(ProgressionItem.ProgGun)
 can_beam_cube = HasAllCounts({ProgressionItem.ProgCube: 1, ProgressionItem.ProgForceBeam: 3})
 
-can_defeat_rattlehag = CanDefeatCombat(20)
-can_defeat_gauntlet = CanDefeatCombat(100)
+can_defeat_rattlehag = CanDefeatCombat(20) #20
+can_defeat_gauntlet = CanDefeatCombat(20) # 100
 
+#CanAfford = lambda cost: Has(ProgressionItem.Wallet2 , min([i if wallet_sizes[i]>cost else 100 for i in range(len(wallet_sizes))])-5) if min([i if wallet_sizes[i]>cost else 100 for i in range(len(wallet_sizes))]) > 5 else Has(ProgressionItem.Wallet15 , min([i if wallet_sizes[i]>cost else 100 for i in range(len(wallet_sizes))]))

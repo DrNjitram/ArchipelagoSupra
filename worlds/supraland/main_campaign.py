@@ -1,3 +1,4 @@
+
 from .locations import LocationName as L, LocationGroup as LG
 from .regions import RegionName as R
 from .items import ProgressionItem as P, Events as E, UsefulItem as U
@@ -7,6 +8,7 @@ from rule_builder import *
 # Chest91 Helper: CanReachHeight(3) & can_destroy_red_planks
 
 MAIN_LOCATION_RULES: dict[L, Rule["SupralandWorld"]] = {
+    L.RH: can_defeat_rattlehag,
     L.BP_UnlockMap_2: Has(P.Buckle),
     L.BuyBelt2_2: True_(),
     L.BuyChestDetector_30: HasAll(P.Buckle, P.ProgTrans),
@@ -100,7 +102,7 @@ MAIN_LOCATION_RULES: dict[L, Rule["SupralandWorld"]] = {
     L.Chest131: HasAll(E.RH, P.ProgTrans) & CanReachHeight(4),
     L.Chest132: Has(P.Buckle) & can_destroy_red_planks,
     L.Chest133: Has(P.ProgGun) & CanReachHeight(5),
-    L.Chest134_13: CanReachHeight(4) & HasAny(U.ProgHealthRegen, U.Armor, U.Health5),
+    L.Chest134_13: CanReachHeight(4) & HasAny(U.ProgHealthRegen, P.Armor, P.Health5),
     L.Chest135: Has(P.ProgGun) & CanReachHeight(4),
     L.Chest136_3: Has(P.ProgTrans),
     L.Chest137: HasAll(P.Buckle, P.Stomp, P.ProgTrans) & CanReachHeight(3),
@@ -145,7 +147,7 @@ MAIN_LOCATION_RULES: dict[L, Rule["SupralandWorld"]] = {
     L.Chest172: CanReachHeight(2), # | CanReachRegion(R.D2)
     L.Chest17_812: reach_upper_red_crystal,
     L.Chest18_812: CanReachHeight(4),
-    L.Chest19_6182: CanReachHeight(3) & HasAnyCount({U.Health5: 6, U.Health15: 3}),
+    L.Chest19_6182: CanReachHeight(3) & HasAnyCount({P.Health5: 6, P.Health15: 3}),
     L.Chest2: CanReachHeight(2),
     L.Chest20_9041: CanReachHeight(1),
     L.Chest21_10208: True_(),
@@ -190,7 +192,7 @@ MAIN_LOCATION_RULES: dict[L, Rule["SupralandWorld"]] = {
     L.Chest58: HasLocationGroup(LG.Star, 80),
     L.Chest59: Has(P.Stomp),
     L.Chest5_1955: True_(),
-    L.Chest60_2151: CanReachHeight(4) & HasAny(U.ProgHealthRegen, U.Armor, U.Health5),
+    L.Chest60_2151: CanReachHeight(4) & HasAny(U.ProgHealthRegen, P.Armor, P.Health5),
     L.Chest61_2816: HasAll(P.ProgTrans, P.ProgGun),
     L.Chest62_3729: Has(P.Stomp) & CanReachRegion(R.BSF),
     L.Chest63_1565: HasAll(P.ProgCube, P.ProgGun),
@@ -226,7 +228,7 @@ MAIN_LOCATION_RULES: dict[L, Rule["SupralandWorld"]] = {
     L.Chest90_2137: HasAll(P.ProgForceBeam, P.ProgGun) & can_destroy_red_planks,
     L.Chest91: CanReachHeight(3) & can_destroy_red_planks,
     L.Chest92: can_destroy_wood_grave,
-    L.Chest93_3307: Has(U.Shell, 6),
+    L.Chest93_3307: Has(P.Shell, 6),
     L.Chest94: CanReachHeight(5),
     L.Chest95_6394: HasAll(P.Buckle, P.Stomp),
     L.Chest96_8035: Has(P.Buckle),

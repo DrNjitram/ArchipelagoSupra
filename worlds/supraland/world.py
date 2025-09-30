@@ -1,7 +1,7 @@
 from functools import cached_property
 from typing import Any, Dict, List, ClassVar, override
 
-from .StateHelpers import CanAfford
+from .StateHelpers import CanAfford, can_defeat_rattlehag
 from .items import (
     Events,
     ItemGroup,
@@ -24,7 +24,7 @@ from worlds.AutoWorld import WebWorld, World
 from .constants import GAME_NAME
 from rule_builder import RuleWorldMixin
 from .main_campaign import COMPLETION_RULE,  MAIN_LOCATION_RULES
-from .entrances import ENTRANCE_RULES
+from .entrances import ENTRANCE_RULES, PIPE_RULES
 #from .tracker import UTMxin
 import logging
 
@@ -53,6 +53,7 @@ class SupralandWorld(RuleWorldMixin, World):
     item_name_to_id: ClassVar[dict[str, int]] = item_name_to_id
     location_name_to_id = location_name_to_id
     rule_caching_enabled: ClassVar[bool] = True
+    #explicit_indirect_conditions = False
 
     options_dataclass = options.SupralandOptions
     options: options.SupralandOptions
@@ -67,6 +68,7 @@ class SupralandWorld(RuleWorldMixin, World):
     # def generate_early(self) -> None:
     #     pass
 
+    @override
     def create_location(self, name: str) -> SupralandLocation:
         location_name = LocationName(name)
         data = location_table[name]
@@ -97,26 +99,27 @@ class SupralandWorld(RuleWorldMixin, World):
                 entrance = self.create_entrance(region, exit_region, rule)
                 if not entrance:
                     logger.debug(f"No matching rules for {region_name.value} -> {exit_region_name.value}")
+            if region_data.pipes is not None:
+                for pipe_region_name in region_data.pipes:
+                    pipe_region = self.get_region(pipe_region_name.value)
+                    region_pair = (region_name, pipe_region_name)
+                    rule = PIPE_RULES.get(region_pair)
+                    entrance = self.create_entrance(region, pipe_region, rule)
+                    if not entrance:
+                        logger.debug(f"No matching rules for {region_name.value} -> {pipe_region_name.value}")
 
-        # for group, location_names in location_name_groups.items():
-        #     # if group not in logic_groups:
-        #     #     continue
-        #
-        #     for location_name in sorted(location_names):
-        #         # if location_name == LocationName.UpgradeHappiness2_2:
-        #         #     continue
-        for location_name in location_table:
-            self.create_location(location_name)
+        for group, location_names in location_name_groups.items():
+            if group in [LocationGroup.E]:
+                continue
 
-        RH_item = SupralandItem(
-            Events.RH.value,
-            ItemClassification.progression_skip_balancing,
-            None,
-            self.player,
-        )
-        RH_region = self.get_region(RegionName.BA)
-        RH_location = SupralandLocation(self.player, Events.RH.value, None, RH_region)
-        RH_location.place_locked_item(RH_item)
+            for location_name in sorted(location_names):
+                # if location_name == LocationName.UpgradeHappiness2_2:
+                #     continue
+        #for location_name in location_table:
+                self.create_location(location_name)
+
+        self.create_event(Events.RH, LocationName.RH)
+
 
         victory_region = self.get_region(RegionName.BA)
         victory_location = SupralandLocation(self.player, Events.MB.value, None, victory_region)
@@ -129,7 +132,6 @@ class SupralandWorld(RuleWorldMixin, World):
         victory_location.place_locked_item(victory_item)
         victory_region.locations.append(victory_location)
         self.set_completion_rule(COMPLETION_RULE)
-
 
 
     def fill_slot_data(self) -> Dict[str, Any]:
@@ -160,6 +162,7 @@ class SupralandWorld(RuleWorldMixin, World):
     def create_items(self) -> None:
 
         pool: List[Item] = []
+        filler_pool: List[Item] = []
 
         for data in item_table.values():
             # if (not self.options.gravesanity.value and data.type_name in self.gravesanity_types) or (not self.options.coinsanity.value and data.type_name in self.coinsanity_types):
@@ -167,19 +170,21 @@ class SupralandWorld(RuleWorldMixin, World):
             for _ in range(data.count):
                 pool.append(self.create_item(data.name))
 
-        self.multiworld.itempool += pool
+        total_locations = len(self.multiworld.get_unfilled_locations(self.player))
+
+        while len(pool) + len(filler_pool) < total_locations:
+            filler_pool.append(self.create_filler())
+
+        self.multiworld.itempool += pool + filler_pool
 
     @override
     def set_rules(self) -> None:
         self.register_dependencies()
 
-    @cached_property
-    def filler_item_names(self) -> tuple[str, ...]:
-        return FillerItem.Coin, FillerItem.BigCoin
 
     @override
     def get_filler_item_name(self) -> str:
-        return self.random.choice(self.filler_item_names)
+        return FillerItem.Coin.value
 
     # def get_trap_item_name(self) -> str:
     #     return self.random.choice(trap_items)

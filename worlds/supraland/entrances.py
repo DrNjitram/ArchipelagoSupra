@@ -100,7 +100,7 @@ ENTRANCE_RULES: dict[tuple[R, R], Rule["SupralandWorld"]] = {
 PIPE_RULES = {
     #(R.D2, R.RC): True_(),
     (R.D2, R.AF3): Has(ProgItem.Stomp),
-    (R.RC, R.D2): Has(UsefulItem.Shell, 6),
+    (R.RC, R.D2): Has(ProgItem.Shell, 6),
     (R.FR, R.BC): HasAll(ProgItem.ProgCube, ProgItem.ProgGun) & CanReachHeight(5),
     #(R.FR, R.AF_RH): True_(),
     (R.BC, R.FR): Has(ProgItem.Buckle),
