@@ -7,7 +7,7 @@ from .items import (
     ItemGroup,
     item_name_to_id,
     item_table,
-    SupralandItem, FillerItem
+    SupralandItem, FillerItem, ItemName
 )
 from . import options
 from .locations import (
@@ -168,7 +168,7 @@ class SupralandWorld(RuleWorldMixin, World):
             # if (not self.options.gravesanity.value and data.type_name in self.gravesanity_types) or (not self.options.coinsanity.value and data.type_name in self.coinsanity_types):
             #     continue
             for _ in range(data.count):
-                pool.append(self.create_item(data.name))
+                pool.append(self.create_item(data.name.value))
 
         total_locations = len(self.multiworld.get_unfilled_locations(self.player))
 

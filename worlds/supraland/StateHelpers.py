@@ -296,6 +296,5 @@ reach_post_lockerroom = can_destroy_red_planks & Has(ProgressionItem.ProgGun)
 can_beam_cube = HasAllCounts({ProgressionItem.ProgCube: 1, ProgressionItem.ProgForceBeam: 3})
 
 can_defeat_rattlehag = CanDefeatCombat(20) #20
-can_defeat_gauntlet = CanDefeatCombat(20) # 100
+can_defeat_gauntlet = CanDefeatCombat(100) # 100
 
-#CanAfford = lambda cost: Has(ProgressionItem.Wallet2 , min([i if wallet_sizes[i]>cost else 100 for i in range(len(wallet_sizes))])-5) if min([i if wallet_sizes[i]>cost else 100 for i in range(len(wallet_sizes))]) > 5 else Has(ProgressionItem.Wallet15 , min([i if wallet_sizes[i]>cost else 100 for i in range(len(wallet_sizes))]))
