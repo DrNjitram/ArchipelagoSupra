@@ -5,9 +5,9 @@ from typing_extensions import override
 from BaseClasses import CollectionState
 from NetUtils import JSONMessagePart
 from .constants import GAME_NAME
-from rule_builder import Has, HasAny, Rule, TWorld, OptionFilter, HasAll, HasAllCounts
+from .rule_builder import Has, HasAny, Rule, TWorld, OptionFilter, HasAll, HasAllCounts, CanReachLocation
 from .items import FillerItem, ProgressionItem, TrapItem, UsefulItem
-
+from .locations import LocationName as L
 
 if TYPE_CHECKING:
     from world import SupralandWorld
@@ -19,7 +19,7 @@ HeightTable = {
 #    ProgressionItem.Happiness: [100]
 }
 wallet_sizes = [30, 45, 67, 101, 151, 227, 455, 911, 1822, 3645, 7290]
-
+star_pairs = ((L.Chest10_1082, 23), (L.Juicer2, 23), (L.Chest112, 80), (L.Chest58, 80))
 to_count = [ProgressionItem.Health15, ProgressionItem.Health5, ProgressionItem.Health2]
 to_double = [ProgressionItem.GunDamage15, ProgressionItem.GunDamage5, ProgressionItem.GunDamage1, ProgressionItem.SwordDamage1,
              ProgressionItem.SwordDamage2, ProgressionItem.SwordDamage3, ProgressionItem.GunComboDamage]
@@ -33,9 +33,7 @@ class CanReachHeight(Rule["SupralandWorld"], game=GAME_NAME):
 
     TargetHeight: int = 1
 
-    def __init__(self, TargetHeight: int, options: Iterable[OptionFilter[Any]] = ()) -> None:
-        super().__init__(options=options)
-        self.TargetHeight = TargetHeight
+
 
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
@@ -88,10 +86,6 @@ class CanAfford(Rule["SupralandWorld"], game=GAME_NAME):
 
     cost: int = 1
 
-    def __init__(self, cost: int, options: Iterable[OptionFilter[Any]] = ()) -> None:
-        super().__init__(options=options)
-        self.cost = cost
-
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
         # ## TODO FIX
@@ -106,7 +100,7 @@ class CanAfford(Rule["SupralandWorld"], game=GAME_NAME):
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
-            return wallet_sizes[state.count(ProgressionItem.Wallet2, self.player)+state.count(ProgressionItem.Wallet15, self.player)] > self.cost
+            return 30*(2**state.count(ProgressionItem.Wallet2, self.player))*(1.5**state.count(ProgressionItem.Wallet15, self.player)) > self.cost
 
         @override
         def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
@@ -153,9 +147,6 @@ class CanDefeatCombat(Rule["SupralandWorld"], game=GAME_NAME):
     # max is 150
     combat : int = 1
 
-    def __init__(self, combat: int, options: Iterable[OptionFilter[Any]] = ()) -> None:
-        super().__init__(options=options)
-        self.combat = combat
 
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
@@ -218,16 +209,9 @@ class HasLocationGroup(Rule["SupralandWorld"], game=GAME_NAME):
     count: int = 1
     """The number of items the player needs to have"""
 
-    def __init__(self, location_name_group: str, count: int, options: Iterable[OptionFilter[Any]] = ()) -> None:
-        super().__init__(options=options)
-        self.location_name_group = location_name_group
-        self.count = count
 
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
-        ## TODO Fix this mess
-        # if True:
-        #     return world.true_rule
         location_names = tuple(sorted(world.location_name_groups[self.location_name_group]))
         return self.Resolved(
             self.location_name_group,
@@ -251,6 +235,13 @@ class HasLocationGroup(Rule["SupralandWorld"], game=GAME_NAME):
                 found += state.can_reach_location(location_name, self.player)
                 if found >= self.count:
                     return True
+
+            # for name, cost in star_pairs:
+            #     if found >= cost and state.can_reach_location(name, self.player):
+            #         found += 1
+            #         if found >= self.count:
+            #             return True
+
             return False
 
         @override
@@ -287,7 +278,7 @@ class HasLocationGroup(Rule["SupralandWorld"], game=GAME_NAME):
 can_destroy_red_planks = HasAny(ProgressionItem.ProgSword, ProgressionItem.ProgGun, ProgressionItem.ProgTrans)
 
 can_defeat_meatbag = HasAllCounts({ProgressionItem.Buckle : 1, ProgressionItem.ProgForceBeam: 3}) & can_destroy_red_planks
-can_melt_metal = HasAllCounts({ProgressionItem.GunAltDamage: 5, ProgressionItem.ProgGun: 2})
+can_melt_metal = HasAllCounts({ProgressionItem.ProgGun: 7})
 can_destroy_wood_grave = HasAny(ProgressionItem.ProgGraveGun, ProgressionItem.ProgGraveSword)
 can_destroy_stone_grave = (HasAllCounts({ProgressionItem.ProgGraveSword: 2,ProgressionItem.ProgSword: 1})) | (HasAllCounts({ProgressionItem.ProgGraveGun: 2,ProgressionItem.ProgGun: 1}))
 can_break_stone = HasAll(ProgressionItem.Strong, ProgressionItem.ProgSword)

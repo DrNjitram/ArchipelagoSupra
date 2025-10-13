@@ -1,5 +1,6 @@
+from .locations import LocationGroup
 from .regions import RegionName as R
-from rule_builder import Rule, True_, HasAll, Has, HasAny,CanReachRegion
+from .rule_builder import Rule, True_, HasAll, Has, HasAny,CanReachRegion
 from typing import TYPE_CHECKING
 from .StateHelpers import can_destroy_red_planks, CanReachHeight, can_destroy_wood_grave, can_destroy_stone_grave, \
     can_defeat_rattlehag, can_defeat_meatbag, HasLocationGroup
@@ -107,7 +108,7 @@ PIPE_RULES = {
     (R.AF3, R.D2): Has(ProgItem.Buckle),
     (R.RH, R.BH_BV): Has(ProgItem.ProgTrans) & CanReachHeight(8),
     (R.AF_RH, R.FR): Has(ProgItem.ProgForceBeam) | CanReachHeight(5),
-    (R.AF_RH, R.CA): HasLocationGroup("Star", 166),
+    (R.AF_RH, R.CA): HasLocationGroup(LocationGroup.Star, 166),
     #(R.CT, R.CT): HasAll(ProgItem.ProgForceBeam, ProgItem.Buckle), # Jank
     (R.BH_BV, R.RH): True_(),
     #(R.BFB1, R.BA): True_(),

@@ -14,11 +14,14 @@ class SupralandLocation(Location):
 class LocationGroup(str, Enum):
     C = "Coin"
     BC = "Big Coin"
+    G = "Grave"
     Star = "Star" # Gives a star, I think
+    RStar = "Requires Stars"
     E = "Event"
 
 class LocationName(str, Enum):
     RH = "Rattlehag"
+    MB = "Meatbag"
     BP_UnlockMap_2 = "Blue Crystal - After Gate - on top of tower"
     BuyBelt2_2 = "Blueville - Shop 1"
     BuyChestDetector_30 = "Before Boss 1 - Chest Detector Shop"
@@ -247,7 +250,7 @@ class LocationName(str, Enum):
     Chest99_2116 = "Carrot Town - hidden next to carrots"
     Chest9_2231 = "Introduction - Chest upstairs"
     Chest_622 = "Desert 2 - Purple Block Jump"
-    #UpgradeHappiness2_2 = "Redville - Shop - Barrel behind combat"
+    UpgradeHappiness2_2 = "Redville - Shop - Barrel behind combat"
     Juicer2 = "Farm - in basement"
     Juicer3 = "Redville - Juicer"
     Juicer_286 = "Carrot Town - Strong"
@@ -1189,18 +1192,18 @@ class LocationName(str, Enum):
     Shell5_1015 = "Red Crystal - behind metal door 2"
     Shell9_2044 = "Red Crystal - next to tree"
     Shell_1483 = "Red Crystal - hidden cave"
-    DeadHero2Austin = "After Chapel 2 - behind carrot"
-    DeadHero2Link = "Desert 2 - in dark cave"
-    DeadHero3Heman = "Desert 3 - on top of rock"
-    DeadHero3Pokemon = "Blue Crystal - Inside - inside tube"
-    DeadHero4Picard = "After Chapel 2 - on high stone ledge"
-    DeadHero4Santa = "Before Purple - on supraballers House"
-    DeadHero4Santa2 = "Before Purple - in flooded valley"
-    DeadHero4Santa3 = "Boss Arena - next to farm"
+    DeadHero2Austin = "After Chapel 2 - Dead Hero with glasses"
+    DeadHero2Link = "Desert 2 - Dead Hero"
+    DeadHero3Heman = "Desert 3 - Dead Hero"
+    DeadHero3Pokemon = "Blue Crystal - Dead Hero"
+    DeadHero4Picard = "After Chapel 3 - Dead Hero on a high rock"
+    DeadHero4Santa = "Before Purple - Dead Hero on house"
+    DeadHero4Santa2 = "Before Purple - Dead Hero in valley"
+    DeadHero4Santa3 = "Boss Arena - Dead Hero"
     DeadHero_3 = "Blueville - on roof"
-    DeadHeroGoku = "Lavafield - ForceBeam3 & BuyForceCube_C & HeightIncrease3 & BuyBelt_C"
-    DeadHeroGuybrush = "Suprafield - behind arena"
-    DeadHeroIndy = "Red Crystal - next to purple button"
+    DeadHeroGoku = "Lavafield - Dead Hero"
+    DeadHeroGuybrush = "Suprafield - Dead Hero"
+    DeadHeroIndy = "Red Crystal - Dead Hero"
 
 @dataclass(frozen=True)
 class LocationData:
@@ -1212,6 +1215,7 @@ class LocationData:
 
 ALL_LOCATIONS: tuple[LocationData, ...] = (
     LocationData(LocationName.RH, RegionName.RH, group=LocationGroup.E),
+    LocationData(LocationName.MB, RegionName.BA, group=LocationGroup.E),
     LocationData(LocationName.BP_UnlockMap_2, RegionName.BC_AG, 20),
     LocationData(LocationName.BuyBelt2_2, RegionName.BV, 120),
     LocationData(LocationName.BuyChestDetector_30, RegionName.BFB1, 400),
@@ -1278,10 +1282,10 @@ ALL_LOCATIONS: tuple[LocationData, ...] = (
     LocationData(LocationName.Chest107_9218, RegionName.AF2),
     LocationData(LocationName.Chest108_10670, RegionName.D2),
     LocationData(LocationName.Chest109, RegionName.RV),
-    LocationData(LocationName.Chest10_1082, RegionName.FR, group=LocationGroup.C),
+    LocationData(LocationName.Chest10_1082, RegionName.FR, group=LocationGroup.RStar),
     LocationData(LocationName.Chest110, RegionName.PC),
     LocationData(LocationName.Chest111_3, RegionName.BC_AG),
-    LocationData(LocationName.Chest112, RegionName.RV, group=LocationGroup.C),
+    LocationData(LocationName.Chest112, RegionName.RV, group=LocationGroup.RStar),
     LocationData(LocationName.Chest113, RegionName.D1),
     LocationData(LocationName.Chest114, RegionName.BV),
     LocationData(LocationName.Chest115_4, RegionName.CT),
@@ -1392,7 +1396,7 @@ ALL_LOCATIONS: tuple[LocationData, ...] = (
     LocationData(LocationName.Chest55_3907, RegionName.AF3),
     LocationData(LocationName.Chest56_5023, RegionName.AF4),
     LocationData(LocationName.Chest57_1073, RegionName.SF),
-    LocationData(LocationName.Chest58, RegionName.RV, group=LocationGroup.C),
+    LocationData(LocationName.Chest58, RegionName.RV, group=LocationGroup.RStar),
     LocationData(LocationName.Chest59, RegionName.RV),
     LocationData(LocationName.Chest5_1955, RegionName.D2),
     LocationData(LocationName.Chest60_2151, RegionName.RC),
@@ -1440,8 +1444,8 @@ ALL_LOCATIONS: tuple[LocationData, ...] = (
     LocationData(LocationName.Chest99_2116, RegionName.CT),
     LocationData(LocationName.Chest9_2231, RegionName.Intro),
     LocationData(LocationName.Chest_622, RegionName.D2),
-    #LocationData(LocationName.UpgradeHappiness2_2, RegionName.RV, 1337),
-    LocationData(LocationName.Juicer2, RegionName.FR, group=LocationGroup.C),
+    LocationData(LocationName.UpgradeHappiness2_2, RegionName.RV, 1337),
+    LocationData(LocationName.Juicer2, RegionName.FR, group=LocationGroup.RStar),
     LocationData(LocationName.Juicer3, RegionName.RV),
     LocationData(LocationName.Juicer_286, RegionName.CT),
     LocationData(LocationName.Shell13_3781, RegionName.RC),
@@ -1476,8 +1480,15 @@ location_name_groups: dict[str, set[str]] = {
     for group, location_names in groupby(sorted(location_table, key=get_location_group), get_location_group)
 }
 
-all_names = [loc.name.value for loc in ALL_LOCATIONS]
-for loc in ALL_LOCATIONS:
-    count = all_names.count(loc.name)
-    if count>1:
-        print(loc, count, loc.name)
+
+# all_names = [loc.name.value for loc in ALL_LOCATIONS if loc.group != LocationGroup.E]
+# print(len(all_names))
+# print(len(set(all_names)))
+#
+# for loc in ALL_LOCATIONS:
+#     count = all_names.count(loc.name)
+#     if count>1:
+#         print(loc, count, loc.name)
+
+# for name, val in location_name_to_id.items():
+#     print(f"\t{location_table[name].name.name} = {val},")

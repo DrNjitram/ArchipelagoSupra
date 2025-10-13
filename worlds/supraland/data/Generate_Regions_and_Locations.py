@@ -94,25 +94,30 @@ RegionKeys = {
 }
 
 print(raw_data[0].split(","))
+i = 0
 for line in raw_data[2:]:
     location = [l.strip() for l in line.strip().split(",")]
+    if location[6] in ["Coin_C", "CoinBig_C", "EnemySpawn1_C", "EnemySpawn2_C", "EnemySpawn3_C"]:
+        continue
+    i+=1
+    print(f"{location[0].replace("+", "_")} = {location[6]}")
+    #print(f"{location[0].replace("+", "_")} = \"{loc_replace[location[9]]} - {location[8]}\"")
+print(i)
+# for line in raw_data[2:]:
+#     location = [l.strip() for l in line.strip().split(",")]
+#     if location[6] in ["Coin_C", "CoinBig_C", "EnemySpawn1_C", "EnemySpawn2_C", "EnemySpawn3_C"]:
+#         continue
+#     coins = 0
+#     if "coins" in location[10].lower() and "gives" not in location[10].lower():
+#         coins = int(location[10].split()[0])
+#     if coins:
+#         print(f"LocationData(LocationName.{location[0].replace("+", "_")}, RegionName.{RegionKeys[location[9]]}, {coins}),")
+#     else:
+#         print(
+#             f"LocationData(LocationName.{location[0].replace("+", "_")}, RegionName.{RegionKeys[location[9]]}),")
 
-    print(f"{location[0].replace("+", "_")} = \"{loc_replace[location[9]]} - {location[8]}\"")
-
-for line in raw_data[2:]:
-    location = [l.strip() for l in line.strip().split(",")]
-
-    coins = 0
-    if "coins" in location[10].lower() and "gives" not in location[10].lower():
-        coins = int(location[10].split()[0])
-    if coins:
-        print(f"LocationData(LocationName.{location[0].replace("+", "_")}, RegionName.{RegionKeys[location[9]]}, {coins}),")
-    else:
-        print(
-            f"LocationData(LocationName.{location[0].replace("+", "_")}, RegionName.{RegionKeys[location[9]]}),")
-
-for line in raw_data[2:]:
-    location = [l.strip() for l in line.strip().split(",")]
-
-    print(f"L.{location[0].replace("+", "_")}: True_(),")
+# for line in raw_data[2:]:
+#     location = [l.strip() for l in line.strip().split(",")]
+#
+#     print(f"L.{location[0].replace("+", "_")}: True_(),")
 

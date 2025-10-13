@@ -1,13 +1,13 @@
-from functools import cached_property
-from typing import Any, Dict, List, ClassVar, override
 
-from .StateHelpers import CanAfford, can_defeat_rattlehag
+from typing import Any, Dict, List, ClassVar, override
+from .tracker import UTMxin
+from .StateHelpers import CanAfford
 from .items import (
     Events,
-    ItemGroup,
+
     item_name_to_id,
     item_table,
-    SupralandItem, FillerItem, ItemName
+    SupralandItem, FillerItem, ProgressionItem, TheftItem
 )
 from . import options
 from .locations import (
@@ -18,14 +18,14 @@ from .locations import (
     location_name_to_id,
     location_table,
 )
-from .regions import supraland_regions, RegionName
+from .regions import supraland_regions
 from BaseClasses import Tutorial, Region, ItemClassification, Item
 from worlds.AutoWorld import WebWorld, World
 from .constants import GAME_NAME
-from rule_builder import RuleWorldMixin
+from .rule_builder import RuleWorldMixin
 from .main_campaign import COMPLETION_RULE,  MAIN_LOCATION_RULES
 from .entrances import ENTRANCE_RULES, PIPE_RULES
-#from .tracker import UTMxin
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -40,7 +40,7 @@ class SupralandWeb(WebWorld):
         ["Dr. Njitram", "Gummy"]
     )]
 
-class SupralandWorld(RuleWorldMixin, World):
+class SupralandWorld(UTMxin, RuleWorldMixin, World):
     """
      A mix between Portal, Zelda and Metroid. Exploration, puzzles, terrible combat, secret upgrades and new abilities that help you reach new places.
     """
@@ -52,21 +52,19 @@ class SupralandWorld(RuleWorldMixin, World):
     location_name_groups: ClassVar[dict[str, set[str]]] = location_name_groups
     item_name_to_id: ClassVar[dict[str, int]] = item_name_to_id
     location_name_to_id = location_name_to_id
-    rule_caching_enabled: ClassVar[bool] = True
+    rule_caching_enabled: ClassVar[bool] = False
     #explicit_indirect_conditions = False
 
     options_dataclass = options.SupralandOptions
     options: options.SupralandOptions
     required_client_version = (0, 6, 4)
 
+
     origin_region_name = "Introduction"
 
-    coinsanity_types = ["Coin_C", "CoinBig_C", "Coin:Chest_C"]
-    gravesanity_types = ["EnemySpawn1_C", "EnemySpawn2_C", "EnemySpawn3_C"]
+    coinsanity_types = [FillerItem.Coin, FillerItem.BigCoin]
+    gravesanity_types = [FillerItem.EnemySpawn1, FillerItem.EnemySpawn2, FillerItem.EnemySpawn3]
 
-    # @override
-    # def generate_early(self) -> None:
-    #     pass
 
     @override
     def create_location(self, name: str) -> SupralandLocation:
@@ -109,28 +107,20 @@ class SupralandWorld(RuleWorldMixin, World):
                         logger.debug(f"No matching rules for {region_name.value} -> {pipe_region_name.value}")
 
         for group, location_names in location_name_groups.items():
-            if group in [LocationGroup.E]:
+            if group == LocationGroup.E:
                 continue
-
+            if (not self.options.gravesanity.value and group in [LocationGroup.C, LocationGroup.BC]) or (
+                    not self.options.coinsanity.value and group == LocationGroup.G):
+                continue
             for location_name in sorted(location_names):
-                # if location_name == LocationName.UpgradeHappiness2_2:
+                # if location_name == LocationName.UpgradeHappiness2_2 and self.options.shufflehappiness:
                 #     continue
-        #for location_name in location_table:
+
                 self.create_location(location_name)
 
         self.create_event(Events.RH, LocationName.RH)
+        self.create_event(Events.MB, LocationName.MB)
 
-
-        victory_region = self.get_region(RegionName.BA)
-        victory_location = SupralandLocation(self.player, Events.MB.value, None, victory_region)
-        victory_item = SupralandItem(
-            Events.MB.value,
-            ItemClassification.progression_skip_balancing,
-            None,
-            self.player,
-        )
-        victory_location.place_locked_item(victory_item)
-        victory_region.locations.append(victory_location)
         self.set_completion_rule(COMPLETION_RULE)
 
 
@@ -139,7 +129,8 @@ class SupralandWorld(RuleWorldMixin, World):
             "coinsanity": self.options.coinsanity.value,
             "gravesanity": self.options.gravesanity.value,
             "enemy_trap": self.options.enemy_trap.value,
-            "deathlink": self.options.deathlink.value
+            "deathlink": self.options.deathlink.value,
+            "shuffleHappiness": self.options.shufflehappiness.value
         }
 
     @override
@@ -164,11 +155,24 @@ class SupralandWorld(RuleWorldMixin, World):
         pool: List[Item] = []
         filler_pool: List[Item] = []
 
+        if not self.options.theftskip:
+            for loc, item in [(LocationName.BuyBelt2_2, TheftItem.StolenBuckle),
+                              (LocationName.BuyDoubleJump2, TheftItem.StolenJump2),
+                              (LocationName.BuyTripleJump2, TheftItem.StolenJump3),
+                              (LocationName.BuyForceBlock3, TheftItem.StolenCube),
+                              (LocationName.BuyGun2_2, TheftItem.StolenGun),]:
+                self.get_location(loc).place_locked_item(self.create_item(item.value))
+
+
         for data in item_table.values():
-            # if (not self.options.gravesanity.value and data.type_name in self.gravesanity_types) or (not self.options.coinsanity.value and data.type_name in self.coinsanity_types):
-            #     continue
+            if not self.options.shufflehappiness and data.name == ProgressionItem.Happiness:
+                item = self.create_item(data.name.value)
+                self.get_location(LocationName.UpgradeHappiness2_2).place_locked_item(item)
+                continue
+            if (not self.options.gravesanity.value and data.name in self.gravesanity_types) or (not self.options.coinsanity.value and data.name in self.coinsanity_types):
+                continue
             for _ in range(data.count):
-                pool.append(self.create_item(data.name.value))
+                pool.append(self.create_item(str(data.name.value)))
 
         total_locations = len(self.multiworld.get_unfilled_locations(self.player))
 

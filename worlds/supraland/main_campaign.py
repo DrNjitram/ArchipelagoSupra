@@ -3,7 +3,7 @@ from .locations import LocationName as L, LocationGroup as LG
 from .regions import RegionName as R
 from .items import ProgressionItem as P, Events as E, UsefulItem as U
 from .StateHelpers import *
-from rule_builder import *
+from .rule_builder import *
 
 # Chest91 Helper: CanReachHeight(3) & can_destroy_red_planks
 

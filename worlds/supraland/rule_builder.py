@@ -17,6 +17,7 @@ else:
     World = object
 
 
+
 class RuleWorldMixin(World):
     """A World mixin that provides helpers for interacting with the rule builder"""
 
@@ -581,7 +582,8 @@ class Rule(Generic[TWorld]):
             custom_rules[cls.__qualname__] = cls
         elif cls.__module__ != "rule_builder":
             # TODO: test to make sure this works on frozen
-            raise TypeError("You cannot define custom rules for the base Archipelago world")
+            pass
+            #raise TypeError("You cannot define custom rules for the base Archipelago world")
         cls.game_name = game
 
     class Resolved(metaclass=CustomRuleRegister):

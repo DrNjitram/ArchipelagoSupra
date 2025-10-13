@@ -17,7 +17,7 @@ class ProgressionItem(str, Enum):
     ProgSword = "Progressive Sword"
     Buckle = "Float Buckle"
     ProgSpeedJump = "Progressive Speed/Jumps"
-    ProgForceBeam = "Progressive Force Beams"
+    ProgForceBeam = "Progressive Force Beam"
     ProgCube = "Progressive Cube"
     ProgGun = "Progressive Gun"
     ProgTrans = "Progressive Translocator"
@@ -33,6 +33,7 @@ class ProgressionItem(str, Enum):
 
     Health2 = "Max Health +2"
     Health5 = "Max Health +5"
+    Health10 = "Max Health +10"
     Health15 = "Max Health +15"
     GunCritDamage = "Gun Critical Damage"
     GunCritChance = "Gun Critical Change +5%"
@@ -76,8 +77,6 @@ class UsefulItem(str, Enum):
     DoubleHealth = "Double Health"
 
 
-
-
 class FillerItem(str, Enum):
     Map = "Map"
     Stats = "Stats"
@@ -108,6 +107,12 @@ class FillerItem(str, Enum):
     EnemySpawn2 = "Stone Grave"
     EnemySpawn3 = "Volcano"
 
+class TheftItem(str, Enum):
+    StolenBuckle = "Float  Buckle"
+    StolenGun = "Might MacGuffin"
+    StolenJump2 = "Double Jump"
+    StolenJump3 = "Triple Jump"
+    StolenCube = "Force Cube"
 
 class TrapItem(str, Enum):
     pass
@@ -117,7 +122,7 @@ class Events(str, Enum):
     MB = "Meatbag"
 
 ItemName: TypeAlias = (
-    FillerItem | ProgressionItem | UsefulItem | TrapItem
+    FillerItem | ProgressionItem | UsefulItem | TrapItem | TheftItem
 )
 
 
@@ -170,7 +175,6 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(FillerItem.EnemyHealth, ItemClassification.filler, 1),
     ItemData(UsefulItem.TransDamage, ItemClassification.useful, 2),
     ItemData(UsefulItem.TransCooldown, ItemClassification.useful, 1),
-    ItemData(ProgressionItem.GunAltDamage, ItemClassification.progression, 5),
     ItemData(ProgressionItem.GreenMoon, ItemClassification.progression, 2),
     ItemData(ProgressionItem.RedMoon, ItemClassification.progression, 6),
     ItemData(UsefulItem.GunSplash, ItemClassification.useful, 1),
@@ -192,8 +196,8 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(UsefulItem.SwordSpeed, ItemClassification.useful, 1),
     ItemData(FillerItem.LootLuck, ItemClassification.filler, 1),
     ItemData(FillerItem.CoinMagnet, ItemClassification.filler, 1),
-    # ItemData(FillerItem.Coin, ItemClassification.filler, 651),
-    # ItemData(FillerItem.BigCoin, ItemClassification.filler, 83),
+    ItemData(FillerItem.Coin, ItemClassification.filler, 651),
+    ItemData(FillerItem.BigCoin, ItemClassification.filler, 83),
     ItemData(FillerItem.HeroAustin, ItemClassification.filler, 1),
     ItemData(FillerItem.HeroLink, ItemClassification.filler, 1),
     ItemData(FillerItem.HeroHeman, ItemClassification.filler, 1),
@@ -206,17 +210,32 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(FillerItem.HeroGoku, ItemClassification.filler, 1),
     ItemData(FillerItem.HeroGuy, ItemClassification.filler, 1),
     ItemData(FillerItem.HeroIndy, ItemClassification.filler, 1),
-    # ItemData(FillerItem.EnemySpawn1, ItemClassification.filler, 76),
-    # ItemData(FillerItem.EnemySpawn2, ItemClassification.filler, 55),
-    # ItemData(FillerItem.EnemySpawn3, ItemClassification.filler, 67),
+    ItemData(FillerItem.EnemySpawn1, ItemClassification.filler, 76),
+    ItemData(FillerItem.EnemySpawn2, ItemClassification.filler, 55),
+    ItemData(FillerItem.EnemySpawn3, ItemClassification.filler, 67),
     ItemData(UsefulItem.DoubleHealth, ItemClassification.useful, 1),
     ItemData(ProgressionItem.Shell, ItemClassification.progression, 6),
     ItemData(ProgressionItem.Strong, ItemClassification.progression, 1),
-    #ItemData(ProgressionItem.Happiness, ItemClassification.progression, 1),
-    ItemData(FillerItem.Coin, ItemClassification.filler, 1)
+    ItemData(ProgressionItem.Happiness, ItemClassification.progression, 1),
+    ItemData(TheftItem.StolenBuckle, ItemClassification.progression_skip_balancing, 0),
+    ItemData(TheftItem.StolenGun, ItemClassification.progression_skip_balancing, 0),
+    ItemData(TheftItem.StolenCube, ItemClassification.progression_skip_balancing, 0),
+    ItemData(TheftItem.StolenJump2, ItemClassification.progression_skip_balancing, 0),
+    ItemData(TheftItem.StolenJump3, ItemClassification.progression_skip_balancing, 0),
+    ItemData(ProgressionItem.Health10, ItemClassification.progression, 1),
 )
 
 item_table = {item.name.value: item for item in ALL_ITEMS}
 item_name_to_id: dict[str, int] = {data.name.value: i for i, data in enumerate(ALL_ITEMS, start=BASE_ID)}
 
-#print(sum(i.count for i in ALL_ITEMS))
+#print(sum(i.count for i in ALL_ITEMS if i.name not in [FillerItem.Coin, FillerItem.BigCoin, FillerItem.EnemySpawn1, FillerItem.EnemySpawn2, FillerItem.EnemySpawn3]))
+
+# for name, val in item_name_to_id.items():
+#      #print(f"\t{val} = \"{item_table[name].name.name}\",")
+#     print(f"\t{item_table[name].name.name} = \"{item_table[name].name.value}\",")
+
+# all_names = [loc.name.value for loc in ALL_ITEMS]
+# for loc in ALL_ITEMS:
+#     count = all_names.count(loc.name)
+#     if count>1:
+#         print(loc, count, loc.name)

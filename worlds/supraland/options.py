@@ -20,6 +20,16 @@ class Enemytrap(Toggle):
     Add enemy traps to the item pool
     """
 
+class ShuffleHappiness(Toggle):
+    """
+    Put the Happiness item into the item pool
+    """
+
+class SkipBluevilleTheft(Toggle):
+    """
+    Does not remove your items at the Blueville theft
+    """
+
 class SupralandDeathLink(DeathLink):
     __doc__ = DeathLink.__doc__
 
@@ -30,4 +40,6 @@ class SupralandOptions(PerGameCommonOptions):
     gravesanity: GraveSanity
     enemy_trap: Enemytrap
     deathlink: DeathLink
+    shufflehappiness: ShuffleHappiness
+    theftskip: SkipBluevilleTheft
 
