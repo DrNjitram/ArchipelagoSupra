@@ -68,8 +68,9 @@ class CanReachHeight(Rule["SupralandWorld"], game=GAME_NAME):
             if state is None:
                 return str(self)
             prefix = "Reached" if self(state) else "Cannot reach"
-            return f"{prefix} height {self.target_height} with {sum([HeightTable[item][min(state.count(item, self.player)-1, len(HeightTable[item]))] for item in
-                        HeightTable.keys()])}({item_dict})"
+            reachable_height = sum([HeightTable[item][min(state.count(item, self.player)-1, len(HeightTable[item]))] for item in
+                        HeightTable.keys()])
+            return f"{prefix} height {self.target_height} with {reachable_height}({item_dict})"
 
         @override
         def __str__(self) -> str:
