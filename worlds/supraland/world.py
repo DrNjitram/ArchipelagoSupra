@@ -2,7 +2,7 @@
 from typing import Any, Dict, List, ClassVar#, override
 from typing_extensions import override
 from .tracker import UTMxin
-from .StateHelpers import CanAfford
+from .StateHelpers import CanAfford, can_defeat_meatbag, can_defeat_rattlehag
 from .items import (
     Events,
 
@@ -65,7 +65,9 @@ class SupralandWorld(UTMxin, RuleWorldMixin, World):
 
     coinsanity_types = [FillerItem.Coin, FillerItem.BigCoin]
     gravesanity_types = [FillerItem.EnemySpawn1, FillerItem.EnemySpawn2, FillerItem.EnemySpawn3]
-
+    skip_types = [FillerItem.Map, FillerItem.HeroAustin, FillerItem.HeroLink, FillerItem.HeroHeman, FillerItem.HeroAsh
+                          , FillerItem.HeroPicard, FillerItem.HeroSanta, FillerItem.HeroVault, FillerItem.HeroStar, FillerItem.HeroMagic
+                          , FillerItem.HeroGoku, FillerItem.HeroGuy, FillerItem.HeroIndy]
 
     @override
     def create_location(self, name: str) -> SupralandLocation:
@@ -156,6 +158,22 @@ class SupralandWorld(UTMxin, RuleWorldMixin, World):
         pool: List[Item] = []
         filler_pool: List[Item] = []
 
+        # Currently non-functional
+        for loc, item in [(LocationName.BP_UnlockMap_2, FillerItem.Map),
+                          (LocationName.DeadHero2Austin, FillerItem.HeroAustin),
+                          (LocationName.DeadHero2Link, FillerItem.HeroLink),
+                          (LocationName.DeadHero3Heman, FillerItem.HeroHeman),
+                          (LocationName.DeadHero3Pokemon, FillerItem.HeroAsh),
+                          (LocationName.DeadHero4Picard, FillerItem.HeroPicard),
+                          (LocationName.DeadHero4Santa, FillerItem.HeroSanta),
+                          (LocationName.DeadHero4Santa2, FillerItem.HeroVault),
+                          (LocationName.DeadHero4Santa3, FillerItem.HeroStar),
+                          (LocationName.DeadHero_3, FillerItem.HeroMagic),
+                          (LocationName.DeadHeroGoku, FillerItem.HeroGoku),
+                          (LocationName.DeadHeroGuybrush, FillerItem.HeroGuy),
+                          (LocationName.DeadHeroIndy, FillerItem.HeroIndy)]:
+            self.get_location(loc).place_locked_item(self.create_item(item.value))
+
         if not self.options.theftskip:
             for loc, item in [(LocationName.BuyBelt2_2, TheftItem.StolenBuckle),
                               (LocationName.BuyDoubleJump2, TheftItem.StolenJump2),
@@ -171,6 +189,8 @@ class SupralandWorld(UTMxin, RuleWorldMixin, World):
                 self.get_location(LocationName.UpgradeHappiness2_2).place_locked_item(item)
                 continue
             if (not self.options.gravesanity.value and data.name in self.gravesanity_types) or (not self.options.coinsanity.value and data.name in self.coinsanity_types):
+                continue
+            if data.name in self.skip_types:
                 continue
             for _ in range(data.count):
                 pool.append(self.create_item(str(data.name.value)))

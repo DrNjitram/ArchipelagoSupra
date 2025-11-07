@@ -7,12 +7,14 @@ import contextlib
 import copy
 import datetime
 import functools
+import glob
 import hashlib
 import inspect
 import itertools
 import logging
 import math
 import operator
+import os
 import pickle
 import random
 import shlex
@@ -2683,7 +2685,9 @@ async def main(args: argparse.Namespace):
     if not data_filename:
         try:
             filetypes = (("Multiworld data", (".archipelago", ".zip")),)
-            data_filename = Utils.open_filename("Select multiworld data", filetypes)
+            #data_filename = Utils.open_filename("Select multiworld data", filetypes)
+            data_filename = sorted(glob.glob(r'.\output\*'), key=os.path.getmtime, reverse=True)[0]
+            print(data_filename)
 
         except Exception as e:
             if isinstance(e, ImportError) or (e.__class__.__name__ == "TclError" and "no display" in str(e)):
@@ -2707,7 +2711,9 @@ async def main(args: argparse.Namespace):
         logging.exception(f"Failed to read multiworld data ({e})")
         raise
 
+
     ctx.init_save(not args.disable_save)
+
 
     ssl_context = load_server_cert(args.cert, args.cert_key) if args.cert else None
 

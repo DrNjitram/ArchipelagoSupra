@@ -157,7 +157,7 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(ProgressionItem.Health15, ItemClassification.progression, 5),
     ItemData(UsefulItem.ProgHealthRegen, ItemClassification.useful, 18),
     ItemData(UsefulItem.ShieldBreaker, ItemClassification.useful, 1),
-    ItemData(UsefulItem.ShowProgress, ItemClassification.useful, 1),
+    ItemData(UsefulItem.ShowProgress, ItemClassification.progression, 1),
     ItemData(UsefulItem.StompDamage, ItemClassification.useful, 5),
     ItemData(FillerItem.Stats, ItemClassification.filler, 1),
     ItemData(ProgressionItem.ProgSword, ItemClassification.progression, 2),
@@ -228,11 +228,13 @@ ALL_ITEMS: tuple[ItemData, ...] = (
 item_table = {item.name.value: item for item in ALL_ITEMS}
 item_name_to_id: dict[str, int] = {data.name.value: i for i, data in enumerate(ALL_ITEMS, start=BASE_ID)}
 
+#print(item_name_to_id["Strong"])
 #print(sum(i.count for i in ALL_ITEMS if i.name not in [FillerItem.Coin, FillerItem.BigCoin, FillerItem.EnemySpawn1, FillerItem.EnemySpawn2, FillerItem.EnemySpawn3]))
 
 # for name, val in item_name_to_id.items():
-#      #print(f"\t{val} = \"{item_table[name].name.name}\",")
-#     print(f"\t{item_table[name].name.name} = \"{item_table[name].name.value}\",")
+#     print(f"[\"{val}\"] = \"{item_table[name].name.name}\",")
+     #print(f"\t{val} = \"{item_table[name].name.name}\",")
+    #print(f"\t{item_table[name].name.name} = \"{item_table[name].name.value}\",")
 
 # all_names = [loc.name.value for loc in ALL_ITEMS]
 # for loc in ALL_ITEMS:
