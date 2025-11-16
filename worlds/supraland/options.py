@@ -30,6 +30,11 @@ class SkipBluevilleTheft(Toggle):
     Does not remove your items at the Blueville theft
     """
 
+class IncludeHeroes(Toggle):
+    """"
+    Include the dead heroes into the shuffle
+    """
+
 class SupralandDeathLink(DeathLink):
     __doc__ = DeathLink.__doc__
 
@@ -42,4 +47,5 @@ class SupralandOptions(PerGameCommonOptions):
     deathlink: DeathLink
     shufflehappiness: ShuffleHappiness
     theftskip: SkipBluevilleTheft
+    deadheroes: IncludeHeroes
 

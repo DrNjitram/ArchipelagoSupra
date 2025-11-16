@@ -19,6 +19,12 @@ else:
     World = object
 
 
+if TYPE_CHECKING:
+    from worlds.AutoWorld import World
+else:
+    World = object
+
+
 def rule_to_json(rule: CollectionRule | None, state: CollectionState) -> list[JSONMessagePart]:
     if isinstance(rule, Rule.Resolved):
         return [
@@ -55,10 +61,6 @@ class UTMxin(World):
                 if opt is not None:
                     setattr(self.options, key, opt.from_any(value))
 
-            if "starting_characters" in slot_data:
-                self.starting_characters = [Character(c) for c in slot_data["starting_characters"]]
-            if "extra_gold_eyes" in slot_data:
-                self.extra_gold_eyes = slot_data["extra_gold_eyes"]
 
     def get_logical_path(self, dest_name: str, state: CollectionState) -> list[JSONMessagePart]:
         if not dest_name:

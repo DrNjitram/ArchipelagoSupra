@@ -13,10 +13,10 @@ if TYPE_CHECKING:
     from world import SupralandWorld
 
 HeightTable = {
-    ProgressionItem.ProgTrans: [3, 6], #base, shot force
-    ProgressionItem.ProgSpeedJump: [1, 2, 4, 5], #speed inc 1.5x, 2x, double jump, triple jump
-    ProgressionItem.ProgCube: [2, 2, 2],
-#    ProgressionItem.Happiness: [100]
+    ProgressionItem.ProgTrans: [0, 3, 6], #base, shot force
+    ProgressionItem.ProgSpeedJump: [0, 1, 2, 4, 5], #speed inc 1.5x, 2x, double jump, triple jump
+    ProgressionItem.ProgCube: [0, 2, 2, 2],
+    #ProgressionItem.Happiness: [0, 100]
 }
 wallet_sizes = [30, 45, 67, 101, 151, 227, 455, 911, 1822, 3645, 7290]
 star_pairs = ((L.Chest10_1082, 23), (L.Juicer2, 23), (L.Chest112, 80), (L.Chest58, 80))
@@ -43,10 +43,10 @@ class CanReachHeight(Rule["SupralandWorld"], game=GAME_NAME):
 
 
     class Resolved(Rule.Resolved):
-        target_height: int
+        target_height: int = 1
 
         def _evaluate(self, state: CollectionState) -> bool:
-            return sum([HeightTable[item][min(state.count(item, self.player)-1, len(HeightTable[item]))] for item in
+            return sum([HeightTable[item][min(state.count(item, self.player), len(HeightTable[item]))] for item in
                         HeightTable.keys()]) >= self.target_height
 
         @override
@@ -97,7 +97,7 @@ class CanAfford(Rule["SupralandWorld"], game=GAME_NAME):
 
 
     class Resolved(Rule.Resolved):
-        cost: int
+        cost: int = 1
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
@@ -159,7 +159,7 @@ class CanDefeatCombat(Rule["SupralandWorld"], game=GAME_NAME):
 
 
     class Resolved(Rule.Resolved):
-        combat: int
+        combat: int = 1
 
         def get_combat_level(self, state: CollectionState) -> int:
             return (sum(state.count(item, self.player) for item in to_count) +
@@ -225,8 +225,8 @@ class HasLocationGroup(Rule["SupralandWorld"], game=GAME_NAME):
         )
 
     class Resolved(Rule.Resolved):
-        location_name_group: str
-        location_names: tuple[str, ...]
+        location_name_group: str = ""
+        location_names: tuple[str, ...] = ("", "")
         count: int = 1
 
         @override

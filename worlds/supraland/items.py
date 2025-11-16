@@ -75,6 +75,15 @@ class UsefulItem(str, Enum):
     GunCoin = "Gun Picks Up Coins"
     SwordSpeed = "Sword 33% Faster"
     DoubleHealth = "Double Health"
+    LotOfCoin1 = "1 Coin"
+    LotOfCoin2 = "2 Coins"
+    LotOfCoin3 = "3 Coins"
+    LotOfCoin5 = "5 Coins"
+    LotOfCoin10 = "10 Coins"
+    LotOfCoin15 = "15 Coins"
+    LotOfCoin30 = "30 Coins"
+    LotOfCoin50 = "50 Coins"
+    LotOfCoin200 = "200 Coins"
 
 
 class FillerItem(str, Enum):
@@ -113,6 +122,7 @@ class TheftItem(str, Enum):
     StolenJump2 = "Double Jump"
     StolenJump3 = "Triple Jump"
     StolenCube = "Force Cube"
+    StolenCoins = "Stolen Coins"
 
 class TrapItem(str, Enum):
     pass
@@ -171,7 +181,7 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(ProgressionItem.Wallet15, ItemClassification.progression, 5),
     ItemData(UsefulItem.StompRadius, ItemClassification.useful, 8),
     ItemData(ProgressionItem.GunComboDamage, ItemClassification.progression, 8),
-    ItemData(FillerItem.CoinBundle, ItemClassification.filler, 25),
+    ItemData(FillerItem.CoinBundle, ItemClassification.filler, 0),
     ItemData(FillerItem.EnemyHealth, ItemClassification.filler, 1),
     ItemData(UsefulItem.TransDamage, ItemClassification.useful, 2),
     ItemData(UsefulItem.TransCooldown, ItemClassification.useful, 1),
@@ -216,13 +226,23 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(UsefulItem.DoubleHealth, ItemClassification.useful, 1),
     ItemData(ProgressionItem.Shell, ItemClassification.progression, 6),
     ItemData(ProgressionItem.Strong, ItemClassification.progression, 1),
-    ItemData(ProgressionItem.Happiness, ItemClassification.progression, 1),
+    ItemData(ProgressionItem.Happiness, ItemClassification.useful, 1),
     ItemData(TheftItem.StolenBuckle, ItemClassification.progression_skip_balancing, 0),
     ItemData(TheftItem.StolenGun, ItemClassification.progression_skip_balancing, 0),
     ItemData(TheftItem.StolenCube, ItemClassification.progression_skip_balancing, 0),
     ItemData(TheftItem.StolenJump2, ItemClassification.progression_skip_balancing, 0),
     ItemData(TheftItem.StolenJump3, ItemClassification.progression_skip_balancing, 0),
     ItemData(ProgressionItem.Health10, ItemClassification.progression, 1),
+    ItemData(TheftItem.StolenCoins, ItemClassification.progression_skip_balancing, 0),
+    ItemData(UsefulItem.LotOfCoin1, ItemClassification.useful, 0), # sums to 25
+    ItemData(UsefulItem.LotOfCoin2, ItemClassification.useful, 0),
+    ItemData(UsefulItem.LotOfCoin3, ItemClassification.useful, 0),
+    ItemData(UsefulItem.LotOfCoin5, ItemClassification.useful, 1),
+    ItemData(UsefulItem.LotOfCoin10, ItemClassification.useful, 9),
+    ItemData(UsefulItem.LotOfCoin15, ItemClassification.useful, 3),
+    ItemData(UsefulItem.LotOfCoin30, ItemClassification.useful, 4),
+    ItemData(UsefulItem.LotOfCoin50, ItemClassification.useful, 5),
+    ItemData(UsefulItem.LotOfCoin200, ItemClassification.useful, 2),
 )
 
 item_table = {item.name.value: item for item in ALL_ITEMS}

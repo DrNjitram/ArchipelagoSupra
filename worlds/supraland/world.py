@@ -20,7 +20,7 @@ from .locations import (
     location_table,
 )
 from .regions import supraland_regions
-from BaseClasses import Tutorial, Region, ItemClassification, Item
+from BaseClasses import Tutorial, Region, ItemClassification, Item, LocationProgressType
 from worlds.AutoWorld import WebWorld, World
 from .constants import GAME_NAME
 from .rule_builder import RuleWorldMixin
@@ -120,6 +120,7 @@ class SupralandWorld(UTMxin, RuleWorldMixin, World):
                 #     continue
 
                 self.create_location(location_name)
+        self.get_location(LocationName.Chest157).progress_type = LocationProgressType.EXCLUDED
 
         self.create_event(Events.RH, LocationName.RH)
         self.create_event(Events.MB, LocationName.MB)
@@ -158,29 +159,30 @@ class SupralandWorld(UTMxin, RuleWorldMixin, World):
         pool: List[Item] = []
         filler_pool: List[Item] = []
 
-        # Currently non-functional
-        for loc, item in [(LocationName.BP_UnlockMap_2, FillerItem.Map),
-                          (LocationName.DeadHero2Austin, FillerItem.HeroAustin),
-                          (LocationName.DeadHero2Link, FillerItem.HeroLink),
-                          (LocationName.DeadHero3Heman, FillerItem.HeroHeman),
-                          (LocationName.DeadHero3Pokemon, FillerItem.HeroAsh),
-                          (LocationName.DeadHero4Picard, FillerItem.HeroPicard),
-                          (LocationName.DeadHero4Santa, FillerItem.HeroSanta),
-                          (LocationName.DeadHero4Santa2, FillerItem.HeroVault),
-                          (LocationName.DeadHero4Santa3, FillerItem.HeroStar),
-                          (LocationName.DeadHero_3, FillerItem.HeroMagic),
-                          (LocationName.DeadHeroGoku, FillerItem.HeroGoku),
-                          (LocationName.DeadHeroGuybrush, FillerItem.HeroGuy),
-                          (LocationName.DeadHeroIndy, FillerItem.HeroIndy)]:
-            self.get_location(loc).place_locked_item(self.create_item(item.value))
+        if self.options.deadheroes:
+            for loc, item in [(LocationName.DeadHero2Austin, FillerItem.HeroAustin),
+                              (LocationName.DeadHero2Link, FillerItem.HeroLink),
+                              (LocationName.DeadHero3Heman, FillerItem.HeroHeman),
+                              (LocationName.DeadHero3Pokemon, FillerItem.HeroAsh),
+                              (LocationName.DeadHero4Picard, FillerItem.HeroPicard),
+                              (LocationName.DeadHero4Santa, FillerItem.HeroSanta),
+                              (LocationName.DeadHero4Santa2, FillerItem.HeroVault),
+                              (LocationName.DeadHero4Santa3, FillerItem.HeroStar),
+                              (LocationName.DeadHero_3, FillerItem.HeroMagic),
+                              (LocationName.DeadHeroGoku, FillerItem.HeroGoku),
+                              (LocationName.DeadHeroGuybrush, FillerItem.HeroGuy),
+                              (LocationName.DeadHeroIndy, FillerItem.HeroIndy)]:
+                self.get_location(loc).place_locked_item(self.create_item(item.value))
 
         if not self.options.theftskip:
             for loc, item in [(LocationName.BuyBelt2_2, TheftItem.StolenBuckle),
                               (LocationName.BuyDoubleJump2, TheftItem.StolenJump2),
                               (LocationName.BuyTripleJump2, TheftItem.StolenJump3),
                               (LocationName.BuyForceBlock3, TheftItem.StolenCube),
-                              (LocationName.BuyGun2_2, TheftItem.StolenGun),]:
+                              (LocationName.BuyGun2_2, TheftItem.StolenGun),
+                              (LocationName.Chest114, TheftItem.StolenCoins)]:
                 self.get_location(loc).place_locked_item(self.create_item(item.value))
+
 
 
         for data in item_table.values():

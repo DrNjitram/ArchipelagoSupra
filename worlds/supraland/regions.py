@@ -46,7 +46,8 @@ supraland_regions: dict[RegionName, RegionData] = {
         exits=(
             RegionName.Intro,
             RegionName.D1,
-            RegionName.SF,)
+            #RegionName.SF,
+        )
     ),
     RegionName.D1: RegionData(
         exits=(
@@ -74,7 +75,7 @@ supraland_regions: dict[RegionName, RegionData] = {
             RegionName.RC,
             RegionName.FR,
             RegionName.RH,
-            RegionName.BFB1,
+            #RegionName.BFB1,
             RegionName.GC,
         )
     ),
@@ -143,7 +144,7 @@ supraland_regions: dict[RegionName, RegionData] = {
             RegionName.AF1,
             RegionName.AF3,
             RegionName.AF4,
-            #RegionName.SF,
+            RegionName.SF,
         )
     ),
     RegionName.AF3: RegionData(
