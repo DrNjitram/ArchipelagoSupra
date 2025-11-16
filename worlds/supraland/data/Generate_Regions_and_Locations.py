@@ -100,7 +100,8 @@ for line in raw_data[2:]:
     if location[6] in ["Coin_C", "CoinBig_C", "EnemySpawn1_C", "EnemySpawn2_C", "EnemySpawn3_C"]:
         continue
     i+=1
-    print(f"{location[0].replace("+", "_")} = {location[6]}")
+    loc = location[0].replace("+", "_")
+    print(f"{loc} = {location[6]}")
     #print(f"{location[0].replace("+", "_")} = \"{loc_replace[location[9]]} - {location[8]}\"")
 print(i)
 # for line in raw_data[2:]:

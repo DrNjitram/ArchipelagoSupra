@@ -71,10 +71,11 @@ connections = {}
 localisation = {}
 
 for d in marker_data.values():
-    if d["type"] not in all_types:
-        raise Exception(f"Type not found: {d["type"]}. Add to ignore_types if it isn't needed")
-    if d["type"] in relevant_types and d["type"] not in game_classes:
-        raise Exception(f"Missing Localisation for {d["type"]}")
+    t = d["type"]
+    if t not in all_types:
+        raise Exception(f"Type not found: {t}. Add to ignore_types if it isn't needed")
+    if t in relevant_types and t not in game_classes:
+        raise Exception(f"Missing Localisation for {t}")
     if d["type"] not in relevant_types:
         continue
 
