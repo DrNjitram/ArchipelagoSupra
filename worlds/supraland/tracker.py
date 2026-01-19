@@ -1,14 +1,14 @@
 # pyright: reportUninitializedInstanceVariable=false
 
 from functools import cached_property
-from typing import TYPE_CHECKING, Any, ClassVar
+from typing import Any, ClassVar, TYPE_CHECKING
 
 from typing_extensions import override
 
 from BaseClasses import CollectionState, Entrance, Location, Region
 from NetUtils import JSONMessagePart
 from Options import Option
-from .rule_builder import Rule
+from .rule_builder.rules import Rule
 from Utils import get_intended_text  # pyright: ignore[reportUnknownVariableType]
 from worlds.generic.Rules import CollectionRule
 
@@ -19,10 +19,7 @@ else:
     World = object
 
 
-if TYPE_CHECKING:
-    from worlds.AutoWorld import World
-else:
-    World = object
+# from.bases import SupralandWorldBase
 
 
 def rule_to_json(rule: CollectionRule | None, state: CollectionState) -> list[JSONMessagePart]:
@@ -37,7 +34,7 @@ def rule_to_json(rule: CollectionRule | None, state: CollectionState) -> list[JS
     ]
 
 
-class UTMxin(World):
+class SupralandUTWorld(World):
     ut_can_gen_without_yaml: ClassVar[bool] = True
 
 

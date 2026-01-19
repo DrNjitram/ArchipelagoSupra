@@ -1,4 +1,6 @@
+from dataclasses import dataclass
 from enum import Enum
+from functools import cached_property
 from typing import NamedTuple, TypeAlias
 from .constants import BASE_ID, GAME_NAME
 
@@ -142,7 +144,24 @@ class ItemData(NamedTuple):
     count: int
     group: ItemGroup = ItemGroup.N
 
+@dataclass(frozen=True)
+class EarlyItems:
+    items: tuple[ItemName, ...] = ()
+    @cached_property
+    def all(self) -> set[ItemName]:
+        return set(self.items)
 
+EARLY_ITEMS = {
+    "First_Sword": EarlyItems(items = (
+        ProgressionItem.ProgSword,
+        ProgressionItem.ProgGun,
+        ProgressionItem.ProgTrans,
+        ProgressionItem.Stomp
+    )),
+    "Early_Speed": EarlyItems(items = (
+        ProgressionItem.ProgSpeedJump,
+    ))
+}
 
 ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(FillerItem.Map, ItemClassification.filler, 1),
@@ -246,7 +265,7 @@ ALL_ITEMS: tuple[ItemData, ...] = (
 )
 
 item_table = {item.name.value: item for item in ALL_ITEMS}
-item_name_to_id: dict[str, int] = {data.name.value: i for i, data in enumerate(ALL_ITEMS, start=BASE_ID)}
+item_name_to_id: dict[str, int] = {str(data.name.value): int(i) for i, data in enumerate(ALL_ITEMS, start=BASE_ID)}
 
 #print(item_name_to_id["Strong"])
 #print(sum(i.count for i in ALL_ITEMS if i.name not in [FillerItem.Coin, FillerItem.BigCoin, FillerItem.EnemySpawn1, FillerItem.EnemySpawn2, FillerItem.EnemySpawn3]))

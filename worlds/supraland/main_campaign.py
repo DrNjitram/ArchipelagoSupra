@@ -1,13 +1,13 @@
-
-from .locations import LocationName as L, LocationGroup as LG
+from .locations import LocationGroup as LG
 from .regions import RegionName as R
 from .items import ProgressionItem as P, Events as E, UsefulItem as U
 from .StateHelpers import *
-from .rule_builder import *
+from .rule_builder.rules import Rule, True_
+
 
 # Chest91 Helper: CanReachHeight(3) & can_destroy_red_planks
 
-MAIN_LOCATION_RULES: dict[L, Rule["SupralandWorld"]] = {
+MAIN_LOCATION_RULES: dict[L, Rule[SupralandWorldBase]] = {
     L.RH: can_defeat_rattlehag,
     L.MB: can_defeat_meatbag,
     L.BP_UnlockMap_2: Has(P.Buckle),
@@ -262,4 +262,4 @@ MAIN_LOCATION_RULES: dict[L, Rule["SupralandWorld"]] = {
     L.DeadHeroIndy: reach_upper_red_crystal & Has(P.ProgGun),
 }
 
-COMPLETION_RULE = Has(E.MB)
+COMPLETION_RULE: Rule[SupralandWorldBase] = Has(E.MB)

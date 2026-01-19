@@ -1,21 +1,28 @@
 import dataclasses
 from enum import Enum
-from typing import TYPE_CHECKING, Iterable, Any
+from typing import TYPE_CHECKING
+
 from typing_extensions import override
 from BaseClasses import CollectionState
 from NetUtils import JSONMessagePart
 from .constants import GAME_NAME
-from .rule_builder import Has, HasAny, Rule, TWorld, OptionFilter, HasAll, HasAllCounts, CanReachLocation
-from .items import FillerItem, ProgressionItem, TrapItem, UsefulItem
+from .items import ItemName, ProgressionItem, Events
 from .locations import LocationName as L
 
 if TYPE_CHECKING:
-    from world import SupralandWorld
+    from world import SupralandWorld as SupralandWorldBase
+else:
+    SupralandWorldBase = object
+
+from .locations import RegionName
+from .rule_builder import rules
+from .rule_builder.options import OptionFilter
+from collections.abc import Iterable
 
 HeightTable = {
-    ProgressionItem.ProgTrans: [0, 3, 6], #base, shot force
-    ProgressionItem.ProgSpeedJump: [0, 1, 2, 4, 5], #speed inc 1.5x, 2x, double jump, triple jump
-    ProgressionItem.ProgCube: [0, 2, 2, 2],
+    ProgressionItem.ProgTrans: [0, 3, 6, 6], #base, shot force
+    ProgressionItem.ProgSpeedJump: [0, 1, 2, 4, 5, 5], #speed inc 1.5x, 2x, double jump, triple jump
+    ProgressionItem.ProgCube: [0, 2, 2, 2, 2],
     #ProgressionItem.Happiness: [0, 100]
 }
 wallet_sizes = [30, 45, 67, 101, 151, 227, 455, 911, 1822, 3645, 7290]
@@ -27,22 +34,115 @@ to_double = [ProgressionItem.GunDamage15, ProgressionItem.GunDamage5, Progressio
 def as_str(value: Enum | str) -> str:
     return str(value.value) if isinstance(value, Enum) else value
 
+@dataclasses.dataclass(init=False)
+class Has(rules.Has[SupralandWorldBase], game=GAME_NAME):
+    @override
+    def __init__(
+        self,
+        item_name: ItemName | Events,
+        count: int = 1,
+        *,
+        options: Iterable[OptionFilter] = (),
+    ) -> None:
+        super().__init__(as_str(item_name), count, options=options)
+
+
+@dataclasses.dataclass(init=False)
+class HasAll(rules.HasAll[SupralandWorldBase], game=GAME_NAME):
+    @override
+    def __init__(
+        self,
+        *item_names: ItemName | Events,
+        options: Iterable[OptionFilter] = (),
+    ) -> None:
+        names = [as_str(name) for name in item_names]
+        if len(names) != len(set(names)):
+            raise ValueError(f"Duplicate items detected, likely typo, items: {names}")
+
+        super().__init__(*names, options=options)
+
+@dataclasses.dataclass(init=False)
+class HasAllCounts(rules.HasAllCounts[SupralandWorldBase], game=GAME_NAME):
+    @override
+    def __init__(
+        self,
+        item_counts: dict[str, int],
+        options: Iterable[OptionFilter] = (),
+    ) -> None:
+        names = [as_str(name) for name in item_counts.keys()]
+        if len(names) != len(set(names)):
+            raise ValueError(f"Duplicate items detected, likely typo, items: {names}")
+
+        super().__init__(item_counts, options=options)
+
+@dataclasses.dataclass(init=False)
+class HasAnyCount(rules.HasAnyCount[SupralandWorldBase], game=GAME_NAME):
+    @override
+    def __init__(
+        self,
+        item_counts: dict[str, int],
+        options: Iterable[OptionFilter] = (),
+    ) -> None:
+        names = [as_str(name) for name in item_counts.keys()]
+        if len(names) != len(set(names)):
+            raise ValueError(f"Duplicate items detected, likely typo, items: {names}")
+
+        super().__init__(item_counts, options=options)
+
+@dataclasses.dataclass(init=False)
+class HasAny(rules.HasAny[SupralandWorldBase], game=GAME_NAME):
+    @override
+    def __init__(
+        self,
+        *item_names: ItemName | Events,
+        options: Iterable[OptionFilter] = (),
+    ) -> None:
+        names = [as_str(name) for name in item_names]
+        if len(names) != len(set(names)):
+            raise ValueError(f"Duplicate items detected, likely typo, items: {names}")
+
+        super().__init__(*names, options=options)
+
+
+@dataclasses.dataclass(init=False)
+class CanReachLocation(rules.CanReachLocation[SupralandWorldBase], game=GAME_NAME):
+    @override
+    def __init__(
+        self,
+        location_name: L,
+        parent_region_name: RegionName | None = None,
+        skip_indirect_connection: bool = False,
+        *,
+        options: Iterable[OptionFilter] = (),
+    ) -> None:
+        super().__init__(as_str(location_name), as_str(parent_region_name), skip_indirect_connection, options=options)
+
+
+@dataclasses.dataclass(init=False)
+class CanReachRegion(rules.CanReachRegion[SupralandWorldBase], game=GAME_NAME):
+    @override
+    def __init__(
+        self,
+        region_name: RegionName,
+        *,
+        options: Iterable[OptionFilter] = (),
+    ) -> None:
+        super().__init__(as_str(region_name), options=options)
+
 
 @dataclasses.dataclass()
-class CanReachHeight(Rule["SupralandWorld"], game=GAME_NAME):
+class CanReachHeight(rules.Rule[SupralandWorldBase], game=GAME_NAME):
 
     TargetHeight: int = 1
 
-
-
     @override
-    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+    def _instantiate(self, world: SupralandWorldBase) -> rules.Rule.Resolved:
         if self.TargetHeight == 0:
             return world.true_rule
         return self.Resolved(self.TargetHeight, player=world.player, caching_enabled=world.rule_caching_enabled)
 
 
-    class Resolved(Rule.Resolved):
+    class Resolved(rules.Rule.Resolved):
         target_height: int = 1
 
         def _evaluate(self, state: CollectionState) -> bool:
@@ -83,24 +183,22 @@ class CanReachHeight(Rule["SupralandWorld"], game=GAME_NAME):
 
 
 @dataclasses.dataclass()
-class CanAfford(Rule["SupralandWorld"], game=GAME_NAME):
+class CanAfford(rules.Rule[SupralandWorldBase], game=GAME_NAME):
 
     cost: int = 1
 
     @override
-    def _instantiate(self, world: TWorld) -> Rule.Resolved:
-        # ## TODO FIX
-        # return world.true_rule
-        if self.cost <= 30:
-            return world.true_rule
+    def _instantiate(self, world: SupralandWorldBase) -> rules.Rule.Resolved:
         return self.Resolved(self.cost, player=world.player, caching_enabled=world.rule_caching_enabled)
 
 
-    class Resolved(Rule.Resolved):
+    class Resolved(rules.Rule.Resolved):
         cost: int = 1
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
+            if self.cost < 30:
+                return True
             if not state.has(ProgressionItem.Loot, self.player):
                 return False
             return 30*(2**state.count(ProgressionItem.Wallet2, self.player))*(1.5**state.count(ProgressionItem.Wallet15, self.player)) > self.cost
@@ -139,7 +237,7 @@ class CanAfford(Rule["SupralandWorld"], game=GAME_NAME):
                 }
 
 @dataclasses.dataclass()
-class CanDefeatCombat(Rule["SupralandWorld"], game=GAME_NAME):
+class CanDefeatCombat(rules.Rule[SupralandWorldBase], game=GAME_NAME):
     # currently just counts all health once, and all combat twice
     # 21x Health (2x 2, 16x 5, 3x 15)
     # 21x Regen (1x base, 3x speed, 16x 5, 1x 10)
@@ -152,13 +250,13 @@ class CanDefeatCombat(Rule["SupralandWorld"], game=GAME_NAME):
 
 
     @override
-    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+    def _instantiate(self, world: SupralandWorldBase) -> rules.Rule.Resolved:
         if self.combat == 0:
             return world.true_rule
         return self.Resolved(self.combat, player=world.player, caching_enabled=world.rule_caching_enabled)
 
 
-    class Resolved(Rule.Resolved):
+    class Resolved(rules.Rule.Resolved):
         combat: int = 1
 
         def get_combat_level(self, state: CollectionState) -> int:
@@ -204,7 +302,7 @@ class CanDefeatCombat(Rule["SupralandWorld"], game=GAME_NAME):
 
 
 @dataclasses.dataclass()
-class HasLocationGroup(Rule["SupralandWorld"], game=GAME_NAME):
+class HasLocationGroup(rules.Rule[SupralandWorldBase], game=GAME_NAME):
 
     location_name_group: str
     """The name of the item group containing the items"""
@@ -214,7 +312,7 @@ class HasLocationGroup(Rule["SupralandWorld"], game=GAME_NAME):
 
 
     @override
-    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+    def _instantiate(self, world: SupralandWorldBase) -> rules.Rule.Resolved:
         location_names = tuple(sorted(world.location_name_groups[self.location_name_group]))
         return self.Resolved(
             self.location_name_group,
@@ -224,7 +322,7 @@ class HasLocationGroup(Rule["SupralandWorld"], game=GAME_NAME):
             caching_enabled=world.rule_caching_enabled,
         )
 
-    class Resolved(Rule.Resolved):
+    class Resolved(rules.Rule.Resolved):
         location_name_group: str = ""
         location_names: tuple[str, ...] = ("", "")
         count: int = 1

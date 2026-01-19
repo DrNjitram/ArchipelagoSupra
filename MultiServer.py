@@ -2689,8 +2689,8 @@ async def main(args: argparse.Namespace):
         try:
             filetypes = (("Multiworld data", (".archipelago", ".zip")),)
             #data_filename = Utils.open_filename("Select multiworld data", filetypes)
-            data_filename = sorted(glob.glob(r'.\output\*'), key=os.path.getmtime, reverse=True)[0]
-            print(data_filename)
+            data_filename = sorted(glob.glob(r'.\output\*.zip'), key=os.path.getmtime, reverse=True)[0]
+
 
         except Exception as e:
             if isinstance(e, ImportError) or (e.__class__.__name__ == "TclError" and "no display" in str(e)):

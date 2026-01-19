@@ -1,16 +1,16 @@
+import logging
 
-from typing import Any, Dict, List, ClassVar#, override
+from typing import Any, Dict, List, ClassVar
 from typing_extensions import override
-from .tracker import UTMxin
-from .StateHelpers import CanAfford, can_defeat_meatbag, can_defeat_rattlehag
+from BaseClasses import Tutorial, Region, ItemClassification, Item, LocationProgressType
+
+from .constants import GAME_NAME
 from .items import (
     Events,
-
     item_name_to_id,
     item_table,
     SupralandItem, FillerItem, ProgressionItem, TheftItem
 )
-from . import options
 from .locations import (
     SupralandLocation,
     LocationGroup,
@@ -19,15 +19,15 @@ from .locations import (
     location_name_to_id,
     location_table,
 )
-from .regions import supraland_regions
-from BaseClasses import Tutorial, Region, ItemClassification, Item, LocationProgressType
-from worlds.AutoWorld import WebWorld, World
-from .constants import GAME_NAME
-from .rule_builder import RuleWorldMixin
-from .main_campaign import COMPLETION_RULE,  MAIN_LOCATION_RULES
 from .entrances import ENTRANCE_RULES, PIPE_RULES
-
-import logging
+from .main_campaign import COMPLETION_RULE,  MAIN_LOCATION_RULES
+from worlds.generic.Rules import set_rule
+from .StateHelpers import CanAfford
+from . import options
+from .options import SupralandOptions
+from .regions import supraland_regions
+from .tracker import SupralandUTWorld
+from worlds.AutoWorld import WebWorld, World
 
 logger = logging.getLogger(__name__)
 
@@ -41,24 +41,31 @@ class SupralandWeb(WebWorld):
         ["Dr. Njitram", "Gummy"]
     )]
 
-class SupralandWorld(UTMxin, RuleWorldMixin, World):
+
+def create_entrance(region, exit_region, rule):
+    region.connect(exit_region, rule=rule)
+
+
+class SupralandWorld(SupralandUTWorld, World):
     """
      A mix between Portal, Zelda and Metroid. Exploration, puzzles, terrible combat, secret upgrades and new abilities that help you reach new places.
     """
 
-    game: ClassVar[str] = GAME_NAME
-    web: ClassVar[WebWorld] = SupralandWeb()
+    game = GAME_NAME
+    web = SupralandWeb()
+
+    options_dataclass = SupralandOptions
+    options: SupralandOptions  # pyright: ignore[reportIncompatibleVariableOverride]
 
     #item_name_groups: ClassVar[dict[str, set[str]]] = item_name_groups
     location_name_groups: ClassVar[dict[str, set[str]]] = location_name_groups
     item_name_to_id: ClassVar[dict[str, int]] = item_name_to_id
     location_name_to_id = location_name_to_id
-    rule_caching_enabled: ClassVar[bool] = False
-    #explicit_indirect_conditions = False
 
-    options_dataclass = options.SupralandOptions
-    options: options.SupralandOptions
-    required_client_version = (0, 6, 4)
+    explicit_indirect_conditions = False
+    rule_caching_enabled: ClassVar[bool] = False
+
+    required_client_version = (0, 6, 6)
 
 
     origin_region_name = "Introduction"
@@ -79,11 +86,17 @@ class SupralandWorld(UTMxin, RuleWorldMixin, World):
 
         if rule is not None:
             if data.cost:
-                self.set_rule(location, rule & CanAfford(data.cost))
+                rule = (rule & CanAfford(data.cost)).resolve(self)
+                set_rule(location, rule)
             else:
-                self.set_rule(location, rule)
+                rule = rule.resolve(self)
+                set_rule(location, rule)
+
+            #self.register_rule_dependencies(rule)
         region.locations.append(location)
+
         return location
+
 
     @override
     def create_regions(self) -> None:
@@ -97,17 +110,25 @@ class SupralandWorld(UTMxin, RuleWorldMixin, World):
                 exit_region = self.get_region(exit_region_name.value)
                 region_pair = (region_name, exit_region_name)
                 rule = ENTRANCE_RULES.get(region_pair)
-                entrance = self.create_entrance(region, exit_region, rule)
-                if not entrance:
-                    logger.debug(f"No matching rules for {region_name.value} -> {exit_region_name.value}")
+                if rule is None:
+                    raise Exception(f"No matching rules for {region_name.value} -> {exit_region_name.value}")
+                else:
+                    rule = rule.resolve(self)
+                    create_entrance(region, exit_region, rule)
+
+
             if region_data.pipes is not None:
                 for pipe_region_name in region_data.pipes:
                     pipe_region = self.get_region(pipe_region_name.value)
                     region_pair = (region_name, pipe_region_name)
                     rule = PIPE_RULES.get(region_pair)
-                    entrance = self.create_entrance(region, pipe_region, rule)
-                    if not entrance:
-                        logger.debug(f"No matching rules for {region_name.value} -> {pipe_region_name.value}")
+
+                    if rule is None:
+                        raise Exception(f"No matching rules for {region_name.value} -> {pipe_region_name.value}")
+                    else:
+                        rule = rule.resolve(self)
+                        create_entrance(region, pipe_region, rule)
+
 
         for group, location_names in location_name_groups.items():
             if group == LocationGroup.E:
@@ -125,7 +146,29 @@ class SupralandWorld(UTMxin, RuleWorldMixin, World):
         self.create_event(Events.RH, LocationName.RH)
         self.create_event(Events.MB, LocationName.MB)
 
-        self.set_completion_rule(COMPLETION_RULE)
+        rule = COMPLETION_RULE.resolve(self)
+        self.multiworld.completion_condition[self.player] = rule
+        #self.register_rule_dependencies(rule)
+
+    def pre_fill(self) -> None:
+        if self.options.earlyplank.value:
+            choice = str(self.multiworld.random.choice([ProgressionItem.ProgSword, ProgressionItem.ProgTrans, ProgressionItem.ProgGun]).value)
+            item = self.create_item(choice)
+            self.multiworld.push_item(self.get_location(LocationName.BuySword_695), item, False)
+            self.multiworld.itempool.remove(item)
+        if self.options.earlyspeed:
+            item = self.create_item(ProgressionItem.ProgSpeedJump)
+            if self.options.earlyspeed == 1: # Sphere 1
+                # Jank for now
+                self.multiworld.push_item(self.get_location(LocationName.Chest27_4172), item, False)
+                #self.multiworld.early_items[self.player][item.name] = 1
+                #self.multiworld.local_early_items[self.player][item.name] = 1
+            else: # self.option.earlyspeed == 2: # Start With
+                self.push_precollected(item)
+            self.multiworld.itempool.remove(item)
+
+        to_add = len(self.multiworld.get_unfilled_locations(self.player)) - len(self.multiworld.itempool)
+        self.multiworld.itempool += [self.create_filler() for _ in range(to_add)]
 
 
     def fill_slot_data(self) -> Dict[str, Any]:
@@ -134,7 +177,7 @@ class SupralandWorld(UTMxin, RuleWorldMixin, World):
             "gravesanity": self.options.gravesanity.value,
             "enemy_trap": self.options.enemy_trap.value,
             "deathlink": self.options.deathlink.value,
-            "shuffleHappiness": self.options.shufflehappiness.value
+            "bluetheft": self.options.theftskip.value
         }
 
     @override
@@ -172,7 +215,8 @@ class SupralandWorld(UTMxin, RuleWorldMixin, World):
                               (LocationName.DeadHeroGoku, FillerItem.HeroGoku),
                               (LocationName.DeadHeroGuybrush, FillerItem.HeroGuy),
                               (LocationName.DeadHeroIndy, FillerItem.HeroIndy)]:
-                self.get_location(loc).place_locked_item(self.create_item(item.value))
+                self.multiworld.push_item(self.get_location(loc), self.create_item(item.value), False)
+
 
         if not self.options.theftskip:
             for loc, item in [(LocationName.BuyBelt2_2, TheftItem.StolenBuckle),
@@ -181,14 +225,12 @@ class SupralandWorld(UTMxin, RuleWorldMixin, World):
                               (LocationName.BuyForceBlock3, TheftItem.StolenCube),
                               (LocationName.BuyGun2_2, TheftItem.StolenGun),
                               (LocationName.Chest114, TheftItem.StolenCoins)]:
-                self.get_location(loc).place_locked_item(self.create_item(item.value))
-
+                self.multiworld.push_item(self.get_location(loc), self.create_item(item.value), False)
 
 
         for data in item_table.values():
             if not self.options.shufflehappiness and data.name == ProgressionItem.Happiness:
-                item = self.create_item(data.name.value)
-                self.get_location(LocationName.UpgradeHappiness2_2).place_locked_item(item)
+                self.multiworld.push_item(self.get_location(LocationName.UpgradeHappiness2_2), self.create_item(data.name), False)
                 continue
             if (not self.options.gravesanity.value and data.name in self.gravesanity_types) or (not self.options.coinsanity.value and data.name in self.coinsanity_types):
                 continue
@@ -206,7 +248,8 @@ class SupralandWorld(UTMxin, RuleWorldMixin, World):
 
     @override
     def set_rules(self) -> None:
-        self.register_dependencies()
+        pass
+        #self.register_dependencies()
 
 
     @override

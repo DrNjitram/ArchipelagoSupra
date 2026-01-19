@@ -1,16 +1,17 @@
 from .locations import LocationGroup
 from .regions import RegionName as R
-from .rule_builder import Rule, True_, HasAll, Has, HasAny, CanReachRegion, HasAllCounts
 from typing import TYPE_CHECKING
+from .rule_builder.rules import Rule, True_, HasAll, Has, HasAny, CanReachRegion
 from .StateHelpers import can_destroy_red_planks, CanReachHeight, can_destroy_wood_grave, can_destroy_stone_grave, \
-    can_defeat_rattlehag, can_defeat_meatbag, HasLocationGroup
-from .items import ProgressionItem as ProgItem, Events, UsefulItem
-
+    can_defeat_meatbag, HasLocationGroup
+from .items import ProgressionItem as ProgItem, Events
 
 if TYPE_CHECKING:
-    from world import SupralandWorld
+    from world import SupralandWorld as SupralandWorldBase
+else:
+    SupralandWorldBase = object
 
-ENTRANCE_RULES: dict[tuple[R, R], Rule["SupralandWorld"]] = {
+ENTRANCE_RULES: dict[tuple[R, R], Rule[SupralandWorldBase]] = {
     (R.Intro, R.RV): can_destroy_red_planks,
     (R.RV, R.Intro): can_destroy_red_planks,
     (R.RV, R.D1): True_(),

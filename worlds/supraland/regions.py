@@ -223,7 +223,7 @@ supraland_regions: dict[RegionName, RegionData] = {
         pipes=(
             RegionName.AF_RH,
             #RegionName.PC,
-            RegionName.CA,
+            #RegionName.CA,
         )
     ),
     RegionName.PC: RegionData(
@@ -265,7 +265,7 @@ supraland_regions: dict[RegionName, RegionData] = {
             RegionName.BFB2,
         ),
         pipes=(
-            RegionName.BA,
+            #RegionName.BA,
         )
     ),
     RegionName.BFB2: RegionData(
