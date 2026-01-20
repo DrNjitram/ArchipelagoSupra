@@ -131,7 +131,7 @@ class TrapItem(str, Enum):
 
 class Events(str, Enum):
     RH = "Rattlehag"
-    MB = "Meatbag"
+    MB = "Victory"
 
 ItemName: TypeAlias = (
     FillerItem | ProgressionItem | UsefulItem | TrapItem | TheftItem
@@ -246,13 +246,13 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(ProgressionItem.Shell, ItemClassification.progression, 6),
     ItemData(ProgressionItem.Strong, ItemClassification.progression, 1),
     ItemData(ProgressionItem.Happiness, ItemClassification.useful, 1),
-    ItemData(TheftItem.StolenBuckle, ItemClassification.progression_skip_balancing, 0),
-    ItemData(TheftItem.StolenGun, ItemClassification.progression_skip_balancing, 0),
-    ItemData(TheftItem.StolenCube, ItemClassification.progression_skip_balancing, 0),
-    ItemData(TheftItem.StolenJump2, ItemClassification.progression_skip_balancing, 0),
-    ItemData(TheftItem.StolenJump3, ItemClassification.progression_skip_balancing, 0),
+    ItemData(TheftItem.StolenBuckle, ItemClassification.progression_skip_balancing, 1),
+    ItemData(TheftItem.StolenGun, ItemClassification.progression_skip_balancing, 1),
+    ItemData(TheftItem.StolenCube, ItemClassification.progression_skip_balancing, 1),
+    ItemData(TheftItem.StolenJump2, ItemClassification.progression_skip_balancing, 1),
+    ItemData(TheftItem.StolenJump3, ItemClassification.progression_skip_balancing, 1),
     ItemData(ProgressionItem.Health10, ItemClassification.progression, 1),
-    ItemData(TheftItem.StolenCoins, ItemClassification.progression_skip_balancing, 0),
+    ItemData(TheftItem.StolenCoins, ItemClassification.progression_skip_balancing, 1),
     ItemData(UsefulItem.LotOfCoin1, ItemClassification.useful, 0), # sums to 25
     ItemData(UsefulItem.LotOfCoin2, ItemClassification.useful, 0),
     ItemData(UsefulItem.LotOfCoin3, ItemClassification.useful, 0),

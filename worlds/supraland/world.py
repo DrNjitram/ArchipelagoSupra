@@ -72,9 +72,6 @@ class SupralandWorld(SupralandUTWorld, World):
 
     coinsanity_types = [FillerItem.Coin, FillerItem.BigCoin]
     gravesanity_types = [FillerItem.EnemySpawn1, FillerItem.EnemySpawn2, FillerItem.EnemySpawn3]
-    skip_types = [FillerItem.Map, FillerItem.HeroAustin, FillerItem.HeroLink, FillerItem.HeroHeman, FillerItem.HeroAsh
-                          , FillerItem.HeroPicard, FillerItem.HeroSanta, FillerItem.HeroVault, FillerItem.HeroStar, FillerItem.HeroMagic
-                          , FillerItem.HeroGoku, FillerItem.HeroGuy, FillerItem.HeroIndy]
 
     @override
     def create_location(self, name: str) -> SupralandLocation:
@@ -141,35 +138,20 @@ class SupralandWorld(SupralandUTWorld, World):
                 #     continue
 
                 self.create_location(location_name)
+
         self.get_location(LocationName.Chest157).progress_type = LocationProgressType.EXCLUDED
+
 
         self.create_event(Events.RH, LocationName.RH)
         self.create_event(Events.MB, LocationName.MB)
+
 
         rule = COMPLETION_RULE.resolve(self)
         self.multiworld.completion_condition[self.player] = rule
         #self.register_rule_dependencies(rule)
 
     def pre_fill(self) -> None:
-        if self.options.earlyplank.value:
-            choice = str(self.multiworld.random.choice([ProgressionItem.ProgSword, ProgressionItem.ProgTrans, ProgressionItem.ProgGun]).value)
-            item = self.create_item(choice)
-            self.multiworld.push_item(self.get_location(LocationName.BuySword_695), item, False)
-            self.multiworld.itempool.remove(item)
-        if self.options.earlyspeed:
-            item = self.create_item(ProgressionItem.ProgSpeedJump)
-            if self.options.earlyspeed == 1: # Sphere 1
-                # Jank for now
-                self.multiworld.push_item(self.get_location(LocationName.Chest27_4172), item, False)
-                #self.multiworld.early_items[self.player][item.name] = 1
-                #self.multiworld.local_early_items[self.player][item.name] = 1
-            else: # self.option.earlyspeed == 2: # Start With
-                self.push_precollected(item)
-            self.multiworld.itempool.remove(item)
-
-        to_add = len(self.multiworld.get_unfilled_locations(self.player)) - len(self.multiworld.itempool)
-        self.multiworld.itempool += [self.create_filler() for _ in range(to_add)]
-
+        pass
 
     def fill_slot_data(self) -> Dict[str, Any]:
         return {
@@ -202,7 +184,20 @@ class SupralandWorld(SupralandUTWorld, World):
         pool: List[Item] = []
         filler_pool: List[Item] = []
 
-        if self.options.deadheroes:
+        for data in item_table.values():
+            if (not self.options.gravesanity.value and data.name in self.gravesanity_types) or (not self.options.coinsanity.value and data.name in self.coinsanity_types):
+                continue
+            for _ in range(data.count):
+                pool.append(self.create_item(str(data.name.value)))
+
+        self.multiworld.itempool += pool
+
+        if not self.options.shufflehappiness:
+            item = self.create_item(ProgressionItem.Happiness)
+            self.multiworld.push_item(self.get_location(LocationName.UpgradeHappiness2_2), item,False)
+            self.multiworld.itempool.remove(item)
+
+        if not self.options.deadheroes:
             for loc, item in [(LocationName.DeadHero2Austin, FillerItem.HeroAustin),
                               (LocationName.DeadHero2Link, FillerItem.HeroLink),
                               (LocationName.DeadHero3Heman, FillerItem.HeroHeman),
@@ -215,7 +210,9 @@ class SupralandWorld(SupralandUTWorld, World):
                               (LocationName.DeadHeroGoku, FillerItem.HeroGoku),
                               (LocationName.DeadHeroGuybrush, FillerItem.HeroGuy),
                               (LocationName.DeadHeroIndy, FillerItem.HeroIndy)]:
-                self.multiworld.push_item(self.get_location(loc), self.create_item(item.value), False)
+                item = self.create_item(item.value)
+                self.multiworld.push_item(self.get_location(loc), item, False)
+                self.multiworld.itempool.remove(item)
 
 
         if not self.options.theftskip:
@@ -225,26 +222,33 @@ class SupralandWorld(SupralandUTWorld, World):
                               (LocationName.BuyForceBlock3, TheftItem.StolenCube),
                               (LocationName.BuyGun2_2, TheftItem.StolenGun),
                               (LocationName.Chest114, TheftItem.StolenCoins)]:
-                self.multiworld.push_item(self.get_location(loc), self.create_item(item.value), False)
+                item = self.create_item(item.value)
+                self.multiworld.push_item(self.get_location(loc), item, False)
+                self.multiworld.itempool.remove(item)
 
+        if self.options.earlyplank.value:
+            choice = str(self.multiworld.random.choice([ProgressionItem.ProgSword, ProgressionItem.ProgTrans, ProgressionItem.ProgGun]).value)
+            item = self.create_item(choice)
+            self.multiworld.push_item(self.get_location(LocationName.BuySword_695), item, False)
+            self.multiworld.itempool.remove(item)
+        if self.options.earlyspeed:
+            item = self.create_item(ProgressionItem.ProgSpeedJump)
+            if self.options.earlyspeed == 1: # Sphere 1
+                # Jank for now
+                self.multiworld.push_item(self.get_location(LocationName.Chest27_4172), item, False)
+                #self.multiworld.early_items[self.player][item.name] = 1
+                #self.multiworld.local_early_items[self.player][item.name] = 1
+                self.multiworld.itempool.remove(item)
+            else: # self.option.earlyspeed == 2: # Start With
+                self.push_precollected(item)
 
-        for data in item_table.values():
-            if not self.options.shufflehappiness and data.name == ProgressionItem.Happiness:
-                self.multiworld.push_item(self.get_location(LocationName.UpgradeHappiness2_2), self.create_item(data.name), False)
-                continue
-            if (not self.options.gravesanity.value and data.name in self.gravesanity_types) or (not self.options.coinsanity.value and data.name in self.coinsanity_types):
-                continue
-            if data.name in self.skip_types:
-                continue
-            for _ in range(data.count):
-                pool.append(self.create_item(str(data.name.value)))
 
         total_locations = len(self.multiworld.get_unfilled_locations(self.player))
 
         while len(pool) + len(filler_pool) < total_locations:
             filler_pool.append(self.create_filler())
 
-        self.multiworld.itempool += pool + filler_pool
+        self.multiworld.itempool += filler_pool
 
     @override
     def set_rules(self) -> None:
