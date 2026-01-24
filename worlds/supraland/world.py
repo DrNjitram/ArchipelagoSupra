@@ -238,9 +238,10 @@ class SupralandWorld(SupralandUTWorld, World):
                 state.add_item(ProgressionItem.ProgSword, 1, 1)
                 loc = self.multiworld.random.choice(self.multiworld.get_reachable_locations(state, 1))
                 self.multiworld.push_item(loc, item, False)
+                self.multiworld.itempool.remove(item)
             else: # self.option.earlyspeed == 2: # Start With
                 self.push_precollected(item)
-            self.multiworld.itempool.remove(item)
+
 
 
         total_locations = len(self.multiworld.get_unfilled_locations(self.player))
