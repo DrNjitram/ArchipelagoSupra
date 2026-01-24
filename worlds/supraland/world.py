@@ -232,15 +232,15 @@ class SupralandWorld(SupralandUTWorld, World):
             self.multiworld.push_item(self.get_location(LocationName.BuySword_695), item, False)
             self.multiworld.itempool.remove(item)
         if self.options.earlyspeed:
-            item = self.create_item(ProgressionItem.ProgSpeedJump)
+            item = self.create_item(ProgressionItem.ProgSpeedJump.value)
             if self.options.earlyspeed == 1: # Sphere 1
-                # Jank for now
-                self.multiworld.push_item(self.get_location(LocationName.Chest27_4172), item, False)
-                #self.multiworld.early_items[self.player][item.name] = 1
-                #self.multiworld.local_early_items[self.player][item.name] = 1
-                self.multiworld.itempool.remove(item)
+                state = self.multiworld.state.copy()
+                state.add_item(ProgressionItem.ProgSword, 1, 1)
+                loc = self.multiworld.random.choice(self.multiworld.get_reachable_locations(state, 1))
+                self.multiworld.push_item(loc, item, False)
             else: # self.option.earlyspeed == 2: # Start With
                 self.push_precollected(item)
+            self.multiworld.itempool.remove(item)
 
 
         total_locations = len(self.multiworld.get_unfilled_locations(self.player))
