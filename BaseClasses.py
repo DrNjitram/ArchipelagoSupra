@@ -8,10 +8,10 @@ import secrets
 import warnings
 from argparse import Namespace
 from collections import Counter, deque, defaultdict
-from collections.abc import Collection, MutableSequence
+from collections.abc import Callable, Collection, Iterable, Iterator, Mapping, MutableSequence, Set
 from enum import IntEnum, IntFlag
-from typing import (AbstractSet, Any, Callable, ClassVar, Dict, Iterable, Iterator, List, Literal, Mapping, NamedTuple,
-                    Optional, Protocol, Set, Tuple, Union, TYPE_CHECKING, Literal, overload)
+from typing import (AbstractSet, Any, ClassVar, Dict, List, Literal, NamedTuple,
+                    Optional, Protocol, Tuple, Union, TYPE_CHECKING, overload)
 import dataclasses
 
 from typing_extensions import NotRequired, TypedDict
@@ -22,6 +22,7 @@ import Utils
 
 if TYPE_CHECKING:
     from entrance_rando import ERPlacementState
+    from rule_builder.rules import Rule
     from worlds import AutoWorld
 
 
@@ -86,7 +87,7 @@ class MultiWorld():
     local_items: Dict[int, Options.LocalItems]
     non_local_items: Dict[int, Options.NonLocalItems]
     progression_balancing: Dict[int, Options.ProgressionBalancing]
-    completion_condition: Dict[int, Callable[[CollectionState], bool]]
+    completion_condition: Dict[int, CollectionRule]
     indirect_connections: Dict[Region, Set[Entrance]]
     exclude_locations: Dict[int, Options.ExcludeLocations]
     priority_locations: Dict[int, Options.PriorityLocations]
@@ -731,6 +732,7 @@ class CollectionState():
     advancements: Set[Location]
     path: Dict[Union[Region, Entrance], PathValue]
     locations_checked: Set[Location]
+    """Internal cache for Advancement Locations already checked by this CollectionState. Not for use in logic."""
     stale: Dict[int, bool]
     allow_partial_entrances: bool
     rule_cache: dict[int, dict[int, bool]]
@@ -794,9 +796,11 @@ class CollectionState():
                 self.multiworld.worlds[player].reached_region(self, new_region)
 
                 # Retry connections if the new region can unblock them
-                for new_entrance in self.multiworld.indirect_connections.get(new_region, set()):
-                    if new_entrance in blocked_connections and new_entrance not in queue:
-                        queue.append(new_entrance)
+                entrances = self.multiworld.indirect_connections.get(new_region)
+                if entrances is not None:
+                    relevant_entrances = entrances.intersection(blocked_connections)
+                    relevant_entrances.difference_update(queue)
+                    queue.extend(relevant_entrances)
 
     def _update_reachable_regions_auto_indirect_conditions(self, player: int, queue: deque[Entrance]):
         reachable_regions = self.reachable_regions[player]
@@ -1182,13 +1186,17 @@ class CollectionState():
             self.prog_items[player][item] = count
 
 
+CollectionRule = Callable[[CollectionState], bool]
+DEFAULT_COLLECTION_RULE: CollectionRule = staticmethod(lambda state: True)
+
+
 class EntranceType(IntEnum):
     ONE_WAY = 1
     TWO_WAY = 2
 
 
 class Entrance:
-    access_rule: Callable[[CollectionState], bool] = staticmethod(lambda state: True)
+    access_rule: CollectionRule = DEFAULT_COLLECTION_RULE
     hide_path: bool = False
     player: int
     name: str
@@ -1375,7 +1383,7 @@ class Region:
             self,
             location_name: str,
             item_name: str | None = None,
-            rule: Callable[[CollectionState], bool] | None = None,
+            rule: CollectionRule | Rule[Any] | None = None,
             location_type: type[Location] | None = None,
             item_type: type[Item] | None = None,
             show_in_spoiler: bool = True,
@@ -1403,7 +1411,7 @@ class Region:
         event_location = location_type(self.player, location_name, None, self)
         event_location.show_in_spoiler = show_in_spoiler
         if rule is not None:
-            event_location.access_rule = rule
+            self.multiworld.worlds[self.player].set_rule(event_location, rule)
 
         event_item = item_type(item_name, ItemClassification.progression, None, self.player)
 
@@ -1414,7 +1422,7 @@ class Region:
         return event_item
 
     def connect(self, connecting_region: Region, name: Optional[str] = None,
-                rule: Optional[Callable[[CollectionState], bool]] = None) -> Entrance:
+                rule: Optional[CollectionRule | Rule[Any]] = None) -> Entrance:
         """
         Connects this Region to another Region, placing the provided rule on the connection.
 
@@ -1423,7 +1431,7 @@ class Region:
         :param rule: callable to determine access of this connection to go from self to the exiting_region"""
         exit_ = self.create_exit(name if name else f"{self.name} -> {connecting_region.name}")
         if rule is not None:
-            exit_.access_rule = rule
+            self.multiworld.worlds[self.player].set_rule(exit_, rule)
         exit_.connect(connecting_region)
         return exit_
 
@@ -1448,7 +1456,7 @@ class Region:
         return entrance
 
     def add_exits(self, exits: Iterable[str] | Mapping[str, str | None],
-                  rules: Mapping[str, Callable[[CollectionState], bool]] | None = None) -> List[Entrance]:
+                  rules: Mapping[str, CollectionRule | Rule[Any]] | None = None) -> List[Entrance]:
         """
         Connects current region to regions in exit dictionary. Passed region names must exist first.
 
@@ -1488,7 +1496,7 @@ class Location:
     show_in_spoiler: bool = True
     progress_type: LocationProgressType = LocationProgressType.DEFAULT
     always_allow: Callable[[CollectionState, Item], bool] = staticmethod(lambda state, item: False)
-    access_rule: Callable[[CollectionState], bool] = staticmethod(lambda state: True)
+    access_rule: CollectionRule = DEFAULT_COLLECTION_RULE
     item_rule: Callable[[Item], bool] = staticmethod(lambda item: True)
     item: Optional[Item] = None
 
@@ -1573,13 +1581,13 @@ class ItemClassification(IntFlag):
     deprioritized = 0b10000
     """ Should technically never occur on its own.
     Will not be considered for priority locations,
-    unless Priority Locations Fill runs out of regular progression items before filling all priority locations. 
+    unless Priority Locations Fill runs out of regular progression items before filling all priority locations.
 
     Should be used for items that would feel bad for the player to find on a priority location.
     Usually, these are items that are plentiful or insignificant. """
 
     progression_deprioritized_skip_balancing = 0b11001
-    """ Since a common case of both skip_balancing and deprioritized is "insignificant progression", 
+    """ Since a common case of both skip_balancing and deprioritized is "insignificant progression",
     these items often want both flags. """
 
     progression_skip_balancing = 0b01001  # only progression gets balanced
