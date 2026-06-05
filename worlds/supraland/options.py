@@ -37,6 +37,8 @@ class SkipBluevilleTheft(Toggle):
     Does not remove your items at the Blueville theft
     """
     display_name = "Skip Blueville Theft"
+    visibility = Visibility.none
+    default = True
 
 class IncludeHeroes(Toggle):
     """"

@@ -65,7 +65,7 @@ class SupralandWorld(SupralandUTWorld, World):
     explicit_indirect_conditions = False
     rule_caching_enabled: ClassVar[bool] = False
 
-    required_client_version = (0, 6, 6)
+    required_client_version = (0, 6, 7)
 
 
     origin_region_name = "Introduction"
@@ -187,6 +187,8 @@ class SupralandWorld(SupralandUTWorld, World):
         for data in item_table.values():
             if (not self.options.gravesanity.value and data.name in self.gravesanity_types) or (not self.options.coinsanity.value and data.name in self.coinsanity_types):
                 continue
+            if self.options.theftskip and data.name in TheftItem:
+                continue
             for _ in range(data.count):
                 pool.append(self.create_item(str(data.name.value)))
 
@@ -196,6 +198,7 @@ class SupralandWorld(SupralandUTWorld, World):
             item = self.create_item(ProgressionItem.Happiness)
             self.multiworld.push_item(self.get_location(LocationName.UpgradeHappiness2_2), item,False)
             self.multiworld.itempool.remove(item)
+            pool.remove(item)
 
         if not self.options.deadheroes:
             for loc, item in [(LocationName.DeadHero2Austin, FillerItem.HeroAustin),
@@ -213,6 +216,7 @@ class SupralandWorld(SupralandUTWorld, World):
                 item = self.create_item(item.value)
                 self.multiworld.push_item(self.get_location(loc), item, False)
                 self.multiworld.itempool.remove(item)
+                pool.remove(item)
 
 
         if not self.options.theftskip:
@@ -225,14 +229,17 @@ class SupralandWorld(SupralandUTWorld, World):
                 item = self.create_item(item.value)
                 self.multiworld.push_item(self.get_location(loc), item, False)
                 self.multiworld.itempool.remove(item)
+                pool.remove(item)
 
         if self.options.earlyplank.value:
             choice = str(self.multiworld.random.choice([ProgressionItem.ProgSword, ProgressionItem.ProgTrans, ProgressionItem.ProgGun]).value)
             item = self.create_item(choice)
             self.multiworld.push_item(self.get_location(LocationName.BuySword_695), item, False)
             self.multiworld.itempool.remove(item)
+            pool.remove(item)
         if self.options.earlyspeed:
             item = self.create_item(ProgressionItem.ProgSpeedJump.value)
+            pool.remove(item)
             if self.options.earlyspeed == 1: # Sphere 1
                 state = self.multiworld.state.copy()
                 state.add_item(ProgressionItem.ProgSword, 1, 1)
