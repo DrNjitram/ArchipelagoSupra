@@ -379,7 +379,7 @@ class HasLocationGroup(rules.Rule[SupralandWorldBase], game=GAME_NAME):
 can_destroy_red_planks = HasAny(ProgressionItem.ProgSword, ProgressionItem.ProgGun, ProgressionItem.ProgTrans)
 
 can_defeat_meatbag = HasAllCounts({ProgressionItem.Buckle : 1, ProgressionItem.ProgForceBeam: 3}) & can_destroy_red_planks & Has(ProgressionItem.GreenMoon, 2)
-can_melt_metal = HasAllCounts({ProgressionItem.ProgGun: 7})
+can_melt_metal = Has(ProgressionItem.ProgGun, 7)
 can_destroy_wood_grave = HasAny(ProgressionItem.ProgGraveGun, ProgressionItem.ProgGraveSword)
 can_destroy_stone_grave = (HasAllCounts({ProgressionItem.ProgGraveSword: 2,ProgressionItem.ProgSword: 1})) | (HasAllCounts({ProgressionItem.ProgGraveGun: 2,ProgressionItem.ProgGun: 1}))
 can_break_stone = HasAll(ProgressionItem.Strong, ProgressionItem.ProgSword)

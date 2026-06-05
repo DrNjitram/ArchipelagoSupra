@@ -171,7 +171,7 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(ProgressionItem.ProgSpeedJump, ItemClassification.progression, 4), # Does not include Happiness
     ItemData(ProgressionItem.ProgForceBeam, ItemClassification.progression, 3),
     ItemData(ProgressionItem.ProgCube, ItemClassification.progression, 3),
-    ItemData(ProgressionItem.ProgGun, ItemClassification.progression, 7),
+    ItemData(ProgressionItem.ProgGun, ItemClassification.progression, 8),
     ItemData(ProgressionItem.GunCritDamage, ItemClassification.progression, 1),
     ItemData(ProgressionItem.GunCritChance, ItemClassification.progression, 6),
     ItemData(ProgressionItem.GunDamage15, ItemClassification.progression, 1),
