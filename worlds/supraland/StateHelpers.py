@@ -199,7 +199,7 @@ class CanAfford(rules.Rule[SupralandWorldBase], game=GAME_NAME):
         def _evaluate(self, state: CollectionState) -> bool:
             if self.cost < 30:
                 return True
-            if not state.has(ProgressionItem.Loot, self.player):
+            if not state.has(ProgressionItem.Loot, self.player) and not state.has(ProgressionItem.ProgLoot, self.player):
                 return False
             return 30*(2**state.count(ProgressionItem.Wallet2, self.player))*(1.5**state.count(ProgressionItem.Wallet15, self.player)) > self.cost
 

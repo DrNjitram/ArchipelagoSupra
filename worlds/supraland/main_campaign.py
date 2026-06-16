@@ -193,7 +193,7 @@ MAIN_LOCATION_RULES: dict[L, Rule[SupralandWorldBase]] = {
     L.Chest58: HasLocationGroup(LG.Star, 80) & Has(U.ShowProgress),
     L.Chest59: Has(P.Stomp),
     L.Chest5_1955: True_(),
-    L.Chest60_2151: CanReachHeight(4) & HasAny(U.ProgHealthRegen, P.Armor, P.Health5),
+    L.Chest60_2151: CanReachHeight(6) & HasAny(U.ProgHealthRegen, P.Armor, P.Health5),
     L.Chest61_2816: HasAll(P.ProgTrans, P.ProgGun),
     L.Chest62_3729: Has(P.Stomp) & CanReachRegion(R.BSF),
     L.Chest63_1565: HasAll(P.ProgCube, P.ProgGun),

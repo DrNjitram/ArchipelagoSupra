@@ -51,7 +51,7 @@ class ProgressionItem(str, Enum):
     ProgGraveSword = "Progressive Holy Sword"
     Armor = "Armor"
     Shell = "Shell"
-
+    ProgLoot = "Progressive Loot"
 
 class UsefulItem(str, Enum):
     ChestDetector = "Chest Detector"
@@ -184,7 +184,7 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(ProgressionItem.Health2, ItemClassification.progression, 2),
     ItemData(ProgressionItem.Health5, ItemClassification.progression, 17),
     ItemData(ProgressionItem.Health15, ItemClassification.progression, 5),
-    ItemData(UsefulItem.ProgHealthRegen, ItemClassification.useful, 18),
+    ItemData(UsefulItem.ProgHealthRegen, ItemClassification.progression, 18),
     ItemData(UsefulItem.ShieldBreaker, ItemClassification.useful, 1),
     ItemData(UsefulItem.ShowProgress, ItemClassification.progression, 1),
     ItemData(UsefulItem.StompDamage, ItemClassification.useful, 5),
@@ -212,18 +212,18 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(FillerItem.Silent, ItemClassification.filler, 1),
     ItemData(FillerItem.GraveCount, ItemClassification.filler, 1),
     ItemData(FillerItem.GraveDetector, ItemClassification.filler, 1),
-    ItemData(UsefulItem.MoreLoot, ItemClassification.useful, 1),
+    ItemData(UsefulItem.MoreLoot, ItemClassification.useful, 0),
     ItemData(UsefulItem.CubeTelefrag, ItemClassification.useful, 1),
     ItemData(UsefulItem.HealthRegenSpeed, ItemClassification.useful, 3),
     ItemData(UsefulItem.SwordRange, ItemClassification.useful, 1),
     ItemData(UsefulItem.SwordCritical, ItemClassification.useful, 1),
-    ItemData(ProgressionItem.Loot, ItemClassification.progression, 1),
+    ItemData(ProgressionItem.Loot, ItemClassification.progression, 0),
     ItemData(ProgressionItem.Stomp, ItemClassification.progression, 1),
     ItemData(FillerItem.HealthBar, ItemClassification.filler, 1),
     ItemData(UsefulItem.GunCoin, ItemClassification.useful, 1),
     ItemData(ProgressionItem.Armor, ItemClassification.progression, 1),
     ItemData(UsefulItem.SwordSpeed, ItemClassification.useful, 1),
-    ItemData(FillerItem.LootLuck, ItemClassification.filler, 1),
+    ItemData(FillerItem.LootLuck, ItemClassification.filler, 0),
     ItemData(FillerItem.CoinMagnet, ItemClassification.filler, 1),
     ItemData(FillerItem.Coin, ItemClassification.filler, 651),
     ItemData(FillerItem.BigCoin, ItemClassification.filler, 83),
@@ -262,6 +262,7 @@ ALL_ITEMS: tuple[ItemData, ...] = (
     ItemData(UsefulItem.LotOfCoin30, ItemClassification.useful, 4),
     ItemData(UsefulItem.LotOfCoin50, ItemClassification.useful, 5),
     ItemData(UsefulItem.LotOfCoin200, ItemClassification.useful, 2),
+    ItemData(ProgressionItem.ProgLoot, ItemClassification.progression, 3)
 )
 
 item_table = {item.name.value: item for item in ALL_ITEMS}
