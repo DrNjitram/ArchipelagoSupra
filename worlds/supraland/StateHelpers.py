@@ -146,7 +146,7 @@ class CanReachHeight(rules.Rule[SupralandWorldBase], game=GAME_NAME):
         target_height: int = 1
 
         def _evaluate(self, state: CollectionState) -> bool:
-            return sum([HeightTable[item][min(state.count(item, self.player), len(HeightTable[item]))] for item in
+            return sum([HeightTable[item][min(state.count(item, self.player), len(HeightTable[item]) - 1)] for item in
                         HeightTable.keys()]) >= self.target_height
 
         @override
@@ -158,7 +158,7 @@ class CanReachHeight(rules.Rule[SupralandWorldBase], game=GAME_NAME):
             else:
                 verb = "Cannot reach"
             return [
-                {"type": "text", "text": f"{verb} height"},
+                {"type": "text", "text": f"{verb} height "},
                 {"type": "color", "color": "yellow", "text": str(self.target_height)},
             ]
 
